@@ -168,6 +168,15 @@ function getColor(mag) {
   }
 }
 
+var drawerButton = document.getElementById('container-button');
+var listDrawer = document.getElementById('list-drawer');
+
+drawerButton.addEventListener('click', function(e) {
+  listDrawer.classList.toggle('open');
+  drawerButton.classList.toggle('open');
+  e.stopPropagation();
+});
+
 var viewModel = new ViewModel();
 
 ko.applyBindings(viewModel);

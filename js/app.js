@@ -66,7 +66,7 @@ var ViewModel = function() {
   };
 */
   this.loadEarthquakes = function() {
-    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1900-01-01&endtime=1907-04-01&minmagnitude=7&maxmagnitude=8';
+    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1900-01-01&endtime=1907-04-01&minmagnitude=7&maxmagnitude=7.2';
 
     console.log('earthquakeURL = ' + earthquakeURL);
 

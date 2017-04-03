@@ -21,13 +21,31 @@
     <div class="inner-box">
       <div class="form">
         <!-- <h4 class="search-head">Search Results List</h4> -->
-        <div id="search-form">
+        <form id="search-form" data-bind="submit: searchResults">
           <input id="search-string" type="text" placeholder="Search Results List  (i.e. New Guinea)">
-          <input id="search-button" type="button" value="Go">
-        </div>
+          <button id="search-button" type="submit">Go</button>
+        </form>
       </div>
       <ul class="results-list" data-bind="foreach: quakeArray">
-        <li data-bind="text: place"></li>
+        <!-- ko if: included() -->
+          <li data-bind="text: place"></li>
+        <!-- /ko -->
+
+
+<!--
+        <li>
+          planet: <b data-bind="text: time"></b>
+          <div data-bind="if: included()">
+            capital: <b data-bind="text: place"></b>
+          </div>
+        </li>
+
+ -->
+<!--
+        <div data-bind="if: included()">
+          <li data-bind="text: place"></li>
+        </div>
+ -->
       </ul>
     </div>
   </div>

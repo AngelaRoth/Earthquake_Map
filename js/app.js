@@ -5,6 +5,8 @@ var Quake = function(data) {
   this.magnitude = ko.observable(data.magnitude);
   this.alert = ko.observable(data.alert);
   this.tsunami = ko.observable(data.tsunami);
+
+  this.included = ko.observable(true);
 }
 
 var ViewModel = function() {
@@ -40,6 +42,24 @@ var ViewModel = function() {
       map.fitBounds(bounds);
     }
   }, this);
+
+  this.searchResults = function() {
+    console.log('in searchResults');
+    var searchString = 'New';
+    self.quakeArray().forEach(function(item) {
+      if (item.place().includes(searchString)) {
+        item.included(true);
+      } else {
+        item.included (false);
+      }
+      console.log(item.place() + " = " + item.included());
+    });
+  }
+
+
+
+
+
 
   // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function
   // http://stackoverflow.com/questions/9194579/how-to-simulate-a-click-on-a-google-maps-marker

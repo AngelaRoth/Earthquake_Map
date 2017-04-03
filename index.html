@@ -22,7 +22,7 @@
       <div class="form">
         <!-- <h4 class="search-head">Search Results List</h4> -->
         <form id="search-form" data-bind="submit: searchResults">
-          <input id="search-string" type="text" placeholder="Search Results List  (i.e. New Guinea)">
+          <input data-bind="value: searchString" id="search-string" type="text" placeholder="Search Results List  (i.e. New Guinea)">
           <button id="search-button" type="submit">Go</button>
         </form>
       </div>
@@ -31,7 +31,7 @@
           <li data-bind="text: place"></li>
         <!-- /ko -->
 
-
+<!-- All Three work -->
 <!--
         <li>
           planet: <b data-bind="text: time"></b>

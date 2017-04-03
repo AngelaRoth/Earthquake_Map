@@ -15,6 +15,8 @@ var ViewModel = function() {
   self.quakesLoaded = ko.observable(false);
   self.quakeArray = ko.observableArray([]);
 
+  self.searchString = ko.observable("");
+
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var largeInfowindow = new google.maps.InfoWindow();
@@ -45,9 +47,9 @@ var ViewModel = function() {
 
   this.searchResults = function() {
     console.log('in searchResults');
-    var searchString = 'New';
+    /*var searchString = 'New';*/
     self.quakeArray().forEach(function(item) {
-      if (item.place().includes(searchString)) {
+      if (item.place().includes(self.searchString())) {
         item.included(true);
       } else {
         item.included (false);

@@ -18,9 +18,18 @@
 
 
   <div id="list-drawer" class="container">
-    <ul class="results-list" data-bind="foreach: quakeArray">
-      <li data-bind="text: place"></li>
-    </ul>
+    <div class="inner-box">
+      <div class="form">
+        <h4 class="search-head">Search Results List</h4>
+        <div id="search-form">
+          <input id="search-string" type="text" placeholder="Ex: Papua New Guinea">
+          <input id="search-button" type="button" value="Go">
+        </div>
+      </div>
+      <ul class="results-list" data-bind="foreach: quakeArray">
+        <li data-bind="text: place"></li>
+      </ul>
+    </div>
   </div>
   <img id="container-button" src="img/open.svg" alt="">
 

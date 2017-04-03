@@ -3,7 +3,7 @@ var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
 
-var clickedIcon;
+/*var clickedIcon;*/
 
 ViewModel.prototype.initMap = function() {
   // Constructor creates a new map - only center and zoom are required.
@@ -13,7 +13,7 @@ ViewModel.prototype.initMap = function() {
     mapTypeControl: false
   });
 
-  clickedIcon = makeMarkerIcon('0091ff');
+  /*clickedIcon = makeMarkerIcon('0091ff');*/
 
   var bounds = new google.maps.LatLngBounds();
 
@@ -30,6 +30,7 @@ ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {
     // Make sure the marker property is cleared if the infowindow is closed.
     infowindow.addListener('closeclick', function(){
       infowindow.setMarker = null;
+      marker.setAnimation(null);
     });
   }
 }

@@ -37,9 +37,16 @@ var ViewModel = function() {
           icon: icon
         });
 
+        item.marker.setAnimation(null);
+
         item.marker.addListener('click', function() {
           self.populateInfoWindow(this, largeInfowindow);
-          this.setIcon(clickedIcon);
+          if (this.getAnimation() !== null) {
+            this.setAnimation(null);
+          } else {
+            this.setAnimation(google.maps.Animation.BOUNCE);
+          }
+          /*this.setIcon(clickedIcon);*/
         });
 
         bounds.extend(item.marker.position);

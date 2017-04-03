@@ -3,6 +3,8 @@ var map;
 // Create a new blank array for all the listing markers.
 var markers = [];
 
+var clickedIcon;
+
 ViewModel.prototype.initMap = function() {
   // Constructor creates a new map - only center and zoom are required.
   map = new google.maps.Map(document.getElementById('map'), {
@@ -11,7 +13,8 @@ ViewModel.prototype.initMap = function() {
     mapTypeControl: false
   });
 
-  /*var largeInfowindow = new google.maps.InfoWindow();*/
+  clickedIcon = makeMarkerIcon('0091ff');
+
   var bounds = new google.maps.LatLngBounds();
 
   map.fitBounds(bounds);

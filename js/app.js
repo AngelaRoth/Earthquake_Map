@@ -21,7 +21,7 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
-  this.makeMarkers = ko.computed(function() {
+    this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var largeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
@@ -39,6 +39,7 @@ var ViewModel = function() {
 
         item.marker.addListener('click', function() {
           self.populateInfoWindow(this, largeInfowindow);
+          this.setIcon(clickedIcon);
         });
 
         bounds.extend(item.marker.position);

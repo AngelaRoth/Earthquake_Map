@@ -12,7 +12,6 @@ body {
   width:100%;
   margin: 0;
   padding: 0;
-  color: white;
 }
 
 #map {
@@ -113,7 +112,9 @@ ul.results-list {
 }
 
 li {
-  margin: 12px 5px;
+  margin: 15px 5px;
+  font-size: 14px;
+  color: white;
 }
 
 
@@ -136,7 +137,7 @@ li {
   }
 
   #header-buttons {
-    margin: 5px 20px;
+    margin: 10px 20px;
     width: 260px;
   }
 

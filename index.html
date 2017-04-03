@@ -18,7 +18,9 @@
 
 
   <div id="list-drawer" class="container">
-
+    <ul class="results-list" data-bind="foreach: quakeArray">
+      <li data-bind="text: place"></li>
+    </ul>
   </div>
   <img id="container-button" src="img/open.svg" alt="">
 

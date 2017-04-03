@@ -12,6 +12,7 @@ body {
   width:100%;
   margin: 0;
   padding: 0;
+  color: white;
 }
 
 #map {
@@ -68,8 +69,9 @@ h1 {
 }
 
 .container {
-  height: 100%;
+  height: 100vh;
   width: 300px;
+  padding: 70px 10px 5px;
   position: absolute;
   transform: translate(-300px, 0);
   transition: transform 0.3s ease;
@@ -77,6 +79,10 @@ h1 {
   background-color: black;
   opacity: 0.8;
   filter: alpha(opacity=80);  /* For IE8 and earlier */
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+    flex-flow: column nowrap;
 }
 
 .container.open {
@@ -97,6 +103,20 @@ h1 {
   opacity: 0.8;
   filter: alpha(opacity=80);  /* For IE8 and earlier */
 }
+
+ul.results-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+  overflow-y: scroll;
+  flex-grow: 1;
+}
+
+li {
+  margin: 12px 5px;
+}
+
+
 
 @media screen and (min-width: 800px) {
   .container {

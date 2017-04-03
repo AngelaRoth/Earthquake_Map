@@ -28,7 +28,7 @@
       </div>
       <ul class="results-list" data-bind="foreach: quakeArray">
         <!-- ko if: included() -->
-          <li data-bind="text: place"></li>
+          <li data-bind="text: place, click: $parent.listItemClicked"></li>
         <!-- /ko -->
       </ul>
     </div>

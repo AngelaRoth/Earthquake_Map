@@ -109,7 +109,7 @@ h1 {
 }
 
 .form {
-
+  margin: 10px 0;
 }
 
 #search-form {
@@ -121,9 +121,10 @@ h1 {
 }
 
 #search-button {
-  width: 40px;
+  width: 50px;
   height:30px;
   background-color: gold;
+  font-weight: bold;
 }
 
 #search-string {

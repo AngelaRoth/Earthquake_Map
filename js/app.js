@@ -16,6 +16,10 @@ var ViewModel = function() {
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable("");
+  self.startTime = ko.observable("2000-01-01");
+  self.endTime = ko.observable("2017-04-01");
+  self.minMagnitude = ko.observable("7.5");
+  self.maxMagnitude = ko.observable("10");
 
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
@@ -94,7 +98,23 @@ var ViewModel = function() {
   };
 */
   this.loadEarthquakes = function() {
-    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2013-01-01&endtime=2017-04-01&minmagnitude=7&maxmagnitude=10';
+    if (!self.startTime()) {
+      self.startTime("1900-01-01");
+      console.log('Start Time assigned value of 1900-01-01');
+    }
+
+    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime='
+                        + self.startTime();
+
+    if (self.endTime()) {
+      earthquakeURL += '&endtime=' + self.endTime();
+    }
+    if (self.minMagnitude()) {
+      earthquakeURL += '&minmagnitude=' + self.minMagnitude();
+    }
+    if (self.maxMagnitude()) {
+      earthquakeURL += '&maxmagnitude=' + self.maxMagnitude();
+    }
 
     console.log('earthquakeURL = ' + earthquakeURL);
 
@@ -182,6 +202,11 @@ var ViewModel = function() {
     return false;
   };
 };
+/*
+ViewModel.prototype.findQuakes = function(startDate, endDate, minMagnitude, maxMagnitude) {
+
+}
+*/
 
 
 function getColor(mag) {

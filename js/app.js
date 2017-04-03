@@ -44,6 +44,9 @@ var ViewModel = function() {
           if (this.getAnimation() !== null) {
             this.setAnimation(null);
           } else {
+            self.quakeArray().forEach(function(e) {
+              e.marker.setAnimation(null);
+            });
             this.setAnimation(google.maps.Animation.BOUNCE);
           }
           /*this.setIcon(clickedIcon);*/

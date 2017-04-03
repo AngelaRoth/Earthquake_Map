@@ -55,7 +55,14 @@ var ViewModel = function() {
       }
       console.log(item.place() + " = " + item.included());
     });
-  }
+  };
+
+  this.displayAll = function() {
+    self.quakeArray().forEach(function(item) {
+      item.included(true);
+      console.log(item.place() + " = " + item.included());
+    });
+  };
 
 
 

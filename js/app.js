@@ -47,9 +47,8 @@ var ViewModel = function() {
 
   this.searchResults = function() {
     console.log('in searchResults');
-    /*var searchString = 'New';*/
     self.quakeArray().forEach(function(item) {
-      if (item.place().includes(self.searchString())) {
+      if (item.place().toLowerCase().includes(self.searchString().toLowerCase())) {
         item.included(true);
       } else {
         item.included (false);

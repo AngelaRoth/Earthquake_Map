@@ -21,8 +21,8 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
-  self.searchForm = ko.observable(false);
-  self.newForm = ko.observable(true);
+  self.searchForm = ko.observable(true);
+  self.newForm = ko.observable(false);
 
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
@@ -58,14 +58,7 @@ var ViewModel = function() {
         bounds.extend(item.marker.position);
 
       });
-/*
-      if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-         var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.3, bounds.getNorthEast().lng() + 0.01);
-         var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.3, bounds.getNorthEast().lng() - 0.01);
-         bounds.extend(extendPoint1);
-         bounds.extend(extendPoint2);
-      }
-*/
+
       bounds = self.expandBounds(bounds);
       map.fitBounds(bounds);
     }
@@ -73,8 +66,8 @@ var ViewModel = function() {
 
   this.expandBounds = function(bounds) {
     if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-       var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.3, bounds.getNorthEast().lng() + 0.01);
-       var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.3, bounds.getNorthEast().lng() - 0.01);
+       var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 1, bounds.getNorthEast().lng() + 1);
+       var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 1, bounds.getNorthEast().lng() - 1);
        bounds.extend(extendPoint1);
        bounds.extend(extendPoint2);
     }
@@ -94,14 +87,7 @@ var ViewModel = function() {
       }
     });
 
-    if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-       var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
-       var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
-       bounds.extend(extendPoint1);
-       bounds.extend(extendPoint2);
-    }
-
-
+    bounds = self.expandBounds(bounds);
     map.fitBounds(bounds);
   };
 
@@ -113,6 +99,7 @@ var ViewModel = function() {
       bounds.extend(item.marker.position);
     });
 
+    bounds = self.expandBounds(bounds);
     map.fitBounds(bounds);
   };
 

@@ -67,7 +67,7 @@ h1 {
   width: 90px;
 }
 
-.container {
+#list-drawer {
   height: 100%;
   width: 300px;
   padding: 70px 0 5px;
@@ -80,15 +80,15 @@ h1 {
   filter: alpha(opacity=80);  /* For IE8 and earlier */
 }
 
-.container.open {
+#list-drawer.open {
   transform: translate(0, 0);
 }
 
-#container-button.open {
+#list-drawer-button.open {
   transform: translate(-32px, 0);
 }
 
-#container-button {
+#list-drawer-button {
   position: absolute;
   left: 300px;
   top: 0px;
@@ -221,13 +221,13 @@ li.results-list-item {
 
 
 @media screen and (min-width: 800px) {
-  .container {
+  #list-drawer {
     padding: 82px 0 5px;
     position: relative;
     transform: translate(0, 0);
   }
 
-  #container-button {
+  #list-drawer-button {
     position: absolute;
     top: -600px;
     left: -600px;

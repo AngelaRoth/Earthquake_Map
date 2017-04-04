@@ -70,7 +70,6 @@ var ViewModel = function() {
     // toggle slider open
     listDrawer.classList.add('open');
     drawerButton.classList.add('open');
-    e.stopPropagation();
   }
 
   // If Only One Marker is being displayed, expand the bounds of the map
@@ -250,7 +249,7 @@ function getColor(mag) {
   }
 }
 
-var drawerButton = document.getElementById('container-button');
+var drawerButton = document.getElementById('list-drawer-button');
 var listDrawer = document.getElementById('list-drawer');
 
 drawerButton.addEventListener('click', function(e) {

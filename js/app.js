@@ -21,10 +21,10 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
-  self.searchForm = ko.observable(false);
-  self.newForm = ko.observable(true);
+  self.searchForm = ko.observable(true);
+  self.newForm = ko.observable(false);
 
-    this.makeMarkers = ko.computed(function() {
+  this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var largeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
@@ -64,28 +64,31 @@ var ViewModel = function() {
   }, this);
 
   this.searchResults = function() {
-    console.log('in searchResults');
+    var bounds = new google.maps.LatLngBounds();
     self.quakeArray().forEach(function(item) {
       if (item.place().toLowerCase().includes(self.searchString().toLowerCase())) {
         item.included(true);
+        item.marker.setMap(map);
+        bounds.extend(item.marker.position);
       } else {
         item.included (false);
+        item.marker.setMap(null)
       }
-      console.log(item.place() + " = " + item.included());
     });
+    self.allBounds = bounds;
+    map.fitBounds(bounds);
   };
 
   this.displayAll = function() {
+    var bounds = new google.maps.LatLngBounds();
     self.quakeArray().forEach(function(item) {
       item.included(true);
-      console.log(item.place() + " = " + item.included());
+      item.marker.setMap(map);
+      bounds.extend(item.marker.position);
     });
+    self.allBounds = bounds;
+    map.fitBounds(bounds);
   };
-
-
-
-
-
 
   // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function
   // http://stackoverflow.com/questions/9194579/how-to-simulate-a-click-on-a-google-maps-marker
@@ -94,24 +97,11 @@ var ViewModel = function() {
       latLng: new google.maps.LatLng(0,0)
     });
   }
-/*
-  this.filter = function(type) {
-    var bounds = new google.maps.LatLngBounds();
-    self.filteredList().length = 0;
-    self.locationList().forEach(function(item) {
-      if (item.type() === type || type === 'all') {
-        self.filteredList.push(item);
-        item.marker.setMap(map);
-        bounds.extend(item.marker.position);
-      } else {
-        item.marker.setMap(null);
-      }
-    });
-    self.allBounds = bounds;
-    map.fitBounds(bounds);
-  };
-*/
+
   this.loadEarthquakes = function() {
+    self.quakeArray([]);
+
+
     if (!self.startTime()) {
       self.startTime("1900-01-01");
       console.log('Start Time assigned value of 1900-01-01');
@@ -163,6 +153,8 @@ var ViewModel = function() {
             console.log('no quakes found');
           }
         }
+
+        self.makeMarkers();
 
 
 /*
@@ -216,12 +208,6 @@ var ViewModel = function() {
     return false;
   };
 };
-/*
-ViewModel.prototype.findQuakes = function(startDate, endDate, minMagnitude, maxMagnitude) {
-
-}
-*/
-
 
 function getColor(mag) {
   if (mag >= 8.0) {

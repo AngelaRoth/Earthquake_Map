@@ -19,22 +19,44 @@
 
   <div id="list-drawer" class="container">
     <div class="inner-box">
-<!-- ko if: newForm() -->
 
-      <div class="new-search-form">
-        <p>Enter desired Start/End Dates and minimum/maximum Magnitudes</p>
-        <p>Dates must be in the format: <em>yyyy-mm-dd</em></p>
-        <p>Magnitudes may be integers or decimal numbers.</p>
+<!-- ko if: newForm() -->
+      <div id="newForm-box">
+        <p class="first-paragraph">Welcome to QuakeZone. Seach for Earthquakes between a range of Dates and Magnitudes.</p>
         <form id="new-form" data-bind="submit: loadEarthquakes">
-          <input data-bind="value: startTime" id="start-time" type="text" placeholder="Starting Search Date (i.e. 2000-01-31)">
-          <button id="search-button" type="submit">Go</button>
+          <div class="input-pair">
+            <label >Start Time <span class="gold">*</span> </label>
+            <input data-bind="value: startTime" id="start-time" class="input-field" type="text" placeholder="1900-01-01">
+          </div>
+          <div class="input-pair">
+            <label >End Time <span class="gold">*</span> </label>
+            <input data-bind="value: endTime" id="end-time" class="input-field" type="text" placeholder="1900-12-31">
+          </div>
+          <div class="input-pair">
+            <label >Min Magnitude <span class="gold">*</span> </label>
+            <input data-bind="value: minMagnitude" id="min-magnitude" class="input-field" type="text" placeholder="7.7">
+          </div>
+          <div class="input-pair">
+            <label >Max Magnitude <span class="gold">*</span> </label>
+            <input data-bind="value: maxMagnitude" id="max-magnitude" class="input-field" type="text" placeholder="10">
+          </div>
+          <div class="astrix-button-pair">
+            <p class="last-paragraph"><span class="gold">*</span> See Below</p>
+            <button id="new-button" type="submit">Get Earthquakes</button>
+          </div>
         </form>
+        <ul>
+          <li>Dates must be formatted: <em>yyyy-mm-dd</em></li>
+          <li>Magnitudes must be numerical.</li>
+        </ul>
+        <p>Beware that the search craps out if more than 20,000 Quakes are found (yes, there are a lot of Quakes out there, especially at the lower magnitudes!).</p>
+        <p>A Starting Search Date is required; if none is entered a date of 1900-01-01 will be assumed. The other fields may be left blank; no limit will be placed on that end of the search, but again, BEWARE of asking for too many quakes!</p>
       </div>
 <!-- /ko -->
 
 
 <!-- ko if: searchForm() -->
-      <div class="form">
+      <div id="searchForm-box">
         <form id="search-form" data-bind="submit: searchResults">
           <input data-bind="value: searchString" id="search-string" type="text" placeholder="Search Results List  (i.e. New Guinea)">
           <button id="search-button" type="submit">Go</button>
@@ -42,7 +64,7 @@
       </div>
       <ul class="results-list" data-bind="foreach: quakeArray">
         <!--ko if: included() -->
-          <li data-bind="text: place, click: $parent.listItemClicked"></li>
+          <li class="results-list-item" data-bind="text: place, click: $parent.listItemClicked"></li>
         <!-- /ko -->
       </ul>
 <!-- /ko -->

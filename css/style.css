@@ -108,7 +108,7 @@ h1 {
     flex-flow: column nowrap;
 }
 
-.form {
+#searchForm-box {
   margin: 10px 0;
 }
 
@@ -143,13 +143,79 @@ ul.results-list {
   list-style-type: none;
   padding-left: 0;
   margin-left: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex-grow: 1;
 }
 
-li {
+li.results-list-item {
   margin: 15px 5px;
   font-size: 14px;
+}
+
+#newForm-box {
+  margin: 10px;
+  font-size: 11pt;
+  line-height: 110%;
+  overflow-y: auto;
+}
+
+#newForm-box ul {
+  margin: 7px 0 5px 0;
+  padding-left: 0;
+  margin-left: 15px;
+}
+
+#newForm-box li {
+  margin: 5px 0;
+}
+
+#new-form {
+  margin: 5px 0 20px 0;
+}
+
+.first-paragraph {
+  margin-top: 0;
+}
+
+.last-paragraph {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.gold {
+  color: gold;
+}
+
+.input-pair {
+  margin: 7px 0;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.astrix-button-pair {
+  margin: 7px 0;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.input-field {
+  height:25px;
+  width: 150px;
+}
+
+#new-button {
+  height: 30px;
+  width: 150px;
+  background-color: gold;
+  font-weight: bold;
 }
 
 

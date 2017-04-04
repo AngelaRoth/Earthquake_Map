@@ -21,6 +21,9 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
+  self.searchForm = ko.observable(false);
+  self.newForm = ko.observable(true);
+
     this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var largeInfowindow = new google.maps.InfoWindow();

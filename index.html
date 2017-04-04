@@ -19,18 +19,34 @@
 
   <div id="list-drawer" class="container">
     <div class="inner-box">
+<!-- ko if: newForm() -->
+
+      <div class="new-search-form">
+        <p>Enter desired Start/End Dates and minimum/maximum Magnitudes</p>
+        <p>Dates must be in the format: <em>yyyy-mm-dd</em></p>
+        <p>Magnitudes may be integers or decimal numbers.</p>
+        <form id="new-form" data-bind="submit: loadEarthquakes">
+          <input data-bind="value: startTime" id="start-time" type="text" placeholder="Starting Search Date (i.e. 2000-01-31)">
+          <button id="search-button" type="submit">Go</button>
+        </form>
+      </div>
+<!-- /ko -->
+
+
+<!-- ko if: searchForm() -->
       <div class="form">
-        <!-- <h4 class="search-head">Search Results List</h4> -->
         <form id="search-form" data-bind="submit: searchResults">
           <input data-bind="value: searchString" id="search-string" type="text" placeholder="Search Results List  (i.e. New Guinea)">
           <button id="search-button" type="submit">Go</button>
         </form>
       </div>
       <ul class="results-list" data-bind="foreach: quakeArray">
-        <!-- ko if: included() -->
+        <!--ko if: included() -->
           <li data-bind="text: place, click: $parent.listItemClicked"></li>
         <!-- /ko -->
       </ul>
+<!-- /ko -->
+
     </div>
   </div>
   <img id="container-button" src="img/open.svg" alt="">

@@ -58,18 +58,28 @@ var ViewModel = function() {
         bounds.extend(item.marker.position);
 
       });
-
+/*
       if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
          var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.3, bounds.getNorthEast().lng() + 0.01);
          var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.3, bounds.getNorthEast().lng() - 0.01);
          bounds.extend(extendPoint1);
          bounds.extend(extendPoint2);
       }
-
-
+*/
+      bounds = self.expandBounds(bounds);
       map.fitBounds(bounds);
     }
   }, this);
+
+  this.expandBounds = function(bounds) {
+    if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+       var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.3, bounds.getNorthEast().lng() + 0.01);
+       var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.3, bounds.getNorthEast().lng() - 0.01);
+       bounds.extend(extendPoint1);
+       bounds.extend(extendPoint2);
+    }
+    return(bounds);
+  }
 
   this.searchResults = function() {
     var bounds = new google.maps.LatLngBounds();

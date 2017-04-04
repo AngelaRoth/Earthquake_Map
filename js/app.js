@@ -67,6 +67,10 @@ var ViewModel = function() {
   this.getNewScreen = function() {
     self.searchForm(false);
     self.newForm(true);
+    // toggle slider open
+    listDrawer.classList.add('open');
+    drawerButton.classList.add('open');
+    e.stopPropagation();
   }
 
   // If Only One Marker is being displayed, expand the bounds of the map

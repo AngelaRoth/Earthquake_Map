@@ -21,8 +21,8 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
-  self.searchForm = ko.observable(true);
-  self.newForm = ko.observable(false);
+  self.searchForm = ko.observable(false);
+  self.newForm = ko.observable(true);
 
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
@@ -64,6 +64,14 @@ var ViewModel = function() {
     }
   }, this);
 
+  this.getNewScreen = function() {
+    self.searchForm(false);
+    self.newForm(true);
+  }
+
+  // If Only One Marker is being displayed, expand the bounds of the map
+  // so we see more than blue ocean or empty land. Thanks to StackOverflow!
+  // http://stackoverflow.com/questions/3334729/google-maps-v3-fitbounds-zoom-too-close-for-single-marker
   this.expandBounds = function(bounds) {
     if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
        var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 1, bounds.getNorthEast().lng() + 1);
@@ -82,8 +90,8 @@ var ViewModel = function() {
         item.marker.setMap(map);
         bounds.extend(item.marker.position);
       } else {
-        item.included (false);
-        item.marker.setMap(null)
+        item.included(false);
+        item.marker.setMap(null);
       }
     });
 
@@ -112,8 +120,12 @@ var ViewModel = function() {
   }
 
   this.loadEarthquakes = function() {
+    // get rid of markers from old quakeArray
+    self.quakeArray().forEach(function(item) {
+      item.marker.setMap(null);
+    });
+    // empty old quakeArray
     self.quakeArray([]);
-
 
     if (!self.startTime()) {
       self.startTime("1900-01-01");
@@ -122,7 +134,6 @@ var ViewModel = function() {
 
     var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime='
                         + self.startTime();
-
     if (self.endTime()) {
       earthquakeURL += '&endtime=' + self.endTime();
     }
@@ -132,7 +143,6 @@ var ViewModel = function() {
     if (self.maxMagnitude()) {
       earthquakeURL += '&maxmagnitude=' + self.maxMagnitude();
     }
-
     console.log('earthquakeURL = ' + earthquakeURL);
 
     $.getJSON( earthquakeURL )
@@ -167,6 +177,8 @@ var ViewModel = function() {
           }
         }
 
+        self.newForm(false);
+        self.searchForm(true);
         self.makeMarkers();
 
 
@@ -246,5 +258,6 @@ drawerButton.addEventListener('click', function(e) {
 var viewModel = new ViewModel();
 
 ko.applyBindings(viewModel);
-
+/*
 viewModel.loadEarthquakes();
+*/

@@ -24,6 +24,9 @@ var ViewModel = function() {
   self.searchForm = ko.observable(false);
   self.newForm = ko.observable(true);
 
+  self.errorText = ko.observable("");
+
+
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var largeInfowindow = new google.maps.InfoWindow();
@@ -182,6 +185,7 @@ var ViewModel = function() {
 
           } else {
             console.log('no quakes found');
+            self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
           }
         }
 
@@ -234,8 +238,35 @@ var ViewModel = function() {
         }
 */
       })
-      .fail(function() {
-        console.log('Earthquake data Unavailable');
+      .fail(function(data) {
+        console.log('Request for Earthquakes Failed');
+        if (data.hasOwnProperty('statusText')) {
+          if (data.statusText === 'Bad Request') {
+            if (data.hasOwnProperty('responseText')) {
+              var errorMsg = data.responseText;
+              var msgStart = 0;
+              var msgEnd = errorMsg.length;
+              // extract the main gist of the error message
+              var msgStart = errorMsg.indexOf('Bad Request') + 13;
+              var msgEnd = errorMsg.indexOf('Usage details') - 2;
+              // check if -1 returned (i.e. search string not found) for either
+              // msgStart or msgEnd (Note: we already added 13 and subtracted 2)
+              if (msgStart === 12) {
+                msgStart = 0;
+              }
+              if (msgEnd === -3) {
+                errorMsg.length;
+              }
+              var reportedMsg = errorMsg.slice(msgStart, msgEnd);
+              console.log('reportedMsg = ' + reportedMsg);
+              self.errorText(reportedMsg);
+            }
+          } else {
+            self.errorText(data.statusText + ' Earthquake Data Unavailable. Check Input Formatting.');
+          }
+        } else {
+          self.errorText('Earthquake Data Unavailable. Check Input Formatting.');
+        }
       });
 
     return false;

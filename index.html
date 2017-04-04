@@ -23,6 +23,13 @@
 <!-- ko if: newForm() -->
       <div id="newForm-box">
         <p class="first-paragraph">Welcome to QuakeZone. Seach for Earthquakes between a range of Dates and Magnitudes.</p>
+
+        <!-- ko if: errorReported() -->
+
+          <div id="error-box" data-bind="text: errorText"></div>
+
+        <!-- /ko -->
+
         <form id="new-form" data-bind="submit: loadEarthquakes">
           <div class="input-pair">
             <label >Start Time <span class="gold">*</span> </label>

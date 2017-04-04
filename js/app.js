@@ -24,7 +24,8 @@ var ViewModel = function() {
   self.searchForm = ko.observable(false);
   self.newForm = ko.observable(true);
 
-  self.errorText = ko.observable("");
+  self.errorReported = ko.observable(true);
+  self.errorText = ko.observable("Test Error Text. Test Error Text. Test Error Text. Test Error Text. Test Error Text. Test Error Text. ");
 
 
   this.makeMarkers = ko.computed(function() {
@@ -162,6 +163,7 @@ var ViewModel = function() {
         console.log(data);
 
         if (data.hasOwnProperty('features')) {
+          self.errorReported(true);  //CHANGE THIS TO FALSE!!!
           var features = data.features;
           if (features.length > 0) {
             features.forEach(function(e) {
@@ -184,7 +186,7 @@ var ViewModel = function() {
             self.quakesLoaded(true);
 
           } else {
-            console.log('no quakes found');
+            self.errorReported(true);
             self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
           }
         }
@@ -239,6 +241,7 @@ var ViewModel = function() {
 */
       })
       .fail(function(data) {
+        self.errorReported(true);
         console.log('Request for Earthquakes Failed');
         if (data.hasOwnProperty('statusText')) {
           if (data.statusText === 'Bad Request') {

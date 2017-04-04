@@ -112,6 +112,11 @@ var ViewModel = function() {
 
     bounds = self.expandBounds(bounds);
     map.fitBounds(bounds);
+    self.newForm(false);
+    self.searchForm(true);
+    // toggle slider open
+    listDrawer.classList.add('open');
+    drawerButton.classList.add('open');
   };
 
   // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function

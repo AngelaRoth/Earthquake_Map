@@ -64,7 +64,7 @@ h1 {
 }
 
 .header-button {
-  width: 90px;
+  width: 100px;
 }
 
 #list-drawer {
@@ -219,6 +219,31 @@ li.results-list-item {
   margin: 0 0 10px 0;
   padding: 5px;
   font-size: 11pt;
+}
+
+
+
+a:link {
+  color: lightgreen;
+}
+
+a:visited {
+  color: lightblue;
+}
+
+#results-box {
+  margin: 5px;
+  padding: 0 5px;
+  font-size: 11pt;
+  line-height: 110%;
+  overflow-y: auto;
+}
+
+#back-to-results-button {
+  margin: 5px 0;
+  height: 30px;
+  background-color: gold;
+  font-weight: bold;
 }
 
 @media screen and (min-width: 800px) {

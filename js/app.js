@@ -3,10 +3,6 @@ var Quake = function(data) {
   this.location = ko.observable(data.location);
   this.time = ko.observable(data.time);
   this.magnitude = ko.observable(data.magnitude);
-/*
-  this.alert = ko.observable(data.alert);
-  this.alertColor = ko.observable(data.alertColor);
-*/
   this.url = ko.observable(data.url);
   this.significance = ko.observable(data.sig);
 
@@ -27,7 +23,7 @@ var ViewModel = function() {
 
   self.newForm = ko.observable(true);
   self.searchForm = ko.observable(false);
-  self.locationSelected = ko.observable(false);
+  self.locationForm = ko.observable(false);
 
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable("");
@@ -52,7 +48,9 @@ var ViewModel = function() {
         item.marker.setAnimation(null);
 
         item.marker.addListener('click', function() {
-          self.locationSelected(true);
+          self.newForm(false);
+          self.searchForm(false);
+          self.locationForm(true);
           self.currentLocation(item);
 
           self.populateInfoWindow(this, largeInfowindow);
@@ -76,10 +74,18 @@ var ViewModel = function() {
     }
   }, this);
 
+  this.backToResults = function() {
+    self.newForm(false);
+    self.searchForm(true);
+    self.locationForm(false);
+
+  }
+
   this.getNewScreen = function() {
     self.errorReported(false);
-    self.searchForm(false);
     self.newForm(true);
+    self.searchForm(false);
+    self.locationForm(false);
     // toggle slider open
     listDrawer.classList.add('open');
     drawerButton.classList.add('open');
@@ -128,6 +134,7 @@ var ViewModel = function() {
     map.fitBounds(bounds);
     self.newForm(false);
     self.searchForm(true);
+    self.locationForm(false);
     // toggle slider open
     listDrawer.classList.add('open');
     drawerButton.classList.add('open');
@@ -169,6 +176,9 @@ var ViewModel = function() {
     if (self.maxMagnitude()) {
       earthquakeURL += '&maxmagnitude=' + self.maxMagnitude();
     }
+
+    earthquakeURL += '&orderby=magnitude';
+
     console.log('earthquakeURL = ' + earthquakeURL);
 
     var waitingMessage = setTimeout(function() {
@@ -185,10 +195,9 @@ var ViewModel = function() {
 
         if (data.hasOwnProperty('features')) {
           var features = data.features;
-          if (features.length >= 2000) {
+          if (features.length >= 400) {
             self.errorReported(true);
-            self.errorText('More than 2000 results returned. Try Narrowing Your Search.');
-
+            self.errorText('More than 400 results returned. Try Narrowing Your Search.');
           } else if (features.length > 0) {
             self.errorReported(false);
             features.forEach(function(e) {
@@ -204,19 +213,13 @@ var ViewModel = function() {
                 sig: e.properties.sig,
                 intensity: e.properties.cdi
               };
-/*
-              if (!quakeObject.alert) {
-                quakeObject.alert = '(none)';
-              }
-
-              quakeObject.alertColor = getAlertColor(quakeObject.alert);
-*/
               var newQuake = new Quake(quakeObject);
               self.quakeArray.push(newQuake);
             });
 
             self.newForm(false);
             self.searchForm(true);
+            self.locationForm(false);
             self.makeMarkers();
             self.currentLocation = ko.observable(self.quakeArray()[0]);
 
@@ -224,55 +227,8 @@ var ViewModel = function() {
             self.errorReported(true);
             self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
           }
-
           self.quakesLoaded(true);
         }
-
-
-
-/*
-        if (data.hasOwnProperty('items')) {
-          bookFound = true;
-          var items = data.items;
-          var firstBook = data.items[0];
-          console.log(firstBook);
-        }
-*/
-/*
-        if (bookFound) {
-          // Check if properties exist and assign their values to global variables
-          if (firstBook.volumeInfo.hasOwnProperty('title')) {
-            bookTitle = firstBook.volumeInfo.title;
-          } else {
-            bookTitle = "No Title Found";
-          }
-          if (firstBook.volumeInfo.hasOwnProperty('authors')) {
-            bookAuthor = "";
-            var authors = firstBook.volumeInfo.authors;
-            var numAuthors = authors.length;
-            for (var i = 0; i < (numAuthors - 1); i++) {
-              bookAuthor += authors[i];
-              bookAuthor += ', ';
-            }
-            bookAuthor += authors[numAuthors - 1];
-          } else {
-            bookAuthor = "No Author Listed";
-          }
-          if (firstBook.volumeInfo.hasOwnProperty('imageLinks')) {
-            if (firstBook.volumeInfo.imageLinks.hasOwnProperty('smallThumbnail')) {
-              bookImageSrc = firstBook.volumeInfo.imageLinks.smallThumbnail;
-            } else if (firstBook.volumeInfo.imageLinks.hasOwnProperty('thumbnail')) {
-              bookImageSrc = firstBook.volumeInfo.imageLinks.thumbnail;
-            }
-          } else {
-            bookImageSrc = "img/books.jpg";
-          }
-        } else {
-          bookTitle = 'No Title Found';
-          bookAuthor = 'No Author Listed';
-          bookImageSrc = 'img/books.jpg';
-        }
-*/
       })
       .fail(function(data) {
         clearTimeout(waitingMessage);
@@ -327,26 +283,7 @@ function getColor(sig) {
     return ('7bb718');
   }
 }
-/*
-function getAlertColor(alert) {
-  switch (alert) {
-    case 'green':
-      return '#7bb718';
-      break;
-    case 'yellow':
-      return '#ffff24';
-      break;
-    case 'orange':
-      return '#ffa500';
-      break;
-    case 'red':
-      return '#ff0000';
-      break;
-    default:
-      return '#0000ff';
-  }
-}
-*/
+
 var drawerButton = document.getElementById('list-drawer-button');
 var listDrawer = document.getElementById('list-drawer');
 

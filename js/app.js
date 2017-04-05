@@ -38,7 +38,7 @@ var ViewModel = function() {
       var bounds = new google.maps.LatLngBounds();
 
       self.quakeArray().forEach(function(item) {
-        var iconColor = getColor(item.magnitude())
+        var iconColor = getColor(item.significance())
         var icon = makeMarkerIcon(iconColor);
         /*var icon = makeMarkerIcon('7BB718');*/
         item.marker = new  google.maps.Marker({
@@ -205,8 +205,6 @@ var ViewModel = function() {
               }
 
               quakeObject.alertColor = getAlertColor(quakeObject.alert);
-              quakeObject.intensityRoman = getIntensityRoman(quakeObject.intensity);
-              quakeObject.intensityDef = getIntensityDef(quakeObject.intensity);
 
               var newQuake = new Quake(quakeObject);
               self.quakeArray.push(newQuake);
@@ -308,12 +306,16 @@ var ViewModel = function() {
   };
 };
 
-function getColor(mag) {
-  if (mag >= 8.0) {
+function getColor(sig) {
+  if (sig >= 900) {
     return ('ff0000');
-  } else if (mag >= 7.7) {
+  } else if (mag >= 800) {
+    return ('ff4500');
+  } else if (mag >= 700) {
     return ('ffa500');
-  } else if (mag >= 7.2) {
+  } else if (mag >= 550) {
+    return ('ffCC00');
+  } else if (mag >= 400) {
     return ('ffff24');
   } else {
     return ('7bb718');

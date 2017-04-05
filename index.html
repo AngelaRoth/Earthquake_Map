@@ -76,7 +76,7 @@
 
 <!-- ko if: locationSelected() -->
       <div data-bind="with: currentLocation">
-        <p>On <span data-bind="text: time"></span>, an Earthquake of magnitude <span data-bind="text: magnitude"></span> and an <a href="https://earthquake.usgs.gov/data/pager/">alert level</a> of <span data-bind="text: alert, style: { color: alertColor() }"></span> hit <span data-bind="text: place"></span>. An intensity of <span data-bind="text: intensityRoman"></span> means it was <em>"<span data-bind="text: intensityDef"></span>"</em> <a data-bind="attr: { href: url }">Read More Here.</a></p>
+        <p>On <span data-bind="text: time"></span>, an Earthquake of magnitude <span data-bind="text: magnitude"></span> and an <a href="https://earthquake.usgs.gov/data/pager/">alert level</a> of <span data-bind="text: alert, style: { color: alertColor() }"></span> hit <span data-bind="text: place"></span>. <a data-bind="attr: { href: url }">Read More Here.</a></p>
 
 
       </div>

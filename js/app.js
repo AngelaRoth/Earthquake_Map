@@ -5,6 +5,7 @@ var Quake = function(data) {
   this.magnitude = ko.observable(data.magnitude);
   this.alert = ko.observable(data.alert);
   this.alertColor = ko.observable(data.alertColor);
+  this.tsunami = ko.observable(data.tsunami);
   this.url = ko.observable(data.url);
   this.significance = ko.observable(data.sig);
 
@@ -23,13 +24,12 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
-  self.newForm = ko.observable(false);
+  self.newForm = ko.observable(true);
   self.searchForm = ko.observable(false);
-  self.locationSelected = ko.observable(true);
+  self.locationSelected = ko.observable(false);
 
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable("");
-  self.currentLocation = ko.observable({});
 
 
   this.makeMarkers = ko.computed(function() {
@@ -51,6 +51,9 @@ var ViewModel = function() {
         item.marker.setAnimation(null);
 
         item.marker.addListener('click', function() {
+          self.locationSelected(true);
+          self.currentLocation(item);
+
           self.populateInfoWindow(this, largeInfowindow);
           if (this.getAnimation() !== null) {
             this.setAnimation(null);
@@ -131,7 +134,8 @@ var ViewModel = function() {
 
   // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function
   // http://stackoverflow.com/questions/9194579/how-to-simulate-a-click-on-a-google-maps-marker
-  this.listItemClicked = function() {
+  this.listItemClicked = function(clickedItem) {
+    /*self.currentLocation(clickedItem);*/
     google.maps.event.trigger(this.marker, 'click', {
       latLng: new google.maps.LatLng(0,0)
     });
@@ -206,6 +210,12 @@ var ViewModel = function() {
 
               quakeObject.alertColor = getAlertColor(quakeObject.alert);
 
+              if (e.properties.tsunami === 1) {
+                quakeObject.tsunami = "A tsunami warning was triggered.";
+              } else {
+                quakeObject.tsunami = "";
+              }
+
               var newQuake = new Quake(quakeObject);
               self.quakeArray.push(newQuake);
             });
@@ -213,6 +223,7 @@ var ViewModel = function() {
             self.newForm(false);
             self.searchForm(true);
             self.makeMarkers();
+            self.currentLocation = ko.observable(self.quakeArray()[0]);
 
           } else {
             self.errorReported(true);
@@ -307,15 +318,15 @@ var ViewModel = function() {
 };
 
 function getColor(sig) {
-  if (sig >= 900) {
+  if (sig >= 800) {
     return ('ff0000');
-  } else if (mag >= 800) {
+  } else if (sig >= 700) {
     return ('ff4500');
-  } else if (mag >= 700) {
+  } else if (sig >= 600) {
     return ('ffa500');
-  } else if (mag >= 550) {
+  } else if (sig >= 450) {
     return ('ffCC00');
-  } else if (mag >= 400) {
+  } else if (sig >= 300) {
     return ('ffff24');
   } else {
     return ('7bb718');

@@ -4,7 +4,9 @@ var Quake = function(data) {
   this.time = ko.observable(data.time);
   this.magnitude = ko.observable(data.magnitude);
   this.alert = ko.observable(data.alert);
-  this.tsunami = ko.observable(data.tsunami);
+  this.alertColor = ko.observable(data.alertColor);
+  this.url = ko.observable(data.url);
+  this.significance = ko.observable(data.sig);
 
   this.included = ko.observable(true);
 }
@@ -21,11 +23,13 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("10");
 
+  self.newForm = ko.observable(false);
   self.searchForm = ko.observable(false);
-  self.newForm = ko.observable(true);
+  self.locationSelected = ko.observable(true);
 
   self.errorReported = ko.observable(false);
-  self.errorText = ko.observable("...");
+  self.errorText = ko.observable("");
+  self.currentLocation = ko.observable({});
 
 
   this.makeMarkers = ko.computed(function() {
@@ -191,8 +195,18 @@ var ViewModel = function() {
                 time: e.properties.time,
                 magnitude: e.properties.mag,
                 alert: e.properties.alert,//green
-                tsunami: e.properties.tsunami
+                url: e.properties.url,
+                sig: e.properties.sig,
+                intensity: e.properties.cdi
               };
+
+              if (!quakeObject.alert) {
+                quakeObject.alert = '(none)';
+              }
+
+              quakeObject.alertColor = getAlertColor(quakeObject.alert);
+              quakeObject.intensityRoman = getIntensityRoman(quakeObject.intensity);
+              quakeObject.intensityDef = getIntensityDef(quakeObject.intensity);
 
               var newQuake = new Quake(quakeObject);
               self.quakeArray.push(newQuake);
@@ -303,6 +317,25 @@ function getColor(mag) {
     return ('ffff24');
   } else {
     return ('7bb718');
+  }
+}
+
+function getAlertColor(alert) {
+  switch (alert) {
+    case 'green':
+      return '#7bb718';
+      break;
+    case 'yellow':
+      return '#ffff24';
+      break;
+    case 'orange':
+      return '#ffa500';
+      break;
+    case 'red':
+      return '#ff0000';
+      break;
+    default:
+      return '#0000ff';
   }
 }
 

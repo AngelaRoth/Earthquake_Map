@@ -3,9 +3,10 @@ var Quake = function(data) {
   this.location = ko.observable(data.location);
   this.time = ko.observable(data.time);
   this.magnitude = ko.observable(data.magnitude);
+/*
   this.alert = ko.observable(data.alert);
   this.alertColor = ko.observable(data.alertColor);
-  this.tsunami = ko.observable(data.tsunami);
+*/
   this.url = ko.observable(data.url);
   this.significance = ko.observable(data.sig);
 
@@ -150,6 +151,7 @@ var ViewModel = function() {
     });
     // empty old quakeArray
     self.quakeArray([]);
+    self.quakeArray().length = 0;
 
     if (!self.startTime()) {
       self.startTime("1900-01-01");
@@ -198,24 +200,17 @@ var ViewModel = function() {
                 },
                 time: e.properties.time,
                 magnitude: e.properties.mag,
-                alert: e.properties.alert,//green
                 url: e.properties.url,
                 sig: e.properties.sig,
                 intensity: e.properties.cdi
               };
-
+/*
               if (!quakeObject.alert) {
                 quakeObject.alert = '(none)';
               }
 
               quakeObject.alertColor = getAlertColor(quakeObject.alert);
-
-              if (e.properties.tsunami === 1) {
-                quakeObject.tsunami = "A tsunami warning was triggered.";
-              } else {
-                quakeObject.tsunami = "";
-              }
-
+*/
               var newQuake = new Quake(quakeObject);
               self.quakeArray.push(newQuake);
             });
@@ -318,21 +313,21 @@ var ViewModel = function() {
 };
 
 function getColor(sig) {
-  if (sig >= 800) {
+  if (sig >= 1800) {
     return ('ff0000');
-  } else if (sig >= 700) {
+  } else if (sig >= 1500) {
     return ('ff4500');
-  } else if (sig >= 600) {
+  } else if (sig >= 1200) {
     return ('ffa500');
-  } else if (sig >= 450) {
+  } else if (sig >= 900) {
     return ('ffCC00');
-  } else if (sig >= 300) {
+  } else if (sig >= 600) {
     return ('ffff24');
   } else {
     return ('7bb718');
   }
 }
-
+/*
 function getAlertColor(alert) {
   switch (alert) {
     case 'green':
@@ -351,7 +346,7 @@ function getAlertColor(alert) {
       return '#0000ff';
   }
 }
-
+*/
 var drawerButton = document.getElementById('list-drawer-button');
 var listDrawer = document.getElementById('list-drawer');
 

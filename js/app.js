@@ -24,8 +24,8 @@ var ViewModel = function() {
   self.searchForm = ko.observable(false);
   self.newForm = ko.observable(true);
 
-  self.errorReported = ko.observable(true);
-  self.errorText = ko.observable("Test Error Text. Test Error Text. Test Error Text. Test Error Text. Test Error Text. Test Error Text. ");
+  self.errorReported = ko.observable(false);
+  self.errorText = ko.observable("...");
 
 
   this.makeMarkers = ko.computed(function() {
@@ -69,6 +69,7 @@ var ViewModel = function() {
   }, this);
 
   this.getNewScreen = function() {
+    self.errorReported(false);
     self.searchForm(false);
     self.newForm(true);
     // toggle slider open
@@ -107,6 +108,7 @@ var ViewModel = function() {
   };
 
   this.displayAll = function() {
+    self.errorReported(false);
     var bounds = new google.maps.LatLngBounds();
     self.quakeArray().forEach(function(item) {
       item.included(true);
@@ -132,6 +134,8 @@ var ViewModel = function() {
   }
 
   this.loadEarthquakes = function() {
+    self.errorReported(false);
+
     // get rid of markers from old quakeArray
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
@@ -157,15 +161,26 @@ var ViewModel = function() {
     }
     console.log('earthquakeURL = ' + earthquakeURL);
 
+    var waitingMessage = setTimeout(function() {
+      self.errorReported(true);
+      self.errorText('Waiting for Results...');
+    }, 1500);
+
     $.getJSON( earthquakeURL )
       .done(function(data) {
+        clearTimeout(waitingMessage);
+        self.errorReported(false);
         // log data to see how it's structured.
         console.log(data);
 
         if (data.hasOwnProperty('features')) {
-          self.errorReported(true);  //CHANGE THIS TO FALSE!!!
           var features = data.features;
-          if (features.length > 0) {
+          if (features.length >= 2000) {
+            self.errorReported(true);
+            self.errorText('More than 2000 results returned. Try Narrowing Your Search.');
+
+          } else if (features.length > 0) {
+            self.errorReported(false);
             features.forEach(function(e) {
               var quakeObject = {
                 place: e.properties.place,
@@ -183,17 +198,18 @@ var ViewModel = function() {
               self.quakeArray.push(newQuake);
             });
 
-            self.quakesLoaded(true);
+            self.newForm(false);
+            self.searchForm(true);
+            self.makeMarkers();
 
           } else {
             self.errorReported(true);
             self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
           }
+
+          self.quakesLoaded(true);
         }
 
-        self.newForm(false);
-        self.searchForm(true);
-        self.makeMarkers();
 
 
 /*
@@ -241,28 +257,30 @@ var ViewModel = function() {
 */
       })
       .fail(function(data) {
+        clearTimeout(waitingMessage);
         self.errorReported(true);
         console.log('Request for Earthquakes Failed');
         if (data.hasOwnProperty('statusText')) {
           if (data.statusText === 'Bad Request') {
             if (data.hasOwnProperty('responseText')) {
               var errorMsg = data.responseText;
+              console.log('errorMsg = ' + errorMsg);
               var msgStart = 0;
               var msgEnd = errorMsg.length;
               // extract the main gist of the error message
               var msgStart = errorMsg.indexOf('Bad Request') + 13;
-              var msgEnd = errorMsg.indexOf('Usage details') - 2;
+              var msgEnd = errorMsg.indexOf('.', msgStart) + 1;
               // check if -1 returned (i.e. search string not found) for either
-              // msgStart or msgEnd (Note: we already added 13 and subtracted 2)
+              // msgStart or msgEnd (Note: we already added 13 and 1)
               if (msgStart === 12) {
                 msgStart = 0;
               }
-              if (msgEnd === -3) {
-                errorMsg.length;
+              if (msgEnd === 0) {
+                msgEnd = errorMsg.length;
               }
               var reportedMsg = errorMsg.slice(msgStart, msgEnd);
               console.log('reportedMsg = ' + reportedMsg);
-              self.errorText(reportedMsg);
+              self.errorText(reportedMsg + ' Try Another Search.');
             }
           } else {
             self.errorText(data.statusText + ' Earthquake Data Unavailable. Check Input Formatting.');

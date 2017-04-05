@@ -25,27 +25,25 @@
         <p class="first-paragraph">Welcome to QuakeZone. Seach for Earthquakes between a range of Dates and Magnitudes.</p>
 
         <!-- ko if: errorReported() -->
-
           <div id="error-box" data-bind="text: errorText"></div>
-
         <!-- /ko -->
 
         <form id="new-form" data-bind="submit: loadEarthquakes">
           <div class="input-pair">
             <label >Start Time <span class="gold">*</span> </label>
-            <input data-bind="value: startTime" id="start-time" class="input-field" type="text" placeholder="1900-01-01">
+            <input data-bind="value: startTime" id="start-time" class="input-field" type="text" placeholder="ex. 2000-01-01">
           </div>
           <div class="input-pair">
             <label >End Time <span class="gold">*</span> </label>
-            <input data-bind="value: endTime" id="end-time" class="input-field" type="text" placeholder="1900-12-31">
+            <input data-bind="value: endTime" id="end-time" class="input-field" type="text" placeholder="ex. 2016-12-31">
           </div>
           <div class="input-pair">
             <label >Min Magnitude <span class="gold">*</span> </label>
-            <input data-bind="value: minMagnitude" id="min-magnitude" class="input-field" type="text" placeholder="7.7">
+            <input data-bind="value: minMagnitude" id="min-magnitude" class="input-field" type="text" placeholder="ex. 7.7">
           </div>
           <div class="input-pair">
             <label >Max Magnitude <span class="gold">*</span> </label>
-            <input data-bind="value: maxMagnitude" id="max-magnitude" class="input-field" type="text" placeholder="10">
+            <input data-bind="value: maxMagnitude" id="max-magnitude" class="input-field" type="text" placeholder="ex. 10">
           </div>
           <div class="astrix-button-pair">
             <p class="last-paragraph"><span class="gold">*</span> See Below</p>
@@ -53,7 +51,7 @@
           </div>
         </form>
         <ul>
-          <li>Dates must be formatted: <em>yyyy-mm-dd</em></li>
+          <li>Dates must be formatted: <span class="gold">yyyy-mm-dd</span></li>
           <li>Magnitudes must be numerical.</li>
         </ul>
         <p>Beware that the search craps out if more than 20,000 Quakes are found (yes, there are a lot of Quakes out there, especially at the lower magnitudes!).</p>

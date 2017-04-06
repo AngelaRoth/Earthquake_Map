@@ -90,7 +90,7 @@ function getIconColor(sig) {
 // 2. If comma appears, extract string after it
 // 3. If word "the" appears, extract string after it
 // 4. Words from part of string still not ignored are combined with "+"
-function getSearchTerms(place) {
+function getSearchTerm(place) {
   var msgStart;
   var sliceStart;
   var ofLoc = place.indexOf(' of ');

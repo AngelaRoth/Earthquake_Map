@@ -290,8 +290,6 @@ var ViewModel = function() {
     // 86400000 = milliseconds in 1 day
     var addTime = 86400000 * 14;
     var withAddedTime = quakeTime + addTime;
-    console.log('quakeTime = ' + quakeTime);
-    console.log('withAddedTime = ' + withAddedTime);
 
     var searchStart = new Date(quakeTime);
     var startYear = searchStart.getUTCFullYear();
@@ -305,29 +303,22 @@ var ViewModel = function() {
     var endDate = searchEnd.getUTCDate();
     var endString = endYear + getStringMonth(endMonth) + getStringDate(endDate);
 
-    console.log('startString = ' + startString);
-    console.log('endString = ' + endString);
-
+    var searchTerm = getSearchTerm(self.currentLocation().place());
+    var prettySearchTerm = searchTerm.replace('+', ' ');
+    var fullSearchTerm = 'quake+' + searchTerm;
+/*
     var searchTerm = 'quake+' + getSearchTerms(self.currentLocation().place());
-    console.log('searchTerm = ' + searchTerm);
-
+    console.log('fullSearchTerm = ' + fullSearchTerm);
+*/
     var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     nytURL += '?' + $.param({
       'api-key': "3579d2c108694c7fb536928a79360c54",
-      'q': searchTerm,
+      'q': fullSearchTerm,
       /*'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",*/
       'begin_date': startString,
       'end_date': endString,
-      'fl': "headline,snippet,web_url,print_page"
+      'fl': "headline,snippet,web_url"
     });
-
-    console.log('URL = ' + nytURL);
-/*
-https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7fb536928a79360c54&q=quake&fq=section_name%3A(%22World%22%20%22Front%20Page%22%20%22International%22%20%22Week%20in%20Review%22%20%22Opinion%22)&begin_date=20161125&end_date=201708&fl=headline%2Csnippet%2Cweb_url
-
-https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7fb536928a79360c54&q=quake&fq=section_name%3A(%22World%22%20%22Front%20Page%22%20%22International%22%20%22Week%20in%20Review%22%20%22Opinion%22)&begin_date=20161013&end_date=20161027&fl=headline%2Csnippet%2Cweb_url
-*/
-
 
     $.getJSON( nytURL )
       .done(function(data) {
@@ -347,9 +338,10 @@ https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7
             self.currentLocation().articles.push(newArticle);
           });
         } else {
+          var sorryHeadline = "No NYT Articles Found for a quake in " + prettySearchTerm;
           var articleObject = {
-            headline: "No NYT articles found for quakes in ",
-            snippet: "Maybe they called it something else?",
+            headline: sorryHeadline,
+            snippet: "Go to the NYT Home Page to search futher.",
             artURL: 'https://www.nytimes.com/'
           };
           var newArticle = new Article(articleObject);
@@ -359,6 +351,18 @@ https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7
       })
       .fail(function(data) {
         console.log('NYT failed to load. Try Again.');
+        // Following Code won't work, because an object in the array
+        // will prevent a NYT search for this location!
+/*
+        var sorryHeadline = "New York Times Failed to Load";
+        var articleObject = {
+          headline: sorryHeadline,
+          snippet: "Try Clicking the Location Again.",
+          artURL: 'https://www.nytimes.com/'
+        };
+        var newArticle = new Article(articleObject);
+        self.currentLocation().articles.push(newArticle);
+*/
       });
 
     return false;

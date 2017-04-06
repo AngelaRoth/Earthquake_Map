@@ -14,6 +14,18 @@ body {
   padding: 0;
 }
 
+.gold {
+  color: gold;
+}
+
+.green {
+  color: #7bb718;
+}
+
+.blue {
+  color: #00C9D4;
+}
+
 #map {
   height: 100%;
   /* width: 100%; */
@@ -157,7 +169,6 @@ li.results-list-item {
 #newForm-box ul {
   margin: 15px 0 5px 0;
   padding-left: 0;
-  margin-left: 15px;
 }
 
 #newForm-box li {
@@ -175,10 +186,6 @@ li.results-list-item {
 .last-paragraph {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.gold {
-  color: gold;
 }
 
 .input-pair {
@@ -224,7 +231,7 @@ li.results-list-item {
 
 
 a:link {
-  color: lightgreen;
+  color: gold;
 }
 
 a:visited {
@@ -240,8 +247,18 @@ a:visited {
 }
 
 #results-box h3 {
-  height: 12px;
+  font-size: 14px;
   margin: 10px 0 5px;
+}
+
+#results-box ul {
+  margin: 0 0 5px 0;
+  list-style-type: none;
+  padding: 0 10px 0 5px;
+}
+
+#results-box li {
+  margin: 5px 0;
 }
 
 #back-to-results-button {

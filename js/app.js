@@ -7,6 +7,7 @@ var Quake = function(data) {
   this.significance = ko.observable(data.sig);
 
   this.included = ko.observable(true);
+  this.articles = ko.observableArray([]);
 }
 
 var Article = function(data) {
@@ -34,8 +35,8 @@ var ViewModel = function() {
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable("");
 
-  self.currentLocArticles = ko.observableArray([]);
-
+/*  self.currentLocArticles = ko.observableArray([]);
+*/
 
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
@@ -59,8 +60,10 @@ var ViewModel = function() {
           self.searchForm(false);
           self.locationForm(true);
           self.currentLocation(item);
-          self.loadNYT();
-
+          if (item.articles().length === 0) {
+            self.loadNYT();
+            console.log('NYT loading!!!')
+          }
           self.populateInfoWindow(this, largeInfowindow);
           if (this.getAnimation() !== null) {
             this.setAnimation(null);
@@ -330,18 +333,29 @@ https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7
       .done(function(data) {
         console.log(data);
         var articles = data.response.docs;
-        self.currentLocArticles([]);
-        self.currentLocArticles.length = 0;
+        /*self.currentLocArticles([]);
+        self.currentLocArticles.length = 0;*/
 
-        articles.forEach(function(art) {
+        if (articles.length > 0) {
+          articles.forEach(function(art) {
+            var articleObject = {
+              headline: art.headline.main,
+              snippet: art.snippet,
+              artURL: art.web_url
+            };
+            var newArticle = new Article(articleObject);
+            self.currentLocation().articles.push(newArticle);
+          });
+        } else {
           var articleObject = {
-            headline: art.headline.main,
-            snippet: art.snippet,
-            artURL: art.web_url
+            headline: "No NYT articles found for quakes in ",
+            snippet: "Maybe they called it something else?",
+            artURL: 'https://www.nytimes.com/'
           };
           var newArticle = new Article(articleObject);
-          self.currentLocArticles.push(newArticle);
-        });
+          self.currentLocation().articles.push(newArticle);
+        }
+
       })
       .fail(function(data) {
         console.log('NYT failed to load. Try Again.');

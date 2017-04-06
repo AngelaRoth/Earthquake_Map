@@ -80,18 +80,18 @@
 <!-- ko if: locationForm() -->
       <button id="back-to-results-button" data-bind="click: backToResults">Back to Search Results</button>
       <div id="results-box" data-bind="with: currentLocation">
-        <p class="first-paragraph">At <span data-bind="text: prettyTime"></span>, an Earthquake of magnitude <span class="gold" data-bind="text: magnitude"></span> with a significance of <span class="gold" data-bind="text: significance"></span> hit <span data-bind="text: place"></span>.</p>
+        <p class="first-paragraph">At <span data-bind="text: prettyTime"></span>, an Earthquake of magnitude <span class="gold" data-bind="text: magnitude"></span> with a significance of <span class="gold" data-bind="text: significance"></span> hit <span data-bind="text: place"></span><span class="gold">*</span>.</p>
 
-        <h3>Images of the Region:</h3>
+        <h3 class="green">Images of the Region:</h3>
 
-        <h3>Earthquake Articles from that Month:</h3>
+        <h3 class="blue">NYT Articles After the Quake:</h3>
         <ul>
           <li></li>
         </ul>
 
 
 
-        <p><a data-bind="attr: { href: url }">More Information</a> (warning: depending on browser settings, clicking may delete search data).</p>
+        <p><span class="gold">*</span> <a data-bind="attr: { href: url }">More Information</a> on the Quake.</p>
       </div>
 
 

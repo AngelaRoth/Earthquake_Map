@@ -315,10 +315,10 @@ var ViewModel = function() {
     nytURL += '?' + $.param({
       'api-key': "3579d2c108694c7fb536928a79360c54",
       'q': searchTerm,
-      'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",
+      /*'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",*/
       'begin_date': startString,
       'end_date': endString,
-      'fl': "headline,snippet,web_url"
+      'fl': "headline,snippet,web_url,print_page"
     });
 
     console.log('URL = ' + nytURL);

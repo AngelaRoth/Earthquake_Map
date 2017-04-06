@@ -85,8 +85,11 @@
         <h3 class="green">Images of the Region:</h3>
 
         <h3 class="blue">NYT Articles After the Quake:</h3>
-        <ul>
-          <li></li>
+        <ul data-bind="foreach: articles">
+          <li>
+            <a data-bind="text: headline, attr: { href: artURL }"></a>
+            <p data-bind="text: snippet"></p>
+          </li>
         </ul>
 
 

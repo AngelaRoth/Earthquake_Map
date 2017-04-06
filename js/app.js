@@ -43,8 +43,7 @@ var ViewModel = function() {
       var bounds = new google.maps.LatLngBounds();
 
       self.quakeArray().forEach(function(item) {
-        var iconColor = getColor(item.significance())
-        var icon = makeMarkerIcon(iconColor);
+        var icon = makeMarkerIcon(item.iconColor());
         /*var icon = makeMarkerIcon('7BB718');*/
         item.marker = new  google.maps.Marker({
           map: map,
@@ -222,7 +221,14 @@ var ViewModel = function() {
                 sig: e.properties.sig,
                 intensity: e.properties.cdi
               };
+
               var newQuake = new Quake(quakeObject);
+              newQuake.prettyTime = ko.computed(function() {
+                return makeTimePretty(newQuake.time());
+              });
+              newQuake.iconColor = ko.computed(function() {
+                return getIconColor(newQuake.significance());
+              });
               self.quakeArray.push(newQuake);
             });
 
@@ -278,21 +284,23 @@ var ViewModel = function() {
 
   this.loadNYT = function() {
     var quakeTime = self.currentLocation().time();
+    // 86400000 = milliseconds in 1 day
     var addTime = 86400000 * 14;
     var withAddedTime = quakeTime + addTime;
     console.log('quakeTime = ' + quakeTime);
     console.log('withAddedTime = ' + withAddedTime);
+
     var searchStart = new Date(quakeTime);
     var startYear = searchStart.getUTCFullYear();
     var startMonth = searchStart.getUTCMonth();
     var startDate = searchStart.getUTCDate();
-    var startString = '' + startYear + startMonth + startDate;
-    // 86400000 = milliseconds in 1 day
+    var startString = startYear + getStringMonth(startMonth) + getStringDate(startDate);
+
     var searchEnd = new Date(withAddedTime);
     var endYear = searchEnd.getUTCFullYear();
     var endMonth = searchEnd.getUTCMonth();
     var endDate = searchEnd.getUTCDate();
-    var endString = '' + endYear + endMonth + endDate;
+    var endString = endYear + getStringMonth(endMonth) + getStringDate(endDate);
 
     console.log('startString = ' + startString);
     console.log('endString = ' + endString);
@@ -358,22 +366,6 @@ https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7
   };
 
 };
-
-function getColor(sig) {
-  if (sig >= 1800) {
-    return ('ff0000');
-  } else if (sig >= 1500) {
-    return ('ff4500');
-  } else if (sig >= 1200) {
-    return ('ffa500');
-  } else if (sig >= 900) {
-    return ('ffCC00');
-  } else if (sig >= 600) {
-    return ('ffff24');
-  } else {
-    return ('7bb718');
-  }
-}
 
 var drawerButton = document.getElementById('list-drawer-button');
 var listDrawer = document.getElementById('list-drawer');

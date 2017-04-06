@@ -304,29 +304,14 @@ var ViewModel = function() {
 
     console.log('startString = ' + startString);
     console.log('endString = ' + endString);
-/*
-    var searchTerm = getTerm(self.currentLocation().place());
 
-    // This is a hail-mary attempt at getting a place name which might appear
-    // in the newspaper. The earthquake site place names are too random to
-    // get a really good search term. I am erring on the side of too few search
-    // results, rather than too many irrelevant ones.
-    function getTerm(place) {
-      var msgStart;
-      var ofLoc = place.indexOf('of');
-      if (ofLoc === -1) {
-        msgStart = 0;
-      } else {
-        msgStart = ofLoc + 3;
-      }
-      var term = place.slice(msgStart).replace(',', '').replace(' ', '%20');
-      return term;
-    }
-*/
+    var searchTerm = 'quake+' + getSearchTerms(self.currentLocation().place());
+    console.log('searchTerm = ' + searchTerm);
+
     var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     nytURL += '?' + $.param({
       'api-key': "3579d2c108694c7fb536928a79360c54",
-      'q': 'quake',
+      'q': searchTerm,
       'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",
       'begin_date': startString,
       'end_date': endString,
@@ -359,7 +344,7 @@ https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7
         });
       })
       .fail(function(data) {
-        console.log('NYT failed to load');
+        console.log('NYT failed to load. Try Again.');
       });
 
     return false;

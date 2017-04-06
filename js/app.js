@@ -9,6 +9,12 @@ var Quake = function(data) {
   this.included = ko.observable(true);
 }
 
+var Article = function(data) {
+  this.headline = ko.observable(data.headline);
+  this.snippet = ko.observable(data.snippet);
+  this.artURL = ko.observable(data.artURL);
+}
+
 var ViewModel = function() {
   var self = this;
   self.googleReady = ko.observable(false);
@@ -27,6 +33,8 @@ var ViewModel = function() {
 
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable("");
+
+  self.currentLocArticles = ko.observableArray([]);
 
 
   this.makeMarkers = ko.computed(function() {
@@ -52,6 +60,7 @@ var ViewModel = function() {
           self.searchForm(false);
           self.locationForm(true);
           self.currentLocation(item);
+          self.loadNYT();
 
           self.populateInfoWindow(this, largeInfowindow);
           if (this.getAnimation() !== null) {
@@ -239,8 +248,8 @@ var ViewModel = function() {
             if (data.hasOwnProperty('responseText')) {
               var errorMsg = data.responseText;
               console.log('errorMsg = ' + errorMsg);
-              var msgStart = 0;
-              var msgEnd = errorMsg.length;
+              /*var msgStart = 0;
+              var msgEnd = errorMsg.length;*/
               // extract the main gist of the error message
               var msgStart = errorMsg.indexOf('Bad Request') + 13;
               var msgEnd = errorMsg.indexOf('.', msgStart) + 1;
@@ -266,6 +275,88 @@ var ViewModel = function() {
 
     return false;
   };
+
+  this.loadNYT = function() {
+    var quakeTime = self.currentLocation().time();
+    var addTime = 86400000 * 14;
+    var withAddedTime = quakeTime + addTime;
+    console.log('quakeTime = ' + quakeTime);
+    console.log('withAddedTime = ' + withAddedTime);
+    var searchStart = new Date(quakeTime);
+    var startYear = searchStart.getUTCFullYear();
+    var startMonth = searchStart.getUTCMonth();
+    var startDate = searchStart.getUTCDate();
+    var startString = '' + startYear + startMonth + startDate;
+    // 86400000 = milliseconds in 1 day
+    var searchEnd = new Date(withAddedTime);
+    var endYear = searchEnd.getUTCFullYear();
+    var endMonth = searchEnd.getUTCMonth();
+    var endDate = searchEnd.getUTCDate();
+    var endString = '' + endYear + endMonth + endDate;
+
+    console.log('startString = ' + startString);
+    console.log('endString = ' + endString);
+/*
+    var searchTerm = getTerm(self.currentLocation().place());
+
+    // This is a hail-mary attempt at getting a place name which might appear
+    // in the newspaper. The earthquake site place names are too random to
+    // get a really good search term. I am erring on the side of too few search
+    // results, rather than too many irrelevant ones.
+    function getTerm(place) {
+      var msgStart;
+      var ofLoc = place.indexOf('of');
+      if (ofLoc === -1) {
+        msgStart = 0;
+      } else {
+        msgStart = ofLoc + 3;
+      }
+      var term = place.slice(msgStart).replace(',', '').replace(' ', '%20');
+      return term;
+    }
+*/
+    var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    nytURL += '?' + $.param({
+      'api-key': "3579d2c108694c7fb536928a79360c54",
+      'q': 'quake',
+      'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",
+      'begin_date': startString,
+      'end_date': endString,
+      'fl': "headline,snippet,web_url"
+    });
+
+    console.log('URL = ' + nytURL);
+/*
+https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7fb536928a79360c54&q=quake&fq=section_name%3A(%22World%22%20%22Front%20Page%22%20%22International%22%20%22Week%20in%20Review%22%20%22Opinion%22)&begin_date=20161125&end_date=201708&fl=headline%2Csnippet%2Cweb_url
+
+https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=3579d2c108694c7fb536928a79360c54&q=quake&fq=section_name%3A(%22World%22%20%22Front%20Page%22%20%22International%22%20%22Week%20in%20Review%22%20%22Opinion%22)&begin_date=20161013&end_date=20161027&fl=headline%2Csnippet%2Cweb_url
+*/
+
+
+    $.getJSON( nytURL )
+      .done(function(data) {
+        console.log(data);
+        var articles = data.response.docs;
+        self.currentLocArticles([]);
+        self.currentLocArticles.length = 0;
+
+        articles.forEach(function(art) {
+          var articleObject = {
+            headline: art.headline.main,
+            snippet: art.snippet,
+            artURL: art.web_url
+          };
+          var newArticle = new Article(articleObject);
+          self.currentLocArticles.push(newArticle);
+        });
+      })
+      .fail(function(data) {
+        console.log('NYT failed to load');
+      });
+
+    return false;
+  };
+
 };
 
 function getColor(sig) {

@@ -239,6 +239,11 @@ a:visited {
   overflow-y: auto;
 }
 
+#results-box h3 {
+  height: 12px;
+  margin: 10px 0 5px;
+}
+
 #back-to-results-button {
   margin: 5px 0;
   height: 30px;

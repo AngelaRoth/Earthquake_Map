@@ -238,34 +238,47 @@ a:visited {
   color: lightblue;
 }
 
+#back-to-results-button {
+  margin: 5px 0;
+  height: 30px;
+  width: 100%;
+  background-color: gold;
+  font-weight: bold;
+}
+
+/* For some reason, flex-box needs this extra div to work
+correctly (with flex-grow on the following div) */
+#butt-div {
+  min-height: 45px;
+  width: 100%;
+}
+
 #results-box {
   margin: 5px;
   padding: 0 5px;
   font-size: 11pt;
   line-height: 110%;
+  flex-grow: 1;
   overflow-y: auto;
 }
 
 #results-box h3 {
   font-size: 14px;
-  margin: 10px 0 5px;
+  margin: 10px 0;
 }
 
-#results-box ul {
+#articles-list {
   margin: 0 0 5px 0;
   list-style-type: none;
-  padding: 0 10px 0 5px;
+  padding: 0 5px 0 0;
 }
 
-#results-box li {
-  margin: 5px 0;
+#articles-list li {
+  margin: 0;
 }
 
-#back-to-results-button {
-  margin: 5px 0;
-  height: 30px;
-  background-color: gold;
-  font-weight: bold;
+#articles-list p {
+  margin-top: 5px;
 }
 
 @media screen and (min-width: 800px) {

@@ -201,10 +201,7 @@ var ViewModel = function() {
     if (self.maxMagnitude()) {
       earthquakeURL += '&maxmagnitude=' + self.maxMagnitude();
     }
-
     earthquakeURL += '&orderby=magnitude';
-
-    console.log('earthquakeURL = ' + earthquakeURL);
 
     var waitingMessage = setTimeout(function() {
       self.errorReported(true);
@@ -322,9 +319,6 @@ var ViewModel = function() {
     var prettySearchTerm = searchTerm.replace('+', ' ');
     var fullSearchTerm = 'quake+' + searchTerm;
 
-    /*var searchTerm = 'quake+' + getSearchTerms(self.currentLocation().place());
-    console.log('fullSearchTerm = ' + fullSearchTerm);*/
-
     var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     nytURL += '?' + $.param({
       'api-key': "3579d2c108694c7fb536928a79360c54",
@@ -339,8 +333,6 @@ var ViewModel = function() {
       .done(function(data) {
         console.log(data);
         var articles = data.response.docs;
-        /*self.currentLocArticles([]);
-        self.currentLocArticles.length = 0;*/
 
         if (articles.length > 0) {
           articles.forEach(function(art) {
@@ -394,24 +386,17 @@ var ViewModel = function() {
 
     geocoder.geocode({'location': latlng}, function(results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
-        /*console.log('Geocoder results');
-        console.log(results);*/
         if (results[0]) {
           results.forEach(function(res) {
-            console.log('res.place_id = ' + res.place_id);
             var request = {
               placeId: res.place_id
             };
             service.getDetails(request, function(placeResults, placeStatus) {
               if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
-                /*console.log('Place Service Results for: ' + res.place_id);
-                console.log(placeResults);*/
                 if (placeResults.hasOwnProperty('photos')) {
                   placeResults.photos.forEach(function(photoItem) {
                     var photoAttr = photoItem.html_attributions[0];
-                    console.log('photoAttr = ' + photoAttr);
                     var photoUrl = photoItem.getUrl({'maxWidth': 250, 'maxHeight': 250});
-                    console.log('photoUrl = ' + photoUrl);
                     var photoObject = {
                       url: photoUrl,
                       attribution: photoItem.html_attributions[0]
@@ -426,7 +411,6 @@ var ViewModel = function() {
                   }
                 }
               } else {
-                console.log('PlacesServices failed');
                 window.alert('PlacesServices failed due to: ' + placeStatus);
               }
             });

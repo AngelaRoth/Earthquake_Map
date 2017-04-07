@@ -87,7 +87,7 @@
         <h3 class="green">Images of the Region:</h3>
         <ul id="photos-list"  data-bind="foreach: photos">
           <li>
-            <img data-bind="attr: { src: photoURL }">
+            <img class="list-image" data-bind="attr: { src: photoURL }, click: openPhotoWindow">
             <span>Source: <span data-bind="html: attribution"></span></span>
           </li>
         </ul>

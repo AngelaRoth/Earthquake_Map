@@ -10,18 +10,24 @@ var Quake = function(data) {
   this.articles = ko.observableArray([]);
   this.photos = ko.observableArray([]);
   this.photosFound = ko.observable(false);
-}
+};
 
 var Article = function(data) {
   this.headline = ko.observable(data.headline);
   this.snippet = ko.observable(data.snippet);
   this.artURL = ko.observable(data.artURL);
-}
+};
 
 var Photo = function(data) {
   this.photoURL = ko.observable(data.url);
   this.attribution = ko.observable(data.attribution);
-}
+
+  this.openPhotoWindow = function() {
+    var thisPhoto = this;
+    window.open(thisPhoto.photoURL(),'photowindow','toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=650px,height=500px');
+    return false;
+  };
+};
 
 var ViewModel = function() {
   var self = this;
@@ -103,8 +109,7 @@ var ViewModel = function() {
     self.newForm(false);
     self.searchForm(true);
     self.locationForm(false);
-
-  }
+  };
 
   this.getNewScreen = function() {
     self.errorReported(false);
@@ -114,7 +119,7 @@ var ViewModel = function() {
     // toggle slider open
     listDrawer.classList.add('open');
     drawerButton.classList.add('open');
-  }
+  };
 
   // If Only One Marker is being displayed, expand the bounds of the map
   // so we see more than blue ocean or empty land. Thanks to StackOverflow!
@@ -127,7 +132,7 @@ var ViewModel = function() {
        bounds.extend(extendPoint2);
     }
     return(bounds);
-  }
+  };
 
   this.searchResults = function() {
     var bounds = new google.maps.LatLngBounds();
@@ -396,7 +401,7 @@ var ViewModel = function() {
                 if (placeResults.hasOwnProperty('photos')) {
                   placeResults.photos.forEach(function(photoItem) {
                     var photoAttr = photoItem.html_attributions[0];
-                    var photoUrl = photoItem.getUrl({'maxWidth': 250, 'maxHeight': 250});
+                    var photoUrl = photoItem.getUrl({'maxWidth': 600, 'maxHeight': 600});
                     var photoObject = {
                       url: photoUrl,
                       attribution: photoItem.html_attributions[0]

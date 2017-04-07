@@ -296,6 +296,10 @@ correctly (with flex-grow on the following div) */
     align-items: flex-start;
 }
 
+.list-image {
+  width: 250px;
+}
+
 @media screen and (min-width: 800px) {
   #list-drawer {
     padding: 82px 0 5px;

@@ -33,7 +33,7 @@ ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {
   }
 };
 
-ViewModel.prototype.getPlaceId = function(location) {
+ViewModel.prototype.getPlaceIds = function(location) {
   var geocoder = new google.maps.Geocoder;
   var placeId = '';
 
@@ -58,6 +58,56 @@ ViewModel.prototype.getPlaceId = function(location) {
   /*console.log('Place Id = ' + placeId);*/
   return placeId;
 };
+
+ViewModel.prototype.getPhotos = function(location) {
+  var geocoder = new google.maps.Geocoder;
+  var service = new google.maps.places.PlacesService(map);
+
+  var idArray = [];
+  var photoArray = [];
+
+  var latitude = location.lat;
+  var longitude = location.lng;
+  var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      console.log('Geocoder results');
+      console.log(results);
+      if (results[0]) {
+        results.forEach(function(res) {
+          console.log('res.place_id = ' + res.place_id);
+          idArray.push(res.place_id);
+        });
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+  });
+
+  console.log('idArray =');
+  console.log(idArray);
+
+  idArray.forEach(function(id) {
+    console.log('in id: ' + id);
+    service.getDetails({'placeId': id}, function() {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        console.log('Place Service Results for: ' + id);
+        console.log(results);
+      } else {
+        console.log('PlacesServices failed');
+        window.alert('PlacesServices failed due to: ' + status);
+      }
+    });
+  });
+
+  photoArray = ['1'];
+  return photoArray;
+};
+
+
 
 
 

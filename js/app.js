@@ -8,7 +8,7 @@ var Quake = function(data) {
 
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
-  this.placeIdArray = ko.observableArray([]);
+  this.photos = ko.observableArray([]);
 }
 
 var Article = function(data) {
@@ -61,6 +61,13 @@ var ViewModel = function() {
           self.searchForm(false);
           self.locationForm(true);
           self.currentLocation(item);
+
+          if (item.photos().length === 0) {
+            var photoArray = self.getPhotos(item.location());
+            item.photos(photoArray);
+          }
+
+
           if (item.articles().length === 0) {
             self.loadNYT();
             console.log('NYT loading!!!')
@@ -232,10 +239,6 @@ var ViewModel = function() {
               });
               newQuake.iconColor = ko.computed(function() {
                 return getIconColor(newQuake.significance());
-              });
-
-              newQuake.placeId = ko.computed(function() {
-                return self.getPlaceId(newQuake.location());
               });
 
               self.quakeArray.push(newQuake);

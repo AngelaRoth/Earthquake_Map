@@ -22,13 +22,14 @@ var Photo = function(data) {
   this.photoURL = ko.observable(data.url);
   this.attribution = ko.observable(data.attribution);
 
+  // Open a new window to display larger version of photo
   this.openPhotoWindow = function() {
     var screenHeight = screen.height;
     var screenWidth = screen.width;
-
-    var thisPhoto = this;
     var heightString = '';
     var widthString = '';
+
+    // For desktops, window is 650x500; for mobile, size depends on screen.
     if (screenHeight > 500 && screenWidth > 650) {
       heightString = '500px';
       widthString = '650px';
@@ -41,7 +42,6 @@ var Photo = function(data) {
     }
 
     var specString = 'toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=' + widthString + ',height=' + heightString;
-
     window.open(this.photoURL(),'photowindow',specString);
     return false;
   };

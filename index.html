@@ -20,7 +20,7 @@
   </header>
 
 
-  <div id="list-drawer" class="open">
+  <div id="list-drawer" data-bind="css: { open: drawerOpen() }">
     <div class="inner-box">
 
 <!-- ko if: newForm() -->
@@ -110,7 +110,7 @@
 
     </div>
   </div>
-  <img id="list-drawer-button" class="open" src="img/open.svg" alt="">
+  <img id="list-drawer-button" data-bind="attr: { src: drawerButtonSrc }, click: drawerButtonClicked, css: { open: drawerOpen() }">
 
   <div id="map"></div>
 

@@ -66,6 +66,19 @@ var ViewModel = function() {
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable("");
 
+  self.drawerButtonSrc = ko.observable('img/close.svg');
+  self.drawerOpen = ko.observable(true);
+
+  this.drawerButtonClicked = function() {
+    if (self.drawerButtonSrc() === 'img/close.svg') {
+      self.drawerOpen(false);
+      self.drawerButtonSrc('img/open.svg');
+    } else {
+      self.drawerButtonSrc('img/close.svg');
+      self.drawerOpen(true);
+    }
+  };
+
 /*  self.currentLocArticles = ko.observableArray([]);
 */
 
@@ -135,8 +148,12 @@ var ViewModel = function() {
     self.searchForm(false);
     self.locationForm(false);
     // toggle slider open
+    self.drawerOpen(true);
+    self.drawerButtonSrc('img/close.svg');
+/*
     listDrawer.classList.add('open');
     drawerButton.classList.add('open');
+*/
   };
 
   // If Only One Marker is being displayed, expand the bounds of the map
@@ -184,8 +201,12 @@ var ViewModel = function() {
     self.searchForm(true);
     self.locationForm(false);
     // toggle slider open
+    self.drawerOpen(true);
+    self.drawerButtonSrc('img/close.svg');
+/*
     listDrawer.classList.add('open');
     drawerButton.classList.add('open');
+*/
   };
 
   // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function
@@ -451,6 +472,7 @@ var ViewModel = function() {
 
 };
 
+/*
 var drawerButton = document.getElementById('list-drawer-button');
 var listDrawer = document.getElementById('list-drawer');
 
@@ -459,6 +481,7 @@ drawerButton.addEventListener('click', function(e) {
   drawerButton.classList.toggle('open');
   e.stopPropagation();
 });
+*/
 
 var viewModel = new ViewModel();
 

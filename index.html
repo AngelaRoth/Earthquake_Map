@@ -6,6 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
 
+  <!-- Start loading Maps API asap (it is async defer, so it
+  won't interfere with page load) -->
+  <script async defer
+      src=
+      "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCNgnR6srI-o-L_1msz-0AA03afwiyOrxA&v=3&callback=viewModel.initMap">
+  </script>
+
   <!-- Make links open in New Windows -->
   <base target="_blank">
 </head>
@@ -119,10 +126,6 @@
   <script src="js/lib.js"></script>
   <script src="js/app.js"></script>
   <script async src="js/map.js"></script>
-  <script async defer
-      src=
-      "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCNgnR6srI-o-L_1msz-0AA03afwiyOrxA&v=3&callback=viewModel.initMap">
-  </script>
 
 </body>
 </html>

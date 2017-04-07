@@ -18,12 +18,25 @@ body {
   color: gold;
 }
 
+.red {
+  font-weight: bold;
+  color: #FE4D50;
+}
+
 .green {
   color: #7bb718;
 }
 
 .blue {
   color: #00C9D4;
+}
+
+.light-green {
+  color: #B5E85D;
+}
+
+.light-blue {
+  color: #65F7FF;
 }
 
 #map {
@@ -235,7 +248,7 @@ a:link {
 }
 
 a:visited {
-  color: lightblue;
+  color: #FF89FD;
 }
 
 #back-to-results-button {
@@ -263,8 +276,8 @@ correctly (with flex-grow on the following div) */
 }
 
 #results-box h3 {
-  font-size: 14px;
-  margin: 10px 0;
+  font-size: 15px;
+  margin: 10px 0 5px;
 }
 
 #articles-list {

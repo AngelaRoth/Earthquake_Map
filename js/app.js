@@ -9,7 +9,7 @@ var Quake = function(data) {
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
   this.photos = ko.observableArray([]);
-  this.photosFound = ko.observable(false);
+  this.photosSearched = ko.observable(false);
 };
 
 var Article = function(data) {
@@ -101,7 +101,7 @@ var ViewModel = function() {
           self.locationForm(true);
           self.currentLocation(item);
 
-          if (item.photos().length === 0) {
+          if (!item.photosSearched()) {
             self.getPhotos(item.location());
             console.log('Getting Photos!!!');
           }
@@ -405,6 +405,9 @@ var ViewModel = function() {
     geocoder.geocode({'location': latlng}, function(results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
         if (results[0]) {
+          // Assume the photo search will go smoothly, and need not
+          // be performed again
+          self.currentLocation().photosSearched(true);
           results.forEach(function(res) {
             var request = {
               placeId: res.place_id
@@ -423,21 +426,21 @@ var ViewModel = function() {
                     var newPhoto = new Photo(photoObject);
                     self.currentLocation().photos.push(newPhoto);
                   });
-
-                  if (self.currentLocation().photos.length > 0) {
-                    self.currentLocation().photosFound(true);
-                  }
                 }
               } else {
                 window.alert('Error Experienced while finding nearby place-services. Try Clicking Location Again. (Places Service Status = ' + status + ')');
+                // An error occurred, so a second search might be in order
+                self.currentLocation().photosSearched(false);
               }
             });
           });
         } else {
-          window.alert('No Photos Taken at Nearby Places');
+          window.alert('No Nearby Places Found to Search for Photos');
         }
       } else {
         window.alert('Error Experienced while finding nearby geo-locations. Try Clicking Location Again. (Geocoder Status = ' + status + ')');
+        // An error occurred, so a second search might be in order
+        self.currentLocation().photosSearched(false);
       }
     });
   };

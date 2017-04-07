@@ -8,6 +8,7 @@ var Quake = function(data) {
 
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
+  this.placeIdArray = ko.observableArray([]);
 }
 
 var Article = function(data) {
@@ -232,6 +233,11 @@ var ViewModel = function() {
               newQuake.iconColor = ko.computed(function() {
                 return getIconColor(newQuake.significance());
               });
+
+              newQuake.placeId = ko.computed(function() {
+                return self.getPlaceId(newQuake.location());
+              });
+
               self.quakeArray.push(newQuake);
             });
 
@@ -306,10 +312,10 @@ var ViewModel = function() {
     var searchTerm = getSearchTerm(self.currentLocation().place());
     var prettySearchTerm = searchTerm.replace('+', ' ');
     var fullSearchTerm = 'quake+' + searchTerm;
-/*
-    var searchTerm = 'quake+' + getSearchTerms(self.currentLocation().place());
-    console.log('fullSearchTerm = ' + fullSearchTerm);
-*/
+
+    /*var searchTerm = 'quake+' + getSearchTerms(self.currentLocation().place());
+    console.log('fullSearchTerm = ' + fullSearchTerm);*/
+
     var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     nytURL += '?' + $.param({
       'api-key': "3579d2c108694c7fb536928a79360c54",
@@ -351,6 +357,7 @@ var ViewModel = function() {
       })
       .fail(function(data) {
         console.log('NYT failed to load. Try Again.');
+
         // Following Code won't work, because an object in the array
         // will prevent a NYT search for this location!
 /*
@@ -367,6 +374,10 @@ var ViewModel = function() {
 
     return false;
   };
+
+
+
+
 
 };
 

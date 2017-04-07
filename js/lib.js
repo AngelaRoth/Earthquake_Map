@@ -59,10 +59,7 @@ function makeTimePretty(time) {
   var minutes = t.getUTCMinutes();
 
   var twoDigitMinutes = getTwoDigitMinutes(minutes);
-/*
-  var prettyTime = dayNames[day] + ' ' + monthNames[month] + ' ' + date + ', ' + year + ', at ' + hours + ':' + twoDigitMinutes;
-*/
-var prettyTime = hours + ':' + twoDigitMinutes + ' UTC on ' + dayNames[day] + ', ' + monthNames[month] + ' ' + date + ' ' + year;
+  var prettyTime = hours + ':' + twoDigitMinutes + ' UTC on ' + dayNames[day] + ', ' + monthNames[month] + ' ' + date + ' ' + year;
   return prettyTime;
 }
 

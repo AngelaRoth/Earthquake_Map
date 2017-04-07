@@ -79,9 +79,6 @@ var ViewModel = function() {
     }
   };
 
-/*  self.currentLocArticles = ko.observableArray([]);
-*/
-
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var largeInfowindow = new google.maps.InfoWindow();
@@ -115,6 +112,7 @@ var ViewModel = function() {
             self.loadNYT();
             console.log('NYT loading!!!')
           }
+
           self.populateInfoWindow(this, largeInfowindow);
           if (this.getAnimation() !== null) {
             this.setAnimation(null);
@@ -124,7 +122,6 @@ var ViewModel = function() {
             });
             this.setAnimation(google.maps.Animation.BOUNCE);
           }
-          /*this.setIcon(clickedIcon);*/
         });
 
         bounds.extend(item.marker.position);
@@ -150,10 +147,6 @@ var ViewModel = function() {
     // toggle slider open
     self.drawerOpen(true);
     self.drawerButtonSrc('img/close.svg');
-/*
-    listDrawer.classList.add('open');
-    drawerButton.classList.add('open');
-*/
   };
 
   // If Only One Marker is being displayed, expand the bounds of the map
@@ -203,16 +196,11 @@ var ViewModel = function() {
     // toggle slider open
     self.drawerOpen(true);
     self.drawerButtonSrc('img/close.svg');
-/*
-    listDrawer.classList.add('open');
-    drawerButton.classList.add('open');
-*/
   };
 
   // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function
   // http://stackoverflow.com/questions/9194579/how-to-simulate-a-click-on-a-google-maps-marker
   this.listItemClicked = function(clickedItem) {
-    /*self.currentLocation(clickedItem);*/
     google.maps.event.trigger(this.marker, 'click', {
       latLng: new google.maps.LatLng(0,0)
     });
@@ -313,8 +301,7 @@ var ViewModel = function() {
             if (data.hasOwnProperty('responseText')) {
               var errorMsg = data.responseText;
               console.log('errorMsg = ' + errorMsg);
-              /*var msgStart = 0;
-              var msgEnd = errorMsg.length;*/
+
               // extract the main gist of the error message
               var msgStart = errorMsg.indexOf('Bad Request') + 13;
               var msgEnd = errorMsg.indexOf('.', msgStart) + 1;
@@ -363,11 +350,14 @@ var ViewModel = function() {
     var prettySearchTerm = searchTerm.replace('+', ' ');
     var fullSearchTerm = 'quake+' + searchTerm;
 
+    // Generate the NYT URL.
+    // I originally included the following "fq" parameter to limit
+    // search results, but it proved unnecessary (and too limiting)
+    // 'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",
     var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     nytURL += '?' + $.param({
       'api-key': "3579d2c108694c7fb536928a79360c54",
       'q': fullSearchTerm,
-      /*'fq': "section_name:(\"World\" \"Front Page\" \"International\" \"Week in Review\" \"Opinion\")",*/
       'begin_date': startString,
       'end_date': endString,
       'fl': "headline,snippet,web_url"
@@ -401,20 +391,7 @@ var ViewModel = function() {
 
       })
       .fail(function(data) {
-        console.log('NYT failed to load. Try Again.');
-
-        // Following Code won't work, because an object in the array
-        // will prevent a NYT search for this location!
-/*
-        var sorryHeadline = "New York Times Failed to Load";
-        var articleObject = {
-          headline: sorryHeadline,
-          snippet: "Try Clicking the Location Again.",
-          artURL: 'https://www.nytimes.com/'
-        };
-        var newArticle = new Article(articleObject);
-        self.currentLocation().articles.push(newArticle);
-*/
+        window.alert('New York Times failed to Load. Try Again!');
       });
 
     return false;
@@ -460,7 +437,7 @@ var ViewModel = function() {
             });
           });
         } else {
-          window.alert('No results found');
+          window.alert('No Photos Found');
         }
       } else {
         window.alert('Geocoder failed due to: ' + status);
@@ -468,24 +445,8 @@ var ViewModel = function() {
     });
   };
 
-
-
 };
-
-/*
-var drawerButton = document.getElementById('list-drawer-button');
-var listDrawer = document.getElementById('list-drawer');
-
-drawerButton.addEventListener('click', function(e) {
-  listDrawer.classList.toggle('open');
-  drawerButton.classList.toggle('open');
-  e.stopPropagation();
-});
-*/
 
 var viewModel = new ViewModel();
 
 ko.applyBindings(viewModel);
-/*
-viewModel.loadEarthquakes();
-*/

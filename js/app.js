@@ -86,7 +86,6 @@ var ViewModel = function() {
 
       self.quakeArray().forEach(function(item) {
         var icon = makeMarkerIcon(item.iconColor());
-        /*var icon = makeMarkerIcon('7BB718');*/
         item.marker = new  google.maps.Marker({
           map: map,
           position: item.location(),
@@ -107,7 +106,6 @@ var ViewModel = function() {
             console.log('Getting Photos!!!');
           }
 
-
           if (item.articles().length === 0) {
             self.loadNYT();
             console.log('NYT loading!!!')
@@ -125,7 +123,6 @@ var ViewModel = function() {
         });
 
         bounds.extend(item.marker.position);
-
       });
 
       bounds = self.expandBounds(bounds);
@@ -432,15 +429,15 @@ var ViewModel = function() {
                   }
                 }
               } else {
-                window.alert('PlacesServices failed due to: ' + placeStatus);
+                window.alert('Error Experienced while finding nearby place-services. Try Clicking Location Again. (Places Service Status = ' + status + ')');
               }
             });
           });
         } else {
-          window.alert('No Photos Found');
+          window.alert('No Photos Taken at Nearby Places');
         }
       } else {
-        window.alert('Geocoder failed due to: ' + status);
+        window.alert('Error Experienced while finding nearby geo-locations. Try Clicking Location Again. (Geocoder Status = ' + status + ')');
       }
     });
   };

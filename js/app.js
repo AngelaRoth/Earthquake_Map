@@ -19,7 +19,7 @@ var Article = function(data) {
 }
 
 var Photo = function(data) {
-  this.url = ko.observable(data.url);
+  this.photoURL = ko.observable(data.url);
   this.attribution = ko.observable(data.attribution);
 }
 
@@ -410,7 +410,7 @@ var ViewModel = function() {
                   placeResults.photos.forEach(function(photoItem) {
                     var photoAttr = photoItem.html_attributions[0];
                     console.log('photoAttr = ' + photoAttr);
-                    var photoUrl = photoItem.getUrl({'maxWidth': 100, 'maxHeight': 100});
+                    var photoUrl = photoItem.getUrl({'maxWidth': 250, 'maxHeight': 250});
                     console.log('photoUrl = ' + photoUrl);
                     var photoObject = {
                       url: photoUrl,

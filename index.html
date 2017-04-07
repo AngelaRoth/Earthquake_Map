@@ -85,6 +85,12 @@
         <p class="first-paragraph">At <span data-bind="text: prettyTime"></span>, an Earthquake of magnitude <span class="gold" data-bind="text: magnitude"></span> with a significance of <span class="gold" data-bind="text: significance"></span> hit <span data-bind="text: place"></span><span class="gold">*</span>.</p>
 
         <h3 class="green">Images of the Region:</h3>
+        <ul id="photos-list"  data-bind="foreach: photos">
+          <li>
+            <img data-bind="attr: { src: photoURL }">
+            <span>Source: <span data-bind="html: attribution"></span></span>
+          </li>
+        </ul>
 
         <h3 class="blue">NYT Articles After the Quake:</h3>
         <ul id="articles-list" data-bind="foreach: articles">

@@ -23,8 +23,26 @@ var Photo = function(data) {
   this.attribution = ko.observable(data.attribution);
 
   this.openPhotoWindow = function() {
+    var screenHeight = screen.height;
+    var screenWidth = screen.width;
+
     var thisPhoto = this;
-    window.open(thisPhoto.photoURL(),'photowindow','toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=650px,height=500px');
+    var heightString = '';
+    var widthString = '';
+    if (screenHeight > 500 && screenWidth > 650) {
+      heightString = '500px';
+      widthString = '650px';
+    } else if (screenHeight > screenWidth) {
+      widthString = screenWidth + 'px';
+      heightString = (0.77 * screenWidth) + 'px';
+    } else {
+      heightString = screenHeight + 'px';
+      widthString = (1.3 * screenHeight) + 'px';
+    }
+
+    var specString = 'toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=' + widthString + ',height=' + heightString;
+
+    window.open(this.photoURL(),'photowindow',specString);
     return false;
   };
 };

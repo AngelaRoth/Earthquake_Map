@@ -9,12 +9,18 @@ var Quake = function(data) {
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
   this.photos = ko.observableArray([]);
+  this.photosFound = ko.observable(false);
 }
 
 var Article = function(data) {
   this.headline = ko.observable(data.headline);
   this.snippet = ko.observable(data.snippet);
   this.artURL = ko.observable(data.artURL);
+}
+
+var Photo = function(data) {
+  this.url = ko.observable(data.url);
+  this.attribution = ko.observable(data.attribution);
 }
 
 var ViewModel = function() {
@@ -63,8 +69,8 @@ var ViewModel = function() {
           self.currentLocation(item);
 
           if (item.photos().length === 0) {
-            var photoArray = self.getPhotos(item.location());
-            item.photos(photoArray);
+            self.getPhotos(item.location());
+            console.log('Getting Photos!!!');
           }
 
 
@@ -378,7 +384,61 @@ var ViewModel = function() {
     return false;
   };
 
+  this.getPhotos = function(location) {
+    var geocoder = new google.maps.Geocoder;
+    var service = new google.maps.places.PlacesService(map);
 
+    var latitude = location.lat;
+    var longitude = location.lng;
+    var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+
+    geocoder.geocode({'location': latlng}, function(results, status) {
+      if (status === google.maps.GeocoderStatus.OK) {
+        /*console.log('Geocoder results');
+        console.log(results);*/
+        if (results[0]) {
+          results.forEach(function(res) {
+            console.log('res.place_id = ' + res.place_id);
+            var request = {
+              placeId: res.place_id
+            };
+            service.getDetails(request, function(placeResults, placeStatus) {
+              if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
+                /*console.log('Place Service Results for: ' + res.place_id);
+                console.log(placeResults);*/
+                if (placeResults.hasOwnProperty('photos')) {
+                  placeResults.photos.forEach(function(photoItem) {
+                    var photoAttr = photoItem.html_attributions[0];
+                    console.log('photoAttr = ' + photoAttr);
+                    var photoUrl = photoItem.getUrl({'maxWidth': 100, 'maxHeight': 100});
+                    console.log('photoUrl = ' + photoUrl);
+                    var photoObject = {
+                      url: photoUrl,
+                      attribution: photoItem.html_attributions[0]
+                    }
+
+                    var newPhoto = new Photo(photoObject);
+                    self.currentLocation().photos.push(newPhoto);
+                  });
+
+                  if (self.currentLocation().photos.length > 0) {
+                    self.currentLocation().photosFound(true);
+                  }
+                }
+              } else {
+                console.log('PlacesServices failed');
+                window.alert('PlacesServices failed due to: ' + placeStatus);
+              }
+            });
+          });
+        } else {
+          window.alert('No results found');
+        }
+      } else {
+        window.alert('Geocoder failed due to: ' + status);
+      }
+    });
+  };
 
 
 

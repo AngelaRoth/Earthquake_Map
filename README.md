@@ -10,9 +10,51 @@ Created as part of the Udacity Front-End Nanodegree.
 
 QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.gov/fdsnws/event/1/), the [New York Times API](https://developer.nytimes.com/), and the [Google Maps API](https://developers.google.com/maps/).
 
+## Loading QuakeZone
+
+The site is hosted on [GitHub's gh-pages](https://angelaroth.github.io/Earthquake_Map/). Alternately, QuakeZone can be run by loading index.html into your local browser.
+
 ## Using QuakeZone
 
+### On Mobile (Screens with Width of less than 800px)
 
+The black-backgrounded box which contains all search forms and results can be toggled in and out at any time using the in/out arrow in the header. Toggling the box open or closed does not change the information displayed in the box. If an action is performed which changes the information in the box (i.e. a location name or marker is clicked), the box will automatically toggle open, with the new information displayed.
+
+### The Initial Search for Earthquakes
+
+On load, you will be presented with a screen which asks you to search for Earthquakes. Fill in the form with the time period and range of magnitudes you wish to search and hit the "Get Earthquakes" button.
+
+* Times must be in the format: YYYY-MM-DD
+* Magnitudes can be integer or decimal numbers
+
+A list of all earthquakes which satisfy your search parameters should be displayed, with corresponding map markers at each earthquake location. If something goes wrong with your search, you will be notified and asked to try again. Possible reasons for failure include:
+
+* No quakes returned due to search parameters being too narrow
+* Too many quakes returned due to search parameters being too broad (more likely!)
+* Incorrectly entered search parameters
+
+### The Earthquake List
+
+The returned list of quakes can be further searched by entering a search term into the input field above the list. This will return a new, more specific subset of quakes which match the search term. The map will also update to only show markers for the new subset of quakes.
+
+At any time, the full results list can be seen by clicking the "All Results" button in the red header.
+
+### Information on a Specific Quake
+
+Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its significance (quake significance is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact; larger numbers indicate a more significant event).
+Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago.
+
+Clicking the "Back to Search Results" button at the top of the information box will bring you back to your most recent subset of quakes. As always, clicking the "All Results" button in the header will return the full list of returned quakes.
+
+### Seeing a Bigger Image
+
+Like a particular photo? You can click it to see a larger (fully opaque!) version. Enlarged photos are a maximum of 600px wide and 600px high; for smaller screens, they are as large as the screen allows.
+
+### A Brand New Search
+
+At any time, a new range of days and magnitudes may be searched by clicking the "New Search" button in the red header.
+
+If you click this button by mistake and want to go back to your results list, just click "All Results." As long as you haven't actually performed a new search, clicking "All Results" will display the full results of your most recent search.
 
 ## Version 2.0
 
@@ -21,3 +63,5 @@ Some aspects of this site are adequate for demonstrating knowledge of programmin
 * A lot of the New York Times articles appear to be from 3rd party news agencies, and are "No Longer Available" on the NYT website. The headlines and "snippets" are still available, but clicking on the url link brings sad disappointment. I am going to investigate the [Reuters API](https://newsapi.org/reuters-api): perhaps they better maintain their links.  [Ironically, the "No Longer Available" issue seems to be more of a problem for more recent quakes (i.e. in the last 6 months); articles for quakes from 10 years ago seem to be more reliably available. Perhaps this is due to the NYT "transferring" articles from current to archive status, or perhaps they are now relying on 3rd party sources more than they did 10 years ago.]
 
 * I thought that Reverse Geocoding on a lat-long would give me place IDs close to that lat-long; and that the Places API would then return pictures in the vicinity of that Place ID.  I knew that the pictures would not be RIGHT AT that lat-long, but I thought they'd be close. However, locations on the Chilean coast, for example, return the same photos even though they are a good distance apart. I might have to rethink which photos I select. [My goal with the photos is to give users a "feel" for the region which was hit, beyond "in-the-moment disaster scenes."]
+
+* Consider adding a few more "fail-safe" buttons, such as one which will allow users to see the details of their "previously viewed" location.

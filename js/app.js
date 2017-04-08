@@ -1,3 +1,5 @@
+// A Quake Object is created from data returned by
+// the US Geological Survey API (in the loadEarthquakes function).
 var Quake = function(data) {
   this.place = ko.observable(data.place);
   this.location = ko.observable(data.location);
@@ -11,12 +13,16 @@ var Quake = function(data) {
   this.photos = ko.observableArray([]);
 };
 
+// An Article Object is created from data returned by the New York Times API
+// (In the loadNYT function)
 var Article = function(data) {
   this.headline = ko.observable(data.headline);
   this.snippet = ko.observable(data.snippet);
   this.artURL = ko.observable(data.artURL);
 };
 
+// A Photo Object is created from data returned by the Google Places Library
+// (In the getPhotos function)
 var Photo = function(data) {
   this.photoURL = ko.observable(data.url);
   this.attribution = ko.observable(data.attribution);
@@ -28,7 +34,7 @@ var Photo = function(data) {
     var heightString = '';
     var widthString = '';
 
-    // For desktops, window is 650x500; for mobile, size depends on screen.
+    // For desktops, window is 650 x 500; for mobile, size depends on screen.
     if (screenHeight > 500 && screenWidth > 650) {
       heightString = '500px';
       widthString = '650px';
@@ -53,21 +59,28 @@ var ViewModel = function() {
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable("");
-  self.startTime = ko.observable("2000-01-01");
-  self.endTime = ko.observable("2017-04-01");
-  self.minMagnitude = ko.observable("7.5");
-  self.maxMagnitude = ko.observable("10");
+  self.startTime = ko.observable("");
+  self.endTime = ko.observable("");
+  self.minMagnitude = ko.observable("");
+  self.maxMagnitude = ko.observable("");
 
+  // These three properties keep track of which "content box"
+  // is displayed in the inner-box of the list-drawer.
   self.newForm = ko.observable(true);
   self.searchForm = ko.observable(false);
   self.locationForm = ko.observable(false);
 
+  // These two properties are used to display a gold-backed warning message
+  // when the user inputs bad earthquake search parameters
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable("");
 
+  // These two properties are used to open and close the list-drawer
   self.drawerButtonSrc = ko.observable('img/close.svg');
   self.drawerOpen = ko.observable(true);
 
+  // When the drawer-button is clicked, change the button image
+  // and toggle the list-drawer between open an shut.
   this.drawerButtonClicked = function() {
     if (self.drawerButtonSrc() === 'img/close.svg') {
       self.drawerOpen(false);
@@ -78,15 +91,16 @@ var ViewModel = function() {
     }
   };
 
+  // When the Google Map is ready, this function makes and displays
+  // map markers for each quake returned by the initial quake search.
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
-      var largeInfowindow = new google.maps.InfoWindow();
+      var quakeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
 
       self.quakeArray().forEach(function(item) {
         var icon = makeMarkerIcon(item.iconColor());
         var formattedTitle = item.place() + '\nMagnitude: ' + item.magnitude();
-
         var infoWindowTitle = '<div>' + item.place() + '</div>' +
                                '<div>Magnitude: <b>' + item.magnitude() + '</b></div>';
 
@@ -106,17 +120,21 @@ var ViewModel = function() {
           self.locationForm(true);
           self.currentLocation(item);
 
+          // We don't search for photos (or NYT articles) until a marker is
+          // acutally clicked. When a marker is clicked, the photos
+          // (or articles) are stored an array. If such an array exists
+          // for the quake in question, then no additional call for photos
+          // (or articles) is needed.
           if (item.photos().length === 0) {
             self.getPhotos(item.location());
             console.log('Getting Photos!!!');
           }
-
           if (item.articles().length === 0) {
             self.loadNYT();
             console.log('NYT loading!!!');
           }
 
-          self.populateInfoWindow(this, largeInfowindow);
+          self.populateInfoWindow(this, quakeInfowindow);
           if (this.getAnimation() !== null) {
             this.setAnimation(null);
           } else {
@@ -135,22 +153,6 @@ var ViewModel = function() {
     }
   }, this);
 
-  this.backToResults = function() {
-    self.newForm(false);
-    self.searchForm(true);
-    self.locationForm(false);
-  };
-
-  this.getNewScreen = function() {
-    self.errorReported(false);
-    self.newForm(true);
-    self.searchForm(false);
-    self.locationForm(false);
-    // toggle slider open
-    self.drawerOpen(true);
-    self.drawerButtonSrc('img/close.svg');
-  };
-
   // If Only One Marker is being displayed, expand the bounds of the map
   // so we see more than blue ocean or empty land. Thanks to StackOverflow!
   // http://stackoverflow.com/questions/3334729/google-maps-v3-fitbounds-zoom-too-close-for-single-marker
@@ -164,23 +166,20 @@ var ViewModel = function() {
     return(bounds);
   };
 
-  this.searchResults = function() {
-    var bounds = new google.maps.LatLngBounds();
-    self.quakeArray().forEach(function(item) {
-      if (item.place().toLowerCase().includes(self.searchString().toLowerCase())) {
-        item.included(true);
-        item.marker.setMap(map);
-        bounds.extend(item.marker.position);
-      } else {
-        item.included(false);
-        item.marker.setMap(null);
-      }
-    });
-
-    bounds = self.expandBounds(bounds);
-    map.fitBounds(bounds);
+  // Display the initial search screen, ready to perform a new search
+  // of the USGS Quake database
+  this.getNewScreen = function() {
+    self.errorReported(false);
+    self.newForm(true);
+    self.searchForm(false);
+    self.locationForm(false);
+    // toggle slider open
+    self.drawerOpen(true);
+    self.drawerButtonSrc('img/close.svg');
   };
 
+  // Display full list of results returned by latest search of the
+  // USGS database (i.e. with no filters applied)
   this.displayAll = function() {
     self.errorReported(false);
     var bounds = new google.maps.LatLngBounds();
@@ -200,7 +199,37 @@ var ViewModel = function() {
     self.drawerButtonSrc('img/close.svg');
   };
 
-  // Thanks to StackOverflow for suggesting how to trigger any Maps API event listener using the event.trigger function
+  // Go from displaying details of a particular quake, to displaying the
+  // most recent list of search results
+  this.backToResults = function() {
+    self.newForm(false);
+    self.searchForm(true);
+    self.locationForm(false);
+  };
+
+  // Display a subset of the results returned by the USGS database, based
+  // on a user-entered search term
+  this.searchResults = function() {
+    var bounds = new google.maps.LatLngBounds();
+    self.quakeArray().forEach(function(item) {
+      if (item.place().toLowerCase().includes(self.searchString().toLowerCase())) {
+        item.included(true);
+        item.marker.setMap(map);
+        bounds.extend(item.marker.position);
+      } else {
+        item.included(false);
+        item.marker.setMap(null);
+      }
+    });
+
+    bounds = self.expandBounds(bounds);
+    map.fitBounds(bounds);
+  };
+
+  // When an item in the list of search results is clicked, trigger the
+  // event listener for its corresponding map marker.
+  // Thanks to StackOverflow for suggesting how to trigger any Maps API event
+  // listener using the event.trigger function.
   // http://stackoverflow.com/questions/9194579/how-to-simulate-a-click-on-a-google-maps-marker
   this.listItemClicked = function(clickedItem) {
     google.maps.event.trigger(this.marker, 'click', {
@@ -208,22 +237,32 @@ var ViewModel = function() {
     });
   }
 
+  // The powerhouse of this site. This function searches the USGS database
+  // for quakes within the user's inputted parameters, makes a new Quake
+  // Object from each returned set of quake results, and pushes these new
+  // Quake Objects into an array.
   this.loadEarthquakes = function() {
+    // When a new search is performed:
+    // 1. The gold-backed error message box disappears
     self.errorReported(false);
 
-    // get rid of markers from old quakeArray
+    // 2. Markers from previous search are jettisoned
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
     });
-    // empty old quakeArray
+
+    // 3. Quake array is emptied of quakes form previous search
     self.quakeArray([]);
     self.quakeArray().length = 0;
 
+    // If no start time is entered, assign first day of 20th century
+    // (start time is the only essential parameter for USGS API)
     if (!self.startTime()) {
       self.startTime("1900-01-01");
       console.log('Start Time assigned value of 1900-01-01');
     }
 
+    // Assemble the URL for the USGS API request
     var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime='
                         + self.startTime();
     if (self.endTime()) {
@@ -237,6 +276,8 @@ var ViewModel = function() {
     }
     earthquakeURL += '&orderby=magnitude';
 
+    // If results take more than 1.5 seconds to load, show a
+    // "waiting" message in the "error message" box
     var waitingMessage = setTimeout(function() {
       self.errorReported(true);
       self.errorText('Waiting for Results...');
@@ -244,16 +285,23 @@ var ViewModel = function() {
 
     $.getJSON( earthquakeURL )
       .done(function(data) {
+        // When API returns data, cancel the call to the "waiting" message
         clearTimeout(waitingMessage);
         self.errorReported(false);
         // log data to see how it's structured.
         console.log(data);
 
+        // Make sure features property exists before referencing it
         if (data.hasOwnProperty('features')) {
           var features = data.features;
+          // Prevent Google Maps from having to display an unwieldy
+          // number of markers;
           if (features.length >= 400) {
             self.errorReported(true);
             self.errorText('More than 400 results returned. Try Narrowing Your Search.');
+
+          // if at least one quake is found, make new Quake Objects for
+          // each found quake and add them to quakeArray
           } else if (features.length > 0) {
             self.errorReported(false);
             features.forEach(function(e) {
@@ -271,6 +319,10 @@ var ViewModel = function() {
               };
 
               var newQuake = new Quake(quakeObject);
+
+              // These two computed observables will change if the
+              // properties of the associated Quake Object change.
+              // For now, this change is theoretical.
               newQuake.prettyTime = ko.computed(function() {
                 return makeTimePretty(newQuake.time());
               });
@@ -281,19 +333,31 @@ var ViewModel = function() {
               self.quakeArray.push(newQuake);
             });
 
+            // Display list of search results in inner-box of list-drawer
             self.newForm(false);
             self.searchForm(true);
             self.locationForm(false);
+
+            // Make map marker for each result of search
             self.makeMarkers();
             self.currentLocation = ko.observable(self.quakeArray()[0]);
 
+          // If no quakes exist within search parameters, display a
+          // message to that effect
           } else {
             self.errorReported(true);
             self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
           }
+
+          // tell self that quakes are loaded (before trying to make markers!)
           self.quakesLoaded(true);
         }
       })
+
+      // If request to USGS API fails, display the reason for the failure
+      // in the gold-backed "error message" box.
+      // The two most likely reasons for failure are misformatted input
+      // parameters, and too many returned results.
       .fail(function(data) {
         clearTimeout(waitingMessage);
         self.errorReported(true);
@@ -307,6 +371,7 @@ var ViewModel = function() {
               // extract the main gist of the error message
               var msgStart = errorMsg.indexOf('Bad Request') + 13;
               var msgEnd = errorMsg.indexOf('.', msgStart) + 1;
+
               // check if -1 returned (i.e. search string not found) for either
               // msgStart or msgEnd (Note: we already added 13 and 1)
               if (msgStart === 12) {
@@ -330,12 +395,17 @@ var ViewModel = function() {
     return false;
   };
 
+  // Load New York Times articles relevant to a quake, create Article
+  // Objects from the first ten returned articles, and store these objects
+  // in the articles array of that quake.
   this.loadNYT = function() {
+    // We want articles from the two weeks after the quake.
     var quakeTime = self.currentLocation().time();
     // 86400000 = milliseconds in 1 day
     var addTime = 86400000 * 14;
     var withAddedTime = quakeTime + addTime;
 
+    // The NYT requires date parameters to be formatted YYYYMMDD
     var searchStart = new Date(quakeTime);
     var startYear = searchStart.getUTCFullYear();
     var startMonth = searchStart.getUTCMonth();
@@ -348,6 +418,8 @@ var ViewModel = function() {
     var endDate = searchEnd.getUTCDate();
     var endString = endYear + getStringMonth(endMonth) + getStringDate(endDate);
 
+    // Extract some relevant serch terms from the location of the quake;
+    // Also search on the word "quake"
     var searchTerm = getSearchTerm(self.currentLocation().place());
     var prettySearchTerm = searchTerm.replace('+', ' ');
     var fullSearchTerm = 'quake+' + searchTerm;
@@ -370,6 +442,8 @@ var ViewModel = function() {
         console.log(data);
         var articles = data.response.docs;
 
+        // If articles are found, make Article Objects and add to array
+        // Note: results are returned in groups of ten
         if (articles.length > 0) {
           articles.forEach(function(art) {
             var articleObject = {
@@ -380,6 +454,10 @@ var ViewModel = function() {
             var newArticle = new Article(articleObject);
             self.currentLocation().articles.push(newArticle);
           });
+
+        // If no articles are found, create a "sorry" headline which
+        // links to the NYT home page.  This fake article will prevent
+        // future NYT searches for an already searched earthquake.
         } else {
           var sorryHeadline = "No NYT Articles Found for a quake in " + prettySearchTerm + " (Click for the NYT Home Page)";
           var articleObject = {
@@ -390,8 +468,10 @@ var ViewModel = function() {
           var newArticle = new Article(articleObject);
           self.currentLocation().articles.push(newArticle);
         }
-
       })
+
+      // If the NYT fails to load, alert user and encourage them
+      // to try again
       .fail(function(data) {
         window.alert('New York Times failed to Load. Try Again!');
       });
@@ -407,10 +487,10 @@ var ViewModel = function() {
     var longitude = location.lng;
     var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
 
-    geocoder.geocode({'location': latlng}, function(results, status) {
-      if (status === google.maps.GeocoderStatus.OK) {
-        if (results[0]) {
-          results.forEach(function(res) {
+    geocoder.geocode({'location': latlng}, function(geoResults, geoStatus) {
+      if (geoStatus === google.maps.GeocoderStatus.OK) {
+        if (geoResults[0]) {
+          geoResults.forEach(function(res) {
             var request = {
               placeId: res.place_id
             };
@@ -429,6 +509,14 @@ var ViewModel = function() {
                     self.currentLocation().photos.push(newPhoto);
                   });
                 }
+
+              // Because remote quakes might not have associated place IDs
+              // or photos, alert windows for "failure to load" these
+              // things can pop up quite often. On the other hand, sometimes
+              // the Google API temporarily craps out on returning IDs and
+              // photos, so it may be useful for user to try again.
+              // Mostly, I found that alert windows for these failures
+              // diminished the user experience, and deleted them.
               } else {
                 console.log('PlacesService failed due to ' + placeStatus);
               }
@@ -438,7 +526,7 @@ var ViewModel = function() {
           console.log('No Place IDs Found');
         }
       } else {
-        console.log('GeoCoder failed due to ' + status);
+        console.log('GeoCoder failed due to ' + geoStatus);
       }
     });
   };

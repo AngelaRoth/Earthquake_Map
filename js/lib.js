@@ -1,13 +1,21 @@
+// Helper functions which take raw data and convert it to a better format.
+
+// Takes the result of Date Object's getMonth() and
+// returns the two-digit month code
 function getStringMonth(m) {
   var months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
   return months[m];
 }
 
+// Takes the result of Date Object's getDate() and
+// returns the two-digit date code
 function getStringDate(d) {
   var dates = ['', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
   return dates[d];
 }
 
+// Takes the result of Date Object's getMinutes() and
+// returns the two-digit minute code
 function getTwoDigitMinutes(minute) {
   switch (minute) {
     case 0:
@@ -45,6 +53,8 @@ function getTwoDigitMinutes(minute) {
   }
 }
 
+// Takes a quake's "millisecond" time information and
+// returns human-readable date/time information
 function makeTimePretty(time) {
   var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -63,6 +73,7 @@ function makeTimePretty(time) {
   return prettyTime;
 }
 
+// Determines marker icon color bases on a quake's significance
 function getIconColor(sig) {
   if (sig >= 1800) {
     return ('ff0000');
@@ -79,10 +90,8 @@ function getIconColor(sig) {
   }
 }
 
-
-// This is an attempt at getting search terms which might appear
-// in the newspaper. The earthquake site place names are too random to
-// get a really good search term.
+// Takes the (somewhat random) place name of the quake and attempts to
+// return useful terms for a newspaper search.
 // 1. If word "of" appears, extract string after it
 // 2. If comma appears, extract string after it
 // 3. If word "the" appears, extract string after it

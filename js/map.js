@@ -1,10 +1,12 @@
 var map;
 
-// Create a new blank array for all the listing markers.
+// Array which will hold the quake location markers.
 var markers = [];
 
+// Initialize the map. When it is good-to-go, set the ViewModel's googleReady
+// property to true, thereby letting the makeMarkers function know
+// that it can do it's stuff
 ViewModel.prototype.initMap = function() {
-  // Constructor creates a new map - only center and zoom are required.
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 43.5425, lng: -80.24466},
     zoom: 15,
@@ -18,6 +20,8 @@ ViewModel.prototype.initMap = function() {
   this.googleReady(true);
 };
 
+// Attach the infowindow to the current marker and fill it with
+// that marker's information
 ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
@@ -31,9 +35,9 @@ ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {
   }
 };
 
-// This function takes in a COLOR, and then creates a new marker
-// icon of that color. The icon will be 21 px wide by 34 high, have an origin
-// of 0, 0 and be anchored at 10, 34).
+// Take in a COLOR and return a new marker icon of that color.
+// The icon will be 21 px wide by 34 high, have an origin of 0, 0
+// and be anchored at 10, 34).
 function makeMarkerIcon(markerColor) {
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +

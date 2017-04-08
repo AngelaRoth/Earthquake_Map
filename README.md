@@ -1,6 +1,20 @@
-# Earthquake_Map
+# QuakeZone
 
-### Version 2.0
+QuakeZone allows users to search for Earthquakes between a range of Dates and Magnitudes, then displays these quakes both on a Map and in a list. The list can be narrowed down by searching for specific terms in the earthquake place names.
+
+Clicking either a quake's marker on the map or its name in the list will display additional information about the quake. At a minimum, this will include the time of the quake, its magnitude, and its significance (quake significance is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact; larger numbers indicate a more significant event). Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed.
+
+Created as part of the Udacity Front-End Nanodegree.
+
+## 3rd Party APIs
+
+QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.gov/fdsnws/event/1/), the [New York Times API](https://developer.nytimes.com/), and the [Google Maps API](https://developers.google.com/maps/).
+
+## Using QuakeZone
+
+
+
+## Version 2.0
 
 Some aspects of this site are adequate for demonstrating knowledge of programming concepts, but could be improved in the next version:
 

@@ -5,7 +5,6 @@
   <title>Earthquake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
-
   <!-- Make links open in New Windows -->
   <base target="_blank">
 </head>
@@ -16,14 +15,21 @@
       <button data-bind="click: displayAll" class="header-button">All Results</button>
       <button data-bind="click: getNewScreen" class="header-button">New Search</button>
     </div>
-
   </header>
 
-
+  <!-- The list-drawer is the black-backgrounded region
+  which contains all the information. On screens of width
+  less than 600px, it slides in and out when user clicks
+  the list-drawer-button (below).
+  The inner-box will display one of three content boxes,
+  depending on what information is currently to be
+  displayed. The things which look like comments which
+  surround each content box are actually knockout
+  conditionals which help determine which content box to
+  display -->
   <div id="list-drawer" data-bind="css: { open: drawerOpen() }">
     <div class="inner-box">
-
-<!-- ko if: newForm() -->
+    <!-- ko if: newForm() -->
       <div id="newForm-box">
         <p class="first-paragraph">Welcome to QuakeZone. Seach for Earthquakes between a range of Dates and Magnitudes.</p>
 
@@ -60,10 +66,9 @@
         <p>Beware that the search craps out if more than 20,000 Quakes are found (yes, there are a lot of Quakes out there, especially at the lower magnitudes!).</p>
         <p>A Starting Search Date is required; if none is entered a date of 1900-01-01 will be assumed. The other fields may be left blank; no limit will be placed on that end of the search, but again, BEWARE of asking for too many quakes!</p>
       </div>
-<!-- /ko -->
+    <!-- /ko -->
 
-
-<!-- ko if: searchForm() -->
+    <!-- ko if: searchForm() -->
       <div id="searchForm-box">
         <form id="search-form" data-bind="submit: searchResults">
           <input data-bind="value: searchString" id="search-string" type="text" placeholder="Search Results List  (i.e. New Guinea)">
@@ -75,9 +80,9 @@
           <li class="results-list-item" data-bind="text: place, click: $parent.listItemClicked"></li>
         <!-- /ko -->
       </ul>
-<!-- /ko -->
+    <!-- /ko -->
 
-<!-- ko if: locationForm() -->
+    <!-- ko if: locationForm() -->
       <div id="butt-div">
         <button id="back-to-results-button" data-bind="click: backToResults">Back to Search Results</button>
       </div>
@@ -102,14 +107,12 @@
           </li>
         </ul>
       </div>
-<!-- /ko -->
-
+    <!-- /ko -->
     </div>
   </div>
   <img id="list-drawer-button" data-bind="attr: { src: drawerButtonSrc }, click: drawerButtonClicked, css: { open: drawerOpen() }">
 
   <div id="map"></div>
-
 
   <script src="js/knockout-3.4.2.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -118,9 +121,7 @@
   <script async src="js/map.js"></script>
   <script async defer
       src=
-      "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCNgnR6srI-o-L_1msz-0AA03afwiyOrxA&v=3&callback=viewModel.initMap">
+      "https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCNgnR6srI-o-L_1msz-0AA03afwiyOrxA&v=3&callback=viewModel.initMap">
   </script>
-
-
 </body>
 </html>

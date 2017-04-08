@@ -85,7 +85,7 @@
         <p class="first-paragraph">At <span data-bind="text: prettyTime"></span>, an Earthquake of magnitude <span class="red" data-bind="text: magnitude"></span> with a significance of <span class="red" data-bind="text: significance"></span> hit <span data-bind="text: place"></span>. [<a data-bind="attr: { href: url }">More</a>]</p>
 
         <h3 class="green">Images of the Region:</h3>
-        <p class="light-green first-paragraph">These images come from the region surrounding the Epicenter; these are the places that felt it. A lack of images indicates a remote location. <b>Click</b> on images to enlarge them!</p>
+        <p class="light-green first-paragraph">Images from the region surrounding the Epicenter: these are the places that felt the quake. Locations without People might not have images. <b>Click</b> on images to enlarge them.</p>
         <ul id="photos-list"  data-bind="foreach: photos">
           <li>
             <img class="list-image" data-bind="attr: { src: photoURL }, click: openPhotoWindow">

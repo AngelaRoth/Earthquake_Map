@@ -9,7 +9,6 @@ var Quake = function(data) {
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
   this.photos = ko.observableArray([]);
-  this.photosSearched = ko.observable(false);
 };
 
 var Article = function(data) {
@@ -101,7 +100,7 @@ var ViewModel = function() {
           self.locationForm(true);
           self.currentLocation(item);
 
-          if (!item.photosSearched()) {
+          if (item.photos().length === 0) {
             self.getPhotos(item.location());
             console.log('Getting Photos!!!');
           }
@@ -376,10 +375,10 @@ var ViewModel = function() {
             self.currentLocation().articles.push(newArticle);
           });
         } else {
-          var sorryHeadline = "No NYT Articles Found for a quake in " + prettySearchTerm;
+          var sorryHeadline = "No NYT Articles Found for a quake in " + prettySearchTerm + " (Click for the NYT Home Page)";
           var articleObject = {
             headline: sorryHeadline,
-            snippet: "Go to the NYT Home Page to search futher.",
+            snippet: "",
             artURL: 'https://www.nytimes.com/'
           };
           var newArticle = new Article(articleObject);
@@ -405,9 +404,6 @@ var ViewModel = function() {
     geocoder.geocode({'location': latlng}, function(results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
         if (results[0]) {
-          // Assume the photo search will go smoothly, and need not
-          // be performed again
-          self.currentLocation().photosSearched(true);
           results.forEach(function(res) {
             var request = {
               placeId: res.place_id
@@ -428,19 +424,15 @@ var ViewModel = function() {
                   });
                 }
               } else {
-                window.alert('Error Experienced while finding nearby place-services. Try Clicking Location Again. (Places Service Status = ' + status + ')');
-                // An error occurred, so a second search might be in order
-                self.currentLocation().photosSearched(false);
+                console.log('PlacesService failed due to ' + placeStatus);
               }
             });
           });
         } else {
-          window.alert('No Nearby Places Found to Search for Photos');
+          console.log('No Place IDs Found');
         }
       } else {
-        window.alert('Error Experienced while finding nearby geo-locations. Try Clicking Location Again. (Geocoder Status = ' + status + ')');
-        // An error occurred, so a second search might be in order
-        self.currentLocation().photosSearched(false);
+        console.log('GeoCoder failed due to ' + status);
       }
     });
   };

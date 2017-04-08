@@ -21,7 +21,7 @@ ViewModel.prototype.initMap = function() {
 ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent(marker.title);
+    infowindow.setContent(marker.infoTitle);
     infowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
     infowindow.addListener('closeclick', function(){

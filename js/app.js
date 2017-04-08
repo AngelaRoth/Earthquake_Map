@@ -85,10 +85,22 @@ var ViewModel = function() {
 
       self.quakeArray().forEach(function(item) {
         var icon = makeMarkerIcon(item.iconColor());
+        item.formattedTitle = ko.computed(function() {
+          var formed = item.place() + '\nMagnitude: ' + item.magnitude();
+          return formed;
+        });
+
+        item.infoWindowTitle = ko.computed(function() {
+          var formed = '<div>' + item.place() + '</div>' +
+                       '<div>Magnitude: <b>' + item.magnitude() + '</b></div>';
+          return formed;
+        });
+
         item.marker = new  google.maps.Marker({
           map: map,
           position: item.location(),
-          title: item.place(),
+          title: item.formattedTitle(),
+          infoTitle: item.infoWindowTitle(),
           icon: icon
         });
 
@@ -107,7 +119,7 @@ var ViewModel = function() {
 
           if (item.articles().length === 0) {
             self.loadNYT();
-            console.log('NYT loading!!!')
+            console.log('NYT loading!!!');
           }
 
           self.populateInfoWindow(this, largeInfowindow);

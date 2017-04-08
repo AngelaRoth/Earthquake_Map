@@ -479,6 +479,10 @@ var ViewModel = function() {
     return false;
   };
 
+  // Take the location (lat-lng co-ordinates) of a quake and use
+  // Google Maps API Geocoder to find associated Place IDs.
+  // Use these Place IDs to find photos of the region; make Photo Objects
+  // from these photos, and push these objects onto the quake's photo array
   this.getPhotos = function(location) {
     var geocoder = new google.maps.Geocoder;
     var service = new google.maps.places.PlacesService(map);

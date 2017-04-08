@@ -17,16 +17,13 @@
     </div>
   </header>
 
-  <!-- The list-drawer is the black-backgrounded region
-  which contains all the information. On screens of width
-  less than 600px, it slides in and out when user clicks
-  the list-drawer-button (below).
-  The inner-box will display one of three content boxes,
-  depending on what information is currently to be
-  displayed. The things which look like comments which
-  surround each content box are actually knockout
-  conditionals which help determine which content box to
-  display -->
+  <!-- The list-drawer is the black-backgrounded region which contains all
+  the information. On screens of width less than 800px, it slides in and out
+  when user clicks the list-drawer-button (below). The inner-box will
+  display one of three content boxes, depending on what information is
+  currently to be displayed. The things which look like comments which
+  surround each content box are actually knockout conditionals which help
+  determine which content box to display -->
   <div id="list-drawer" data-bind="css: { open: drawerOpen() }">
     <div class="inner-box">
     <!-- ko if: newForm() -->
@@ -40,19 +37,19 @@
         <form id="new-form" data-bind="submit: loadEarthquakes">
           <div class="input-pair">
             <label >Start Time <span class="gold">*</span> </label>
-            <input data-bind="value: startTime" id="start-time" class="input-field" type="text" placeholder="ex. 2000-01-01">
+            <input data-bind="value: startTime" id="start-time" class="input-field" type="text" placeholder="i.e. 2000-01-01">
           </div>
           <div class="input-pair">
             <label >End Time <span class="gold">*</span> </label>
-            <input data-bind="value: endTime" id="end-time" class="input-field" type="text" placeholder="ex. 2016-12-31">
+            <input data-bind="value: endTime" id="end-time" class="input-field" type="text" placeholder="i.e. 2016-12-31">
           </div>
           <div class="input-pair">
             <label >Min Magnitude <span class="gold">*</span> </label>
-            <input data-bind="value: minMagnitude" id="min-magnitude" class="input-field" type="text" placeholder="ex. 7.7">
+            <input data-bind="value: minMagnitude" id="min-magnitude" class="input-field" type="text" placeholder="i.e. 7.7">
           </div>
           <div class="input-pair">
             <label >Max Magnitude <span class="gold">*</span> </label>
-            <input data-bind="value: maxMagnitude" id="max-magnitude" class="input-field" type="text" placeholder="ex. 10">
+            <input data-bind="value: maxMagnitude" id="max-magnitude" class="input-field" type="text" placeholder="i.e. 10">
           </div>
           <div class="astrix-button-pair">
             <p class="last-paragraph"><span class="gold">*</span> See Below</p>
@@ -63,8 +60,9 @@
           <li>Dates must be formatted: <span class="gold">yyyy-mm-dd</span></li>
           <li>Magnitudes must be numerical.</li>
         </ul>
-        <p>Beware that the search craps out if more than 20,000 Quakes are found (yes, there are a lot of Quakes out there, especially at the lower magnitudes!).</p>
+        <p>Beware that the search craps out if more than 20,000 Quakes are found (yes, there are a lot of Quakes out there, especially at the lower magnitudes!), and we won't display more than 400 quakes.</p>
         <p>A Starting Search Date is required; if none is entered a date of 1900-01-01 will be assumed. The other fields may be left blank; no limit will be placed on that end of the search, but again, BEWARE of asking for too many quakes!</p>
+        <p class="blue">Thanks to APIs from the <a href="https://earthquake.usgs.gov/">US Geological Survey</a>, the <a href="https://developer.nytimes.com/">New York Times</a>, and <a href="https://developers.google.com/maps/">Google Maps</a> for supplying data for this site.</p>
       </div>
     <!-- /ko -->
 

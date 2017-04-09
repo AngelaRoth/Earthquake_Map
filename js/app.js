@@ -122,6 +122,10 @@ var ViewModel = function() {
           self.locationForm(true);
           self.currentLocation(item);
 
+          // Open drawer to display click results
+          self.drawerButtonSrc('img/close.svg');
+          self.drawerOpen(true);
+
           // We don't search for photos (or NYT articles) until a marker is
           // acutally clicked. When a marker is clicked, the photos
           // (or articles) are stored an array. If such an array exists

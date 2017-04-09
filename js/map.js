@@ -1,11 +1,8 @@
 var map;
 
-// Array which will hold the quake location markers.
-var markers = [];
-
 // Initialize the map. When it is good-to-go, set the ViewModel's googleReady
-// property to true, thereby letting the makeMarkers function know
-// that it can do it's stuff
+// property to true, thereby letting the viewModel's makeMarkers function
+// know that it can do it's stuff
 ViewModel.prototype.initMap = function() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 43.5425, lng: -80.24466},

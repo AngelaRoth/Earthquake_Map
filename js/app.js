@@ -539,14 +539,12 @@ var ViewModel = function() {
                   });
                 }
 
-              // Because remote quakes might not have associated place IDs
-              // or photos, alert windows for "failure to load" these
-              // things can pop up quite often. On the other hand, sometimes
-              // the Google API temporarily craps out on returning IDs and
-              // photos, so it may be useful for user to try again.
-              // Mostly, I found that alert windows for these failures
-              // diminished the user experience, and deleted them.
+              // Sometimes the Google API temporarily craps out on returning
+              // photos, so it may be useful for the user to try again.
+              // Generally, this alert window will only pop up if something
+              // weird occured.
               } else {
+                window.alert('Place Photos Search Failed. Try Again!');
                 console.log('PlacesService failed due to ' + placeStatus);
               }
             });
@@ -555,6 +553,14 @@ var ViewModel = function() {
           console.log('No Place IDs Found');
         }
       } else {
+
+        // Because remote quakes might not have associated place IDs
+        // or photos, the geocoder can easily fail due to "ZERO_RESULTS."
+        // This means that "failure alert windows" can pop up quite often!
+        // I found that alert windows for these failures diminished the user
+        // experience, and deleted them. Instead, there is a disclaimer
+        // on the site which states that remote regions might not have
+        // associated photos.
         console.log('GeoCoder failed due to ' + geoStatus);
       }
     });

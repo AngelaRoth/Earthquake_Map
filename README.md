@@ -35,21 +35,25 @@ A list of all earthquakes which satisfy your search parameters should be display
 * Too many quakes returned due to search parameters being too broad (more likely!)
 * Incorrectly entered search parameters
 
+#### Fewer Quakes on Record in the More Distant Past
+
+Searches from fifty years ago produce significantly fewer results, especially in the low magnitudes, and especially for locations outside North America. Bear in mind that searches for long ago Quakes will not be as comprehensive as searches of recent years.
+
 #### Sample Searches which Return Managable Results:
 
-The Disaster Area Search:
+**The Disaster Area Search** (returns 16 Quakes):
 
 * Start Date: 1900-01-01 (default if no start entered)
 * End Date: (none entered)
 * Min Magnitude: 8.5
 * Max Magnitude: (none entered)
 
-The "It's My Birthday" Search:
+**The "It's My Birthday" Search** (may Return a few or a couple hundred Quakes, depending how old you are!)
 
-* Your Birthday
-* Your Birthday
-* (none entered)
-* (none entered)
+* Start Date: Your Birthday
+* End Date: The Day Following your Birthday
+* Min Magnitude: (none entered)
+* Max Magnitude: (none entered)
 
 ### The Earthquake List
 
@@ -80,6 +84,6 @@ Some aspects of this site are adequate for demonstrating knowledge of programmin
 
 * A lot of the New York Times articles appear to be from 3rd party news agencies, and are "No Longer Available" on the NYT website. The headlines and "snippets" are still available, but clicking on the url link brings sad disappointment. I am going to investigate the [Reuters API](https://newsapi.org/reuters-api): perhaps they better maintain their links.  [Ironically, the "No Longer Available" issue seems to be more of a problem for more recent quakes (i.e. in the last 6 months); articles for quakes from 10 years ago seem to be more reliably available. Perhaps this is due to the NYT "transferring" articles from current to archive status, or perhaps they are now relying on 3rd party sources more than they did 10 years ago.]
 
-* My goal with the photos is to give users a "feel" for the region which was hit, beyond "in-the-moment disaster scenes." I thought that Reverse Geocoding on a lat-long would give me place IDs close to that lat-long; and that the Places API would then return pictures in the vicinity of that Place ID.  I knew that the pictures would not be RIGHT AT that lat-long, but I thought they'd be close. However, some photos are returned both for Idaho Quakes and for San Francisco Quakes. This appears to be due to the fact that, while most place IDs are close to the searched lat-lng, some can be a broad as "The United States." I will have to re-think which IDs and photos I include.
+* My goal with the photos is to give users a "feel" for the region which was hit, beyond "in-the-moment disaster scenes." I hoped that Reverse Geocoding on a lat-long would give me place IDs close to that lat-long; and that the Places API would then return pictures in the vicinity of that Place ID.  I knew that the pictures would not be RIGHT AT that lat-long, but I thought they'd be close. However, Place IDs seem to be returned for ever-expanding rings of "relevance," beginning with the immediate lat-lng and moving out toward "greater region," "State," and "Country." If only one Place ID is returned, it is probably for the country. If five are returned (i.e. for a Quake in Idaho), the fifth will probably be for "The United States" and the fourth will be for "Idaho," both of which are too big to return "close-to-the-Quake" photos. With this in mind, I have implemented code to disregard the "broader-reaching" Place IDs, but this code is still not perfect. Consider: Drawing on map the region photos are from.
 
 * Consider adding a few more "fail-safe" buttons, such as one which will allow users to see the details of their "previously viewed" location.

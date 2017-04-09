@@ -143,16 +143,16 @@ function getNumGeocodesToSearch(numCodes) {
       return 4;
       break;
     case 7:
-      return 4;
+      return 5;
       break;
     case 8:
-      return 5;
+      return 6;
       break;
     case 9:
-      return 5;
+      return 6;
       break;
     default:
-      return 6;
+      return 7;
   }
 }
 

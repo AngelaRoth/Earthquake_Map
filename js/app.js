@@ -246,19 +246,26 @@ var ViewModel = function() {
   // Quake Objects into an array.
   this.loadEarthquakes = function() {
     // When a new search is performed:
-    // 1. The gold-backed error message box disappears
+    // 1. Tell self that no quakes are ready to have markers made, so that
+    //    ko.computed makeMarkers function doesn't go ahead and make
+    //    markers before we're ready, and inadvertantly re-make markers
+    //    for old quakes!
+    self.quakesLoaded(false);
+
+    // 2. The gold-backed error message box disappears
     self.errorReported(false);
 
-    // 2. Markers from previous search are jettisoned
+    // 3. Markers from previous search are jettisoned
     var markerNumber = 1;
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
-      item.marker = null;
+      /*delete item.marker;*/
+      /*item.marker = null;*/
       console.log(markerNumber + '. Dumping marker for ' + item.place());
       markerNumber++;
     });
 
-    // 3. Quake array is emptied of quakes form previous search
+    // 4. Quake array is emptied of quakes form previous search
     console.log('quakeArray Before = ' + self.quakeArray());
     self.quakeArray([]);
     self.quakeArray().length = 0;

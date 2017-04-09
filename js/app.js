@@ -154,7 +154,7 @@ var ViewModel = function() {
       bounds = self.expandBounds(bounds);
       map.fitBounds(bounds);
     }
-  }, this);
+  });
 
   // If Only One Marker is being displayed, expand the bounds of the map
   // so we see more than blue ocean or empty land. Thanks to StackOverflow!
@@ -253,6 +253,7 @@ var ViewModel = function() {
     var markerNumber = 1;
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
+      item.marker = null;
       console.log(markerNumber + '. Dumping marker for ' + item.place());
       markerNumber++;
     });
@@ -346,6 +347,9 @@ var ViewModel = function() {
             self.searchForm(true);
             self.locationForm(false);
 
+            // tell self that quakes are loaded (before trying to make markers!)
+            self.quakesLoaded(true);
+
             // Make map marker for each result of search
             self.makeMarkers();
             self.currentLocation = ko.observable(self.quakeArray()[0]);
@@ -356,9 +360,6 @@ var ViewModel = function() {
             self.errorReported(true);
             self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
           }
-
-          // tell self that quakes are loaded (before trying to make markers!)
-          self.quakesLoaded(true);
         }
       })
 

@@ -27,11 +27,29 @@ On load, you will be presented with a screen which asks you to search for Earthq
 * Times must be in the format: YYYY-MM-DD
 * Magnitudes can be integer or decimal numbers
 
-A list of all earthquakes which satisfy your search parameters should be displayed, with corresponding map markers at each earthquake location. If something goes wrong with your search, you will be notified and asked to try again. Possible reasons for failure include:
+A list of all earthquakes which satisfy your search parameters should be displayed, with corresponding map markers at each earthquake location. If something goes wrong with your search, you will be notified and asked to try again.
+
+#### Possible reasons for failure include:
 
 * No quakes returned due to search parameters being too narrow
 * Too many quakes returned due to search parameters being too broad (more likely!)
 * Incorrectly entered search parameters
+
+#### Sample Searches which Return Managable Results:
+
+The Disaster Area Search:
+
+* Start Date: 1900-01-01 (default if no start entered)
+* End Date: (none entered)
+* Min Magnitude: 8.5
+* Max Magnitude: (none entered)
+
+The "It's My Birthday" Search:
+
+* Your Birthday
+* Your Birthday
+* (none entered)
+* (none entered)
 
 ### The Earthquake List
 
@@ -52,7 +70,7 @@ Like a particular photo? You can click it to see a larger (fully opaque!) versio
 
 ### A Brand New Search
 
-At any time, a new range of days and magnitudes may be searched by clicking the "New Search" button in the red header.
+At any time, a new range of dates and magnitudes may be searched by clicking the "New Search" button in the red header.
 
 If you click this button by mistake and want to go back to your results list, just click "All Results." As long as you haven't actually performed a new search, clicking "All Results" will display the full results of your most recent search.
 

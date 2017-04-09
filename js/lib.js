@@ -100,30 +100,25 @@ function getSearchTerm(place) {
   var msgStart;
   var sliceStart;
   var ofLoc = place.indexOf(' of ');
-  console.log('index of of = ' + ofLoc);
   if (ofLoc !== -1) {
     sliceStart = ofLoc + 4;
     place = place.slice(sliceStart);
-    console.log('sliced place = ' + place);
   }
   var commaLoc = place.indexOf(', ');
   if (commaLoc !== -1) {
     sliceStart = commaLoc + 2;
     place = place.slice(sliceStart);
-    console.log('sliced place = ' + place);
   }
   var theLoc = place.indexOf(' the ');
   if (theLoc !== -1) {
     sliceStart = ofLoc + 5;
     place = place.slice(sliceStart);
-    console.log('sliced place = ' + place);
   }
 
   var term = place.replace('region', '').replace('northern', '').replace('southern', '').replace('eastern', '').replace('western', '').replace(' the', '').replace(',', '').replace('   ', '+').replace('  ', '+').replace(' ', '+');
   if (term[0] === '+') {
     term = term.slice(1);
   }
-  console.log('term = ' + term);
   return term;
 }
 

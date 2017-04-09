@@ -26,6 +26,9 @@ var Article = function(data) {
 var Photo = function(data) {
   this.photoURL = ko.observable(data.url);
   this.attribution = ko.observable(data.attribution);
+  this.where = ko.observable(data.where);
+  this.lat = ko.observable(data.lat);
+  this.lng = ko.observable(data.lng);
 
   // Open a new window to display larger version of photo
   this.openPhotoWindow = function() {
@@ -59,10 +62,10 @@ var ViewModel = function() {
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable("");
-  self.startTime = ko.observable("");
-  self.endTime = ko.observable("");
-  self.minMagnitude = ko.observable("");
-  self.maxMagnitude = ko.observable("");
+  self.startTime = ko.observable("2015-01-01");
+  self.endTime = ko.observable("2015-01-07");
+  self.minMagnitude = ko.observable("5");
+  self.maxMagnitude = ko.observable("5.1");
 
   // These three properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.
@@ -247,13 +250,18 @@ var ViewModel = function() {
     self.errorReported(false);
 
     // 2. Markers from previous search are jettisoned
+    var markerNumber = 1;
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
+      console.log(markerNumber + '. Dumping marker for ' + item.place());
+      markerNumber++;
     });
 
     // 3. Quake array is emptied of quakes form previous search
+    console.log('quakeArray Before = ' + self.quakeArray());
     self.quakeArray([]);
     self.quakeArray().length = 0;
+    console.log('quakeArray = ' + self.quakeArray());
 
     // If no start time is entered, assign first day of 20th century
     // (start time is the only essential parameter for USGS API)
@@ -484,6 +492,8 @@ var ViewModel = function() {
   // Use these Place IDs to find photos of the region; make Photo Objects
   // from these photos, and push these objects onto the quake's photo array
   this.getPhotos = function(location) {
+    console.log('self.currentLocation().photos =');
+    console.log(self.currentLocation().photos());
     var geocoder = new google.maps.Geocoder;
     var service = new google.maps.places.PlacesService(map);
 
@@ -498,15 +508,20 @@ var ViewModel = function() {
             var request = {
               placeId: res.place_id
             };
+            console.log('placeID = ' + request.placeId);
             service.getDetails(request, function(placeResults, placeStatus) {
               if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
                 if (placeResults.hasOwnProperty('photos')) {
                   placeResults.photos.forEach(function(photoItem) {
                     var photoAttr = photoItem.html_attributions[0];
                     var photoUrl = photoItem.getUrl({'maxWidth': 600, 'maxHeight': 600});
+                    var quakePlace = self.currentLocation().place();
                     var photoObject = {
                       url: photoUrl,
-                      attribution: photoItem.html_attributions[0]
+                      attribution: photoItem.html_attributions[0],
+                      where: quakePlace,
+                      lat: latitude,
+                      lng: longitude
                     }
 
                     var newPhoto = new Photo(photoObject);

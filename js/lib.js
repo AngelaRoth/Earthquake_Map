@@ -122,6 +122,11 @@ function getSearchTerm(place) {
   return term;
 }
 
+// Takes in the number of results from reverse coding on a lat-lng and
+// Returns the number of resultant Place IDs which should be searched
+// for photos.  A semi-successful attempt at limiting photos to those
+// which are somewhat in the region of the quake, while not limiting them
+// so much that few places have photos
 function getNumGeocodesToSearch(numCodes) {
   switch (numCodes) {
     case 1:

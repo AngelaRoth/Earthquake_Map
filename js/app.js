@@ -26,9 +26,6 @@ var Article = function(data) {
 var Photo = function(data) {
   this.photoURL = ko.observable(data.url);
   this.attribution = ko.observable(data.attribution);
-  this.where = ko.observable(data.where);
-  this.lat = ko.observable(data.lat);
-  this.lng = ko.observable(data.lng);
 
   // Open a new window to display larger version of photo
   this.openPhotoWindow = function() {
@@ -94,8 +91,9 @@ var ViewModel = function() {
     }
   };
 
-  // When the Google Map is ready, this function makes and displays
-  // map markers for each quake returned by the initial quake search.
+  // WHEN the Google Map is ready AND a new set of Quakes is ready to be
+  // loaded, this computed function makes and displays map markers for
+  // each quake returned by a new quake search.
   this.makeMarkers = ko.computed(function() {
     if (self.googleReady() && self.quakesLoaded()) {
       var quakeInfowindow = new google.maps.InfoWindow();
@@ -103,6 +101,7 @@ var ViewModel = function() {
 
       self.quakeArray().forEach(function(item) {
         var icon = makeMarkerIcon(item.iconColor());
+        // include magnitude in "hover window"
         var formattedTitle = item.place() + '\nMagnitude: ' + item.magnitude();
         var infoWindowTitle = '<div>' + item.place() + '</div>' +
                                '<div>Magnitude: <b>' + item.magnitude() + '</b></div>';
@@ -354,7 +353,7 @@ var ViewModel = function() {
             self.searchForm(true);
             self.locationForm(false);
 
-            // tell self that quakes are loaded (before trying to make markers!)
+            // Tell self that quakes are loaded (before trying to make markers!)
             self.quakesLoaded(true);
 
             // Make map marker for each result of search
@@ -512,8 +511,8 @@ var ViewModel = function() {
     geocoder.geocode({'location': latlng}, function(geoResults, geoStatus) {
       if (geoStatus === google.maps.GeocoderStatus.OK) {
         if (geoResults[0]) {
+          // Limit resultant photos to those somewhat in the region of quake
           var numResultsToSearch = getNumGeocodesToSearch(geoResults.length);
-          /*var numResultsToSearch = geoResults.length - 1;*/
           for (var i = 0; i < numResultsToSearch; i++) {
             var request = {
               placeId: geoResults[i].place_id
@@ -528,10 +527,7 @@ var ViewModel = function() {
                     var quakePlace = self.currentLocation().place();
                     var photoObject = {
                       url: photoUrl,
-                      attribution: photoItem.html_attributions[0],
-                      where: quakePlace,
-                      lat: latitude,
-                      lng: longitude
+                      attribution: photoItem.html_attributions[0]
                     }
 
                     var newPhoto = new Photo(photoObject);
@@ -551,45 +547,6 @@ var ViewModel = function() {
               }
             });
           }
-/*
-          geoResults.forEach(function(res) {
-            var request = {
-              placeId: res.place_id
-            };
-            console.log('placeID = ' + request.placeId);
-            service.getDetails(request, function(placeResults, placeStatus) {
-              if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
-                if (placeResults.hasOwnProperty('photos')) {
-                  placeResults.photos.forEach(function(photoItem) {
-                    var photoAttr = photoItem.html_attributions[0];
-                    var photoUrl = photoItem.getUrl({'maxWidth': 600, 'maxHeight': 600});
-                    var quakePlace = self.currentLocation().place();
-                    var photoObject = {
-                      url: photoUrl,
-                      attribution: photoItem.html_attributions[0],
-                      where: quakePlace,
-                      lat: latitude,
-                      lng: longitude
-                    }
-
-                    var newPhoto = new Photo(photoObject);
-                    self.currentLocation().photos.push(newPhoto);
-                  });
-                }
-
-              // Because remote quakes might not have associated place IDs
-              // or photos, alert windows for "failure to load" these
-              // things can pop up quite often. On the other hand, sometimes
-              // the Google API temporarily craps out on returning IDs and
-              // photos, so it may be useful for user to try again.
-              // Mostly, I found that alert windows for these failures
-              // diminished the user experience, and deleted them.
-              } else {
-                console.log('PlacesService failed due to ' + placeStatus);
-              }
-            });
-          });
-*/
         } else {
           console.log('No Place IDs Found');
         }

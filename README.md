@@ -41,14 +41,14 @@ Searches from fifty years ago produce significantly fewer results, especially in
 
 #### Sample Searches which Return Managable Results:
 
-**The Disaster Area Search** (returns 16 Quakes):
+The Disaster Area Search (returns 16 Quakes):
 
 * Start Date: 1900-01-01 (default if no start entered)
 * End Date: (none entered)
 * Min Magnitude: 8.5
 * Max Magnitude: (none entered)
 
-**The "It's My Birthday" Search** (may Return a few or a couple hundred Quakes, depending how old you are!)
+The "It's My Birthday" Search (may Return a few or a couple hundred Quakes, depending how old you are!)
 
 * Start Date: Your Birthday
 * End Date: The Day Following your Birthday
@@ -78,7 +78,7 @@ At any time, a new range of dates and magnitudes may be searched by clicking the
 
 If you click this button by mistake and want to go back to your results list, just click "All Results." As long as you haven't actually performed a new search, clicking "All Results" will display the full results of your most recent search.
 
-## Version 2.0
+## Future Version 2.0
 
 Some aspects of this site are adequate for demonstrating knowledge of programming concepts, but could be improved in the next version:
 

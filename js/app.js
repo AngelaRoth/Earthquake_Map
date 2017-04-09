@@ -512,6 +512,46 @@ var ViewModel = function() {
     geocoder.geocode({'location': latlng}, function(geoResults, geoStatus) {
       if (geoStatus === google.maps.GeocoderStatus.OK) {
         if (geoResults[0]) {
+          var numResultsToSearch = getNumGeocodesToSearch(geoResults.length);
+          /*var numResultsToSearch = geoResults.length - 1;*/
+          for (var i = 0; i < numResultsToSearch; i++) {
+            var request = {
+              placeId: geoResults[i].place_id
+            };
+            console.log('placeID = ' + request.placeId);
+            service.getDetails(request, function(placeResults, placeStatus) {
+              if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
+                if (placeResults.hasOwnProperty('photos')) {
+                  placeResults.photos.forEach(function(photoItem) {
+                    var photoAttr = photoItem.html_attributions[0];
+                    var photoUrl = photoItem.getUrl({'maxWidth': 600, 'maxHeight': 600});
+                    var quakePlace = self.currentLocation().place();
+                    var photoObject = {
+                      url: photoUrl,
+                      attribution: photoItem.html_attributions[0],
+                      where: quakePlace,
+                      lat: latitude,
+                      lng: longitude
+                    }
+
+                    var newPhoto = new Photo(photoObject);
+                    self.currentLocation().photos.push(newPhoto);
+                  });
+                }
+
+              // Because remote quakes might not have associated place IDs
+              // or photos, alert windows for "failure to load" these
+              // things can pop up quite often. On the other hand, sometimes
+              // the Google API temporarily craps out on returning IDs and
+              // photos, so it may be useful for user to try again.
+              // Mostly, I found that alert windows for these failures
+              // diminished the user experience, and deleted them.
+              } else {
+                console.log('PlacesService failed due to ' + placeStatus);
+              }
+            });
+          }
+/*
           geoResults.forEach(function(res) {
             var request = {
               placeId: res.place_id
@@ -549,6 +589,7 @@ var ViewModel = function() {
               }
             });
           });
+*/
         } else {
           console.log('No Place IDs Found');
         }

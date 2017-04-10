@@ -241,7 +241,7 @@ var ViewModel = function() {
     google.maps.event.trigger(this.marker, 'click', {
       latLng: new google.maps.LatLng(0,0)
     });
-  }
+  };
 
   // The powerhouse of this site. This function searches the USGS database
   // for quakes within the user's inputted parameters, makes a new Quake
@@ -282,8 +282,7 @@ var ViewModel = function() {
     }
 
     // Assemble the URL for the USGS API request
-    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime='
-                        + self.startTime();
+    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + self.startTime();
     if (self.endTime()) {
       earthquakeURL += '&endtime=' + self.endTime();
     }
@@ -505,7 +504,7 @@ var ViewModel = function() {
   this.getPhotos = function(location) {
     console.log('self.currentLocation().photos =');
     console.log(self.currentLocation().photos());
-    var geocoder = new google.maps.Geocoder;
+    var geocoder = new google.maps.Geocoder();
     var service = new google.maps.places.PlacesService(map);
 
     var latitude = location.lat;
@@ -526,13 +525,11 @@ var ViewModel = function() {
               if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
                 if (placeResults.hasOwnProperty('photos')) {
                   placeResults.photos.forEach(function(photoItem) {
-                    var photoAttr = photoItem.html_attributions[0];
                     var photoUrl = photoItem.getUrl({'maxWidth': 600, 'maxHeight': 600});
-                    var quakePlace = self.currentLocation().place();
                     var photoObject = {
                       url: photoUrl,
                       attribution: photoItem.html_attributions[0]
-                    }
+                    };
 
                     var newPhoto = new Photo(photoObject);
                     self.currentLocation().photos.push(newPhoto);

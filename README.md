@@ -1,8 +1,8 @@
 # QuakeZone
 
-QuakeZone allows users to search for Earthquakes between a range of Dates and Magnitudes, then displays these quakes both on a Map and in a list. The list can be narrowed down by searching for specific terms in the earthquake place names.
+QuakeZone allows users to search for Earthquakes between a range of Dates and Magnitudes. Results are displayed both on a Map and in a List. The resulting list can be further refined by searching for specific terms in the earthquake place names.
 
-Clicking either a quake's marker on the map or its name in the list will display additional information about the quake. At a minimum, this will include the time of the quake, its magnitude, and its significance (quake significance is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact; larger numbers indicate a more significant event). Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed.
+Clicking either a quake's marker on the map or its name in the list displays additional information about the quake. At a minimum, this will include the time of the quake, its magnitude, and its [significance](#quake-significance). Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed.
 
 Created as part of the Udacity Front-End Nanodegree.
 
@@ -16,7 +16,7 @@ The site is hosted on [GitHub's gh-pages](https://angelaroth.github.io/Earthquak
 
 ### Note To Project Evaluator
 
-Quake Zone is designed to search for Quakes on user input, but in keeping with the project requirement that "the app should display locations when the page is loaded," I have assigned initial values to "Start Date" and "Min Magnitude," so that all you have to do on load is click the gold "Get Earthquakes" button. This will display all quakes since January 1, 2007 with a minimum magnitude of 7.5.
+QuakeZone is designed to search for Quakes on user input, but in keeping with the project requirement that "the app should display locations when the page is loaded," I have assigned initial values to "Start Date" and "Min Magnitude," so that all you have to do on load is click the gold "Get Earthquakes" button. This will display all quakes since January 1, 2007 with a minimum magnitude of 7.5.
 
 Note that mid-ocean and even some offshore quakes are unlikely to return **photos**. To see photos, click on quakes on land.
 
@@ -24,7 +24,9 @@ Note that mid-ocean and even some offshore quakes are unlikely to return **photo
 
 ### On Mobile (Screens with Width of less than 800px)
 
-The black-backgrounded box which contains all search forms and results can be toggled in and out at any time using the in/out arrow in the header. Toggling the box open or closed does not change the information displayed in the box. If an action is performed which changes the information in the box (i.e. a location name or marker is clicked), the box will automatically toggle open, with the new information displayed.
+The black-backgrounded box which contains all search forms and results can be toggled in and out at any time using the in/out arrow in the header. Toggling the box open or closed does not change the information displayed therein. If an action is performed which changes the information in the box (i.e. a location name or marker is clicked), the box will automatically toggle open, with the new information displayed.
+
+[On screens of width greater than 800px, the information box remains open at all times.]
 
 ### The Initial Search for Earthquakes
 
@@ -47,14 +49,14 @@ Searches from fifty years ago produce significantly fewer results, especially in
 
 #### Sample Searches which Return Managable Results:
 
-The Disaster Area Search (returns 16 Quakes):
+The _Disaster Area_ Search (returns 16 Quakes):
 
 * Start Date: 1900-01-01 (default if no start entered)
 * End Date: (none entered)
 * Min Magnitude: 8.5
 * Max Magnitude: (none entered)
 
-The "It's My Birthday" Search (may Return a few or a couple hundred Quakes, depending how old you are!)
+The _It's My Birthday_ Search (may Return a couple hundred Quakes or only a few, depending on how old you are!)
 
 * Start Date: Your Birthday
 * End Date: The Day Following your Birthday
@@ -65,7 +67,7 @@ The "It's My Birthday" Search (may Return a few or a couple hundred Quakes, depe
 
 #### Map Markers
 
-Map Markers are coloured according to the **Significance** of the quake. Quake significance is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact. Significance may be close to zero for quakes of very small magnitude, or over 2000 for large quakes in populated areas. Marker colours correspond to the following significances:
+Map Markers are coloured according to the Significance of the quake. <a name="quake-significance">**Quake Significance**</a> is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact. Significance may be close to zero for quakes of very small magnitude, or over 2000 for large quakes in populated areas. Marker colours correspond to the following significances:
 
 * Red: 1800 and Over
 * Dark Orange: 1500-1799
@@ -76,15 +78,17 @@ Map Markers are coloured according to the **Significance** of the quake. Quake s
 
 #### Earthquake List
 
-The returned list of quakes can be further searched by entering a search term into the input field above the list. This will return a new, more specific subset of quakes which match the search term. The map also updates to only show markers for the new subset of quakes.
+The list of Quakes can be further refined by entering a search term into the input field above the list. This will return a new, more specific subset of quakes which match the search term. The map also updates to display only markers which match the search.
 
 At any time, the full results list can be seen by clicking the "All Results" button in the red header.
 
 ### Information on a Specific Quake
 
-Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its significance. Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago.
+Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its significance. Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago. Photos, especially, are rare for Quakes which happened below the ocean floor; they are sourced from the Google Places Library, and not many photos are posted of blank ocean!
 
-Clicking the "Back to Search Results" button at the top of the information box will bring you back to your most recent subset of quakes. As always, clicking the "All Results" button in the header will return the full list of returned quakes.
+* ADDITIONAL NOTE ON PHOTOS: Be aware that photos are only as reliable as the Google users who upload them. Clicking on Iceland quakes, for instance, is liable to get you a photo of footballer Ronaldo hoisting a trophy.
+
+Clicking the "Back to Search Results" button at the top of the information box will bring you back to your most recent subset of quakes. As always, clicking the "All Results" button in the header will return the full list of quakes from your initial search.
 
 ### Seeing a Bigger Image
 
@@ -98,10 +102,10 @@ If you click this button by mistake and want to go back to your results list, ju
 
 ## Future Version 2.0
 
-Some aspects of this site are adequate for demonstrating knowledge of programming concepts, but could be improved in the next version:
+Some aspects of this site are adequate for demonstrating knowledge of programming concepts, but might be rethought for the next version:
 
-* A lot of the New York Times articles appear to be from 3rd party news agencies, and are "No Longer Available" on the NYT website. The headlines and "snippets" are still available, but clicking on the url link brings sad disappointment. I am going to investigate the [Reuters API](https://newsapi.org/reuters-api): perhaps they better maintain their links.  [Ironically, the "No Longer Available" issue seems to be more of a problem for more recent quakes (i.e. in the last 6 months); articles for quakes from 10 years ago seem to be more reliably available. Perhaps this is due to the NYT "transferring" articles from current to archive status, or perhaps they are now relying on 3rd party sources more than they did 10 years ago.]
+* A number of New York Times articles appear to be from 3rd party news agencies, and are "No Longer Available" on the NYT website. The headlines and "snippets" are still available, but clicking on the url link brings sad disappointment. I am going to investigate the [Reuters API](https://newsapi.org/reuters-api): perhaps they better maintain their links.  [Ironically, the "No Longer Available" issue seems to be more of a problem for more recent quakes; articles for quakes from 10 years ago seem to be more reliably available. Perhaps this is due to the NYT "transferring" articles from current to archive status, or perhaps they now rely on 3rd party sources more than they did in the past.]
 
-* My goal with the photos is to give users a "feel" for the region which was hit, beyond "in-the-moment disaster scenes." I hoped that Reverse Geocoding on a lat-long would give me place IDs close to that lat-long; and that the Places API would then return pictures in the vicinity of that Place ID.  I knew that the pictures would not be RIGHT AT that lat-long, but I thought they'd be close. However, Place IDs seem to be returned for ever-expanding rings of "relevance," beginning with the immediate lat-lng and moving out toward "greater region," "State," and "Country." If only one Place ID is returned, it is probably for the country. If five are returned (i.e. for a Quake in Idaho), the fifth will probably be for "The United States" and the fourth will be for "Idaho," both of which are too big to return "close-to-the-Quake" photos. With this in mind, I have implemented code to disregard the "broader-reaching" Place IDs, but this code is still not perfect. Consider: Drawing on map the region photos are from.
+* My goal with the photos is to give users a "feel" for the region which was hit, beyond "in-the-moment disaster scenes." I hoped that Reverse Geocoding on a lat-long would give me place IDs close to that lat-long; and that the Places API would then return pictures in the vicinity of that Place ID.  I knew that the pictures would not be RIGHT AT that lat-long, but I thought they'd be close. However, Place IDs seem to be returned for ever-expanding rings of "relevance," beginning with the immediate lat-lng and moving out toward "greater region," "State," and "Country." If only one Place ID is returned, it is probably for the country. If five are returned (i.e. for a Quake in Idaho), the fifth will probably be for "The United States" and the fourth will be for "Idaho," both of which are too big to return "close-to-the-Quake" photos. With this in mind, I have implemented code to disregard the "broader-reaching" Place IDs, but this code is still not perfect. Consider: Indicating on the map the extent of the region the photos are from.
 
 * Consider adding a few more "fail-safe" buttons, such as one which will allow users to see the details of their "previously viewed" location.

@@ -403,10 +403,10 @@ var ViewModel = function() {
               self.errorText(reportedMsg + ' Try Another Search.');
             }
           } else {
-            self.errorText(data.statusText + ' Earthquake Data Unavailable. Check Input Formatting.');
+            self.errorText(data.statusText + ' Unable to Access Earthquake Data.');
           }
         } else {
-          self.errorText('Earthquake Data Unavailable. Check Input Formatting.');
+          self.errorText('Unable to Access Earthquake Data. Check Input Formatting. Note that Internal Firewalls may prevent access to 3rd party data.');
         }
       });
 

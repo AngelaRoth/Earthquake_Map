@@ -14,6 +14,12 @@ QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.
 
 The site is hosted on [GitHub's gh-pages](https://angelaroth.github.io/Earthquake_Map/). Alternately, QuakeZone can be run by loading index.html into your local browser.
 
+### Note To Project Evaluator
+
+Quake Zone is designed to search for Quakes on user input, but in keeping with the project requirement that "the app should display locations when the page is loaded," I have assigned initial values to "Start Date" and "Min Magnitude," so that all you have to do on load is click the gold "Get Earthquakes" button. This will display all quakes since January 1, 2007 with a minimum magnitude of 7.5.
+
+Note that mid-ocean and even some offshore quakes are unlikely to return **photos**. To see photos, click on quakes on land.
+
 ## Using QuakeZone
 
 ### On Mobile (Screens with Width of less than 800px)
@@ -55,16 +61,28 @@ The "It's My Birthday" Search (may Return a few or a couple hundred Quakes, depe
 * Min Magnitude: (none entered)
 * Max Magnitude: (none entered)
 
-### The Earthquake List
+### The Earthquakes
 
-The returned list of quakes can be further searched by entering a search term into the input field above the list. This will return a new, more specific subset of quakes which match the search term. The map will also update to only show markers for the new subset of quakes.
+#### Map Markers
+
+Map Markers are coloured according to the **Significance** of the quake. Quake significance is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact. Significance may be close to zero for quakes of very small magnitude, or over 2000 for large quakes in populated areas. Marker colours correspond to the following significances:
+
+* Red: 1800 and Over
+* Dark Orange: 1500-1799
+* Orange: 1200-1499
+* Light Orange: 900 - 1199
+* Yellow: 600 - 899
+* Green: Under 600
+
+#### Earthquake List
+
+The returned list of quakes can be further searched by entering a search term into the input field above the list. This will return a new, more specific subset of quakes which match the search term. The map also updates to only show markers for the new subset of quakes.
 
 At any time, the full results list can be seen by clicking the "All Results" button in the red header.
 
 ### Information on a Specific Quake
 
-Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its significance (quake significance is determined by factors such as magnitude, maximum estimated instrumental intensity, felt reports, and estimated impact; larger numbers indicate a more significant event).
-Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago.
+Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its significance. Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago.
 
 Clicking the "Back to Search Results" button at the top of the information box will bring you back to your most recent subset of quakes. As always, clicking the "All Results" button in the header will return the full list of returned quakes.
 

@@ -78,7 +78,7 @@ function getIconColor(sig) {
   if (sig >= 1800) {
     return ('ff0000');
   } else if (sig >= 1500) {
-    return ('ff4500');
+    return ('fe5e23');
   } else if (sig >= 1200) {
     return ('ffa500');
   } else if (sig >= 900) {

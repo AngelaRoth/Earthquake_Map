@@ -39,6 +39,18 @@ body {
   color: #65F7FF;
 }
 
+.gold-back {
+  background-color: gold;
+}
+
+.green-back {
+  background-color: #7bb718;
+}
+
+.blue-back {
+  background-color: #00C9D4;
+}
+
 .first-paragraph {
   margin-top: 0;
 }
@@ -46,6 +58,14 @@ body {
 .last-paragraph {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+/* The box which pops up with an error or explanation message for user */
+.message-box {
+  color: black;
+  margin: 0 0 10px 0;
+  padding: 5px;
+  font-size: 11pt;
 }
 
 a:link {
@@ -199,14 +219,6 @@ h1 {
   font-weight: bold;
 }
 
-#error-box {
-  background-color: gold;
-  color: black;
-  margin: 0 0 10px 0;
-  padding: 5px;
-  font-size: 11pt;
-}
-
 
 /* CSS for Second "Content Box" */
 #searchForm-box {
@@ -310,6 +322,8 @@ correctly (with flex-grow on the following div) */
 .list-image {
   width: 250px;
 }
+
+
 
 
 /* CSS for Fourth (Google Failed) Content Box */

@@ -11,6 +11,8 @@ var Quake = function(data) {
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
   this.photos = ko.observableArray([]);
+  this.articlesFound = ko.observable(false);
+  this.photosFound = ko.observable(false);
 };
 
 // An Article Object is created from data returned by the New York Times API
@@ -108,9 +110,6 @@ var ViewModel = function() {
     console.log('self.quakesLoaded() = ' + self.quakesLoaded());
 
     if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
-
-      console.log('Making Markers');
-
       // If everything is ready to go, display the list of search results
       self.newForm(false);
       self.searchForm(true);
@@ -151,19 +150,26 @@ var ViewModel = function() {
           self.drawerButtonSrc('img/close.svg');
           self.drawerOpen(true);
 
-          // We don't search for photos (or NYT articles) until a marker is
-          // acutally clicked. When a marker is clicked, the photos
-          // (or articles) are stored an array. If such an array exists
-          // for the quake in question, then no additional call for photos
-          // (or articles) is needed.
-          if (item.photos().length === 0) {
-            self.getPhotos(item.location());
-            console.log('Getting Photos!!!');
-          }
+          // We don't search for articles (or photos) until a marker is
+          // acutally clicked. When a marker is clicked, the articles
+          // (or photos) are stored an array. If such an array exists
+          // for the quake in question, then no additional call for
+          // articles (or photos) is needed.
           if (item.articles().length === 0) {
             self.loadNYT();
-            console.log('NYT loading!!!');
           }
+          if (item.photos().length === 0) {
+            self.getPhotos(item.location());
+            // If Geocoder and PlacesServices both work, but photos
+            // simply aren't available, show "no photos found" box
+            // (Difficult to make this if statement get
+            // called at the right time in getPhotos)
+            /*if (item.photos().length === 0) {
+              console.log('photo length zero');
+              self.currentLocation().photosFound(false);
+            }*/
+          }
+
 
           self.populateInfoWindow(this, quakeInfowindow);
           if (this.getAnimation() !== null) {
@@ -288,8 +294,6 @@ var ViewModel = function() {
   // Object from each returned set of quake results, and pushes these new
   // Quake Objects into an array.
   this.loadEarthquakes = function() {
-    console.log('Getting Quakes');
-
     // When a new search is performed:
     // 1. Tell self that no quakes are ready to have markers made, so that
     //    ko.computed makeMarkers function doesn't go ahead and make
@@ -413,12 +417,10 @@ var ViewModel = function() {
       .fail(function(data) {
         clearTimeout(waitingMessage);
         self.errorReported(true);
-        console.log('Request for Earthquakes Failed');
         if (data.hasOwnProperty('statusText')) {
           if (data.statusText === 'Bad Request') {
             if (data.hasOwnProperty('responseText')) {
               var errorMsg = data.responseText;
-              console.log('errorMsg = ' + errorMsg);
 
               // extract the main gist of the error message
               var msgStart = errorMsg.indexOf('Bad Request') + 13;
@@ -433,7 +435,6 @@ var ViewModel = function() {
                 msgEnd = errorMsg.length;
               }
               var reportedMsg = errorMsg.slice(msgStart, msgEnd);
-              console.log('reportedMsg = ' + reportedMsg);
               self.errorText(reportedMsg + ' Try Another Search.');
             }
           } else {
@@ -497,6 +498,7 @@ var ViewModel = function() {
         // If articles are found, make Article Objects and add to array
         // Note: results are returned in groups of ten
         if (articles.length > 0) {
+          self.currentLocation().articlesFound(true);
           articles.forEach(function(art) {
             var articleObject = {
               headline: art.headline.main,
@@ -511,7 +513,8 @@ var ViewModel = function() {
         // links to the NYT home page.  This fake article will prevent
         // future NYT searches for an already searched earthquake.
         } else {
-          var sorryHeadline = "No NYT Articles Found for a quake in " + prettySearchTerm + " (Click for the NYT Home Page)";
+          /*self.currentLocation().articlesFound(false);*/
+          var sorryHeadline = " Go to New York Times Home Page";
           var articleObject = {
             headline: sorryHeadline,
             snippet: "",
@@ -536,8 +539,6 @@ var ViewModel = function() {
   // Use these Place IDs to find photos of the region; make Photo Objects
   // from these photos, and push these objects onto the quake's photo array
   this.getPhotos = function(location) {
-    console.log('self.currentLocation().photos =');
-    console.log(self.currentLocation().photos());
     var geocoder = new google.maps.Geocoder();
     var service = new google.maps.places.PlacesService(map);
 
@@ -554,10 +555,10 @@ var ViewModel = function() {
             var request = {
               placeId: geoResults[i].place_id
             };
-            console.log('placeID = ' + request.placeId);
             service.getDetails(request, function(placeResults, placeStatus) {
               if (placeStatus === google.maps.places.PlacesServiceStatus.OK) {
                 if (placeResults.hasOwnProperty('photos')) {
+                  self.currentLocation().photosFound(true);
                   placeResults.photos.forEach(function(photoItem) {
                     var photoUrl = photoItem.getUrl({'maxWidth': 600, 'maxHeight': 600});
                     var photoObject = {
@@ -570,29 +571,48 @@ var ViewModel = function() {
                   });
                 }
 
-              // Sometimes the Google API temporarily craps out on returning
-              // photos, so it may be useful for the user to try again.
-              // Generally, this alert window will only pop up if something
-              // weird occured.
+              // if PlacesServiceStatus is NOT OK
               } else {
-                window.alert('Place Photos Search Failed. Try Again!');
-                console.log('PlacesService failed due to ' + placeStatus);
+                // Show "no photos found" box
+                /*self.currentLocation().photosFound(false);*/
+                // The Place Photos search only "fails" if something wierd
+                // occurs, so we alert the user and suggest they try again.
+                window.alert('Place Photos Search Failed due to ' + placeStatus + '\n\nTry Again.');
               }
             });
           }
-        } else {
-          console.log('No Place IDs Found');
-        }
-      } else {
 
-        // Because remote quakes might not have associated place IDs
-        // or photos, the geocoder can easily fail due to "ZERO_RESULTS."
-        // This means that "failure alert windows" can pop up quite often!
-        // I found that alert windows for these failures diminished the user
-        // experience, and deleted them. Instead, there is a disclaimer
-        // on the site which states that remote regions might not have
-        // associated photos.
-        console.log('GeoCoder failed due to ' + geoStatus);
+        // A little fail-safe: If for some reason Geocoder status is OK,
+        // but there are no geocoder results
+        } else {
+          // Show "no photos found" box
+          /*self.currentLocation().photosFound(false);*/
+          console.log('No Geocoder Results');
+        }
+
+
+
+/*
+        // If Geocoder and PlacesServices both work, but photos
+        // simply aren't available, show "no photos found" box
+        if (self.currentLocation().photos().length === 0) {
+          console.log('photo length zero');
+          self.currentLocation().photosFound(false);
+        }
+*/
+      // If Geocoder Status is NOT OK
+      } else {
+        // Show "no photos found" box
+        /*self.currentLocation().photosFound(false);*/
+
+        // If the GeoCoder failed due to zero results being returned,
+        // don't bother with an alert window. We've already notified the
+        // user that there are no results, and "zero result" alert windows
+        // can pop up annoyingly often if a user is clicking locations
+        // over water
+        if (geoStatus !== 'ZERO_RESULTS') {
+          window.alert('Geocoder Failed due to ' + geoStatus);
+        }
       }
     });
   };

@@ -33,7 +33,7 @@
         <p class="first-paragraph">Welcome to QuakeZone. Seach for Earthquakes between a range of Dates and Magnitudes.</p>
 
         <!-- ko if: errorReported() -->
-          <div id="error-box" data-bind="text: errorText"></div>
+          <div class="message-box gold-back" data-bind="text: errorText"></div>
         <!-- /ko -->
 
         <form id="new-form" data-bind="submit: loadEarthquakes">
@@ -90,7 +90,12 @@
         <p class="first-paragraph">At <span data-bind="text: prettyTime"></span>, an Earthquake of magnitude <span class="red" data-bind="text: magnitude"></span> with a significance of <span class="red" data-bind="text: significance"></span> hit <span data-bind="text: place"></span>. [<a data-bind="attr: { href: url }">More</a>]</p>
 
         <h3 class="green">Images of the Region:</h3>
-        <p class="light-green first-paragraph">Images from the region surrounding the Epicenter: these are the places that felt the quake. Remote or Offshore regions may not have images. <b>Click</b> on images to enlarge them.</p>
+        <p class="light-green first-paragraph">Images from the region surrounding the Epicenter: these are the places that felt the quake. <b>Click</b> on images to enlarge them.</p>
+
+        <!-- ko if: !photosFound() -->
+          <div class="message-box green-back">No Images Available for this Location.</div>
+        <!-- /ko -->
+
         <ul id="photos-list"  data-bind="foreach: photos">
           <li>
             <img class="list-image" data-bind="attr: { src: photoURL, alt: 'no photo' }, click: openPhotoWindow">
@@ -100,6 +105,11 @@
 
         <h3 class="blue">NYT Articles After the Quake:</h3>
         <p class="light-blue first-paragraph">These articles appeared in the New York Times in the Two Weeks following the Quake. The number and relevancy of the articles show how much this quake resonated on the world stage.</p>
+
+        <!-- ko if: !articlesFound() -->
+          <div class="message-box blue-back">No Articles Found.</div>
+        <!-- /ko -->
+
         <ul id="articles-list" data-bind="foreach: articles">
           <li>
             <a data-bind="text: headline, attr: { href: artURL }"></a>

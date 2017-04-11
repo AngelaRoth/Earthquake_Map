@@ -67,8 +67,8 @@ var ViewModel = function() {
   // These four properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.
   self.mapFailed = ko.observable(false);
-  self.newForm = ko.observable(true);
-  self.searchForm = ko.observable(false);
+  self.newForm = ko.observable(false);
+  self.searchForm = ko.observable(true);
   self.locationForm = ko.observable(false);
 
   // These two properties are used to display a gold-backed warning message

@@ -95,7 +95,13 @@ var ViewModel = function() {
   // loaded, this computed function makes and displays map markers for
   // each quake returned by a new quake search.
   this.makeMarkers = ko.computed(function() {
-    if (self.googleReady() && self.quakesLoaded()) {
+    // I check that the map is ready in two ways. The first makes sure
+    // that the google variable has been successfully defined; the second
+    // makes sure all the map stuff has actually happened (this is probably
+    // overkill, but I was previously having grief with two different
+    // things both trying to accessthe map markers!)
+    // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
+    if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
       var quakeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
 
@@ -248,166 +254,171 @@ var ViewModel = function() {
   // Object from each returned set of quake results, and pushes these new
   // Quake Objects into an array.
   this.loadEarthquakes = function() {
-    // When a new search is performed:
-    // 1. Tell self that no quakes are ready to have markers made, so that
-    //    ko.computed makeMarkers function doesn't go ahead and make
-    //    markers before we're ready, and inadvertantly re-make markers
-    //    for old quakes!
-    self.quakesLoaded(false);
+    // Don't bother checking for quakes if Google Maps failed
+    if (typeof google === 'undefined') {
+      console.log('Not Loading Earthquakes because Google Maps failed to Load.')
+    } else {
+      // When a new search is performed:
+      // 1. Tell self that no quakes are ready to have markers made, so that
+      //    ko.computed makeMarkers function doesn't go ahead and make
+      //    markers before we're ready, and inadvertantly re-make markers
+      //    for old quakes!
+      self.quakesLoaded(false);
 
-    // 2. The gold-backed error message box disappears
-    self.errorReported(false);
+      // 2. The gold-backed error message box disappears
+      self.errorReported(false);
 
-    // 3. Markers from previous search are jettisoned
-    var markerNumber = 1;
-    self.quakeArray().forEach(function(item) {
-      item.marker.setMap(null);
-      /*delete item.marker;*/
-      /*item.marker = null;*/
-      markerNumber++;
-    });
-
-    // 4. Quake array is emptied of quakes from previous search
-    self.quakeArray([]);
-    self.quakeArray().length = 0;
-
-    // If no start time is entered, assign first day of 20th century
-    // (start time is the only essential parameter for USGS API)
-    if (!self.startTime()) {
-      self.startTime("1900-01-01");
-      console.log('Start Time assigned value of 1900-01-01');
-    }
-
-    // Assemble the URL for the USGS API request
-    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + self.startTime();
-    if (self.endTime()) {
-      earthquakeURL += '&endtime=' + self.endTime();
-    }
-    if (self.minMagnitude()) {
-      earthquakeURL += '&minmagnitude=' + self.minMagnitude();
-    }
-    if (self.maxMagnitude()) {
-      earthquakeURL += '&maxmagnitude=' + self.maxMagnitude();
-    }
-    earthquakeURL += '&orderby=magnitude';
-
-    // If results take more than 1.5 seconds to load, show a
-    // "waiting" message in the "error message" box
-    var waitingMessage = setTimeout(function() {
-      self.errorReported(true);
-      self.errorText('Waiting for Results...');
-    }, 1500);
-
-    $.getJSON( earthquakeURL )
-      .done(function(data) {
-        // When API returns data, cancel the call to the "waiting" message
-        clearTimeout(waitingMessage);
-        self.errorReported(false);
-        // log data to see how it's structured.
-        console.log(data);
-
-        // Make sure features property exists before referencing it
-        if (data.hasOwnProperty('features')) {
-          var features = data.features;
-          // Prevent Google Maps from having to display an unwieldy
-          // number of markers;
-          if (features.length >= 400) {
-            self.errorReported(true);
-            self.errorText('More than 400 results returned. Try Narrowing Your Search.');
-
-          // if at least one quake is found, make new Quake Objects for
-          // each found quake and add them to quakeArray
-          } else if (features.length > 0) {
-            self.errorReported(false);
-            features.forEach(function(e) {
-              var quakeObject = {
-                place: e.properties.place,
-                location: {
-                  lat: e.geometry.coordinates[1],
-                  lng: e.geometry.coordinates[0]
-                },
-                time: e.properties.time,
-                magnitude: e.properties.mag,
-                url: e.properties.url,
-                sig: e.properties.sig,
-                intensity: e.properties.cdi
-              };
-
-              var newQuake = new Quake(quakeObject);
-
-              // These two computed observables will change if the
-              // properties of the associated Quake Object change.
-              // For now, this change is theoretical.
-              newQuake.prettyTime = ko.computed(function() {
-                return makeTimePretty(newQuake.time());
-              });
-              newQuake.iconColor = ko.computed(function() {
-                return getIconColor(newQuake.significance());
-              });
-
-              self.quakeArray.push(newQuake);
-            });
-
-            // Display list of search results in inner-box of list-drawer
-            self.newForm(false);
-            self.searchForm(true);
-            self.locationForm(false);
-
-            // Tell self that quakes are loaded (before trying to make markers!)
-            self.quakesLoaded(true);
-
-            // Make map marker for each result of search
-            self.makeMarkers();
-            self.currentLocation = ko.observable(self.quakeArray()[0]);
-
-          // If no quakes exist within search parameters, display a
-          // message to that effect
-          } else {
-            self.errorReported(true);
-            self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
-          }
-        }
-      })
-
-      // If request to USGS API fails, display the reason for the failure
-      // in the gold-backed "error message" box.
-      // The two most likely reasons for failure are misformatted input
-      // parameters, and too many returned results.
-      .fail(function(data) {
-        clearTimeout(waitingMessage);
-        self.errorReported(true);
-        console.log('Request for Earthquakes Failed');
-        if (data.hasOwnProperty('statusText')) {
-          if (data.statusText === 'Bad Request') {
-            if (data.hasOwnProperty('responseText')) {
-              var errorMsg = data.responseText;
-              console.log('errorMsg = ' + errorMsg);
-
-              // extract the main gist of the error message
-              var msgStart = errorMsg.indexOf('Bad Request') + 13;
-              var msgEnd = errorMsg.indexOf('.', msgStart) + 1;
-
-              // check if -1 returned (i.e. search string not found) for either
-              // msgStart or msgEnd (Note: we already added 13 and 1)
-              if (msgStart === 12) {
-                msgStart = 0;
-              }
-              if (msgEnd === 0) {
-                msgEnd = errorMsg.length;
-              }
-              var reportedMsg = errorMsg.slice(msgStart, msgEnd);
-              console.log('reportedMsg = ' + reportedMsg);
-              self.errorText(reportedMsg + ' Try Another Search.');
-            }
-          } else {
-            self.errorText(data.statusText + ' Unable to Access Earthquake Data.');
-          }
-        } else {
-          self.errorText('Unable to Access Earthquake Data. Check Input Formatting. Note that Internal Firewalls may prevent access to 3rd party data.');
-        }
+      // 3. Markers from previous search are jettisoned
+      var markerNumber = 1;
+      self.quakeArray().forEach(function(item) {
+        item.marker.setMap(null);
+        /*delete item.marker;*/
+        /*item.marker = null;*/
+        markerNumber++;
       });
 
-    return false;
+      // 4. Quake array is emptied of quakes from previous search
+      self.quakeArray([]);
+      self.quakeArray().length = 0;
+
+      // If no start time is entered, assign first day of 20th century
+      // (start time is the only essential parameter for USGS API)
+      if (!self.startTime()) {
+        self.startTime("1900-01-01");
+        console.log('Start Time assigned value of 1900-01-01');
+      }
+
+      // Assemble the URL for the USGS API request
+      var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + self.startTime();
+      if (self.endTime()) {
+        earthquakeURL += '&endtime=' + self.endTime();
+      }
+      if (self.minMagnitude()) {
+        earthquakeURL += '&minmagnitude=' + self.minMagnitude();
+      }
+      if (self.maxMagnitude()) {
+        earthquakeURL += '&maxmagnitude=' + self.maxMagnitude();
+      }
+      earthquakeURL += '&orderby=magnitude';
+
+      // If results take more than 1.5 seconds to load, show a
+      // "waiting" message in the "error message" box
+      var waitingMessage = setTimeout(function() {
+        self.errorReported(true);
+        self.errorText('Waiting for Results...');
+      }, 1500);
+
+      $.getJSON( earthquakeURL )
+        .done(function(data) {
+          // When API returns data, cancel the call to the "waiting" message
+          clearTimeout(waitingMessage);
+          self.errorReported(false);
+          // log data to see how it's structured.
+          console.log(data);
+
+          // Make sure features property exists before referencing it
+          if (data.hasOwnProperty('features')) {
+            var features = data.features;
+            // Prevent Google Maps from having to display an unwieldy
+            // number of markers;
+            if (features.length >= 400) {
+              self.errorReported(true);
+              self.errorText('More than 400 results returned. Try Narrowing Your Search.');
+
+            // if at least one quake is found, make new Quake Objects for
+            // each found quake and add them to quakeArray
+            } else if (features.length > 0) {
+              self.errorReported(false);
+              features.forEach(function(e) {
+                var quakeObject = {
+                  place: e.properties.place,
+                  location: {
+                    lat: e.geometry.coordinates[1],
+                    lng: e.geometry.coordinates[0]
+                  },
+                  time: e.properties.time,
+                  magnitude: e.properties.mag,
+                  url: e.properties.url,
+                  sig: e.properties.sig,
+                  intensity: e.properties.cdi
+                };
+
+                var newQuake = new Quake(quakeObject);
+
+                // These two computed observables will change if the
+                // properties of the associated Quake Object change.
+                // For now, this change is theoretical.
+                newQuake.prettyTime = ko.computed(function() {
+                  return makeTimePretty(newQuake.time());
+                });
+                newQuake.iconColor = ko.computed(function() {
+                  return getIconColor(newQuake.significance());
+                });
+
+                self.quakeArray.push(newQuake);
+              });
+
+              // Display list of search results in inner-box of list-drawer
+              self.newForm(false);
+              self.searchForm(true);
+              self.locationForm(false);
+
+              // Tell self that quakes are loaded (before trying to make markers!)
+              self.quakesLoaded(true);
+
+              // Make map marker for each result of search
+              self.makeMarkers();
+              self.currentLocation = ko.observable(self.quakeArray()[0]);
+
+            // If no quakes exist within search parameters, display a
+            // message to that effect
+            } else {
+              self.errorReported(true);
+              self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
+            }
+          }
+        })
+
+        // If request to USGS API fails, display the reason for the failure
+        // in the gold-backed "error message" box.
+        // The two most likely reasons for failure are misformatted input
+        // parameters, and too many returned results.
+        .fail(function(data) {
+          clearTimeout(waitingMessage);
+          self.errorReported(true);
+          console.log('Request for Earthquakes Failed');
+          if (data.hasOwnProperty('statusText')) {
+            if (data.statusText === 'Bad Request') {
+              if (data.hasOwnProperty('responseText')) {
+                var errorMsg = data.responseText;
+                console.log('errorMsg = ' + errorMsg);
+
+                // extract the main gist of the error message
+                var msgStart = errorMsg.indexOf('Bad Request') + 13;
+                var msgEnd = errorMsg.indexOf('.', msgStart) + 1;
+
+                // check if -1 returned (i.e. search string not found) for either
+                // msgStart or msgEnd (Note: we already added 13 and 1)
+                if (msgStart === 12) {
+                  msgStart = 0;
+                }
+                if (msgEnd === 0) {
+                  msgEnd = errorMsg.length;
+                }
+                var reportedMsg = errorMsg.slice(msgStart, msgEnd);
+                console.log('reportedMsg = ' + reportedMsg);
+                self.errorText(reportedMsg + ' Try Another Search.');
+              }
+            } else {
+              self.errorText(data.statusText + ' Unable to Access Earthquake Data.');
+            }
+          } else {
+            self.errorText('Unable to Access Earthquake Data. Check Input Formatting. Note that Internal Firewalls may prevent access to 3rd party data.');
+          }
+        });
+
+      return false;
+    }
   };
 
   // Load New York Times articles relevant to a quake, create Article

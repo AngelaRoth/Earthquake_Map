@@ -17,6 +17,10 @@ ViewModel.prototype.initMap = function() {
   this.googleReady(true);
 };
 
+ViewModel.prototype.googleError = function() {
+  window.alert("Google Maps Failed to Load. Try refreshing the page.\n\nIf the error persists, you can still search for Quakes, but you won't be able to see them on the map.\n\nCheck console for more details.");
+}
+
 // Attach the infowindow to the current marker and fill it with
 // that marker's information
 ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {

@@ -98,13 +98,9 @@ var ViewModel = function() {
   this.makeMarkers = ko.computed(function() {
     // I check that the map is ready in two ways. The first makes sure
     // that the google variable has been successfully defined; the second
-    // makes sure all the map stuff has actually happened (this is probably
-    // overkill, but I was previously having grief with two different
-    // things both trying to accessthe map markers!)
+    // makes sure all the map stuff has actually happened (i.e. the bounds
+    // code has run, as well as the map creation code).
     // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
-
-    console.log('self.googleReady = ' + self.googleReady());
-
     if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
       // If everything is ready to go, display the list of search results
       self.newForm(false);
@@ -362,12 +358,7 @@ var ViewModel = function() {
 
               self.quakeArray.push(newQuake);
             });
-/*
-            // Display list of search results in inner-box of list-drawer
-            self.newForm(false);
-            self.searchForm(true);
-            self.locationForm(false);
-*/
+
             // Tell self that quakes are loaded (before trying to make markers!)
             self.quakesLoaded(true);
 
@@ -575,18 +566,12 @@ var ViewModel = function() {
     });
   };
 
-
-/*
-  // In order to meet the PROJECT GUIDELINES of displaying markers ONLOAD
-  // I check to make sure that Google Maps is working and then automatically
-  // begin loading earthquakes for my default search parameters
-  if (typeof google !== 'undefined') {
-    this.loadEarthquakes();
-  }
-*/
-
   // In order to meet the PROJECT GUIDELINES of displaying markers ONLOAD,
   // automatically begin loading earthquakes for the default search parameters
+  // I considered not loading quakes until I was sure Google Maps had loaded,
+  // but I think that Google Maps WILL usually load, and that it is a good
+  // idea to get the quakes loading as well so that they're more likely
+  // to be available when the makeMarkers function is called
   this.loadEarthquakes();
 
 };

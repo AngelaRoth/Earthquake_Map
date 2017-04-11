@@ -15,7 +15,6 @@ ViewModel.prototype.initMap = function() {
   map.fitBounds(bounds);
 
   this.googleReady(true);
-  this.mapFailed(false);
 };
 
 // Display the "failure" content box, indicating that

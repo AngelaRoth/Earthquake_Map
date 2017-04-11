@@ -325,7 +325,7 @@ var ViewModel = function() {
     }
 
     // Assemble the URL for the USGS API request
-    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnwsOOPS/event/1/query?format=geojson&starttime=' + self.startTime();
+    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + self.startTime();
     if (self.endTime()) {
       earthquakeURL += '&endtime=' + self.endTime();
     }

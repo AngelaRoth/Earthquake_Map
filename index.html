@@ -11,10 +11,12 @@
 <body>
   <header>
     <h1>QuakeZone</h1>
-    <div id="header-buttons">
-      <button data-bind="click: displayAll" class="header-button">All Results</button>
-      <button data-bind="click: getNewScreen" class="header-button">New Search</button>
-    </div>
+    <!-- ko if: !mapFailed() -->
+      <div id="header-buttons">
+        <button data-bind="click: displayAll" class="header-button">All Results</button>
+        <button data-bind="click: getNewScreen" class="header-button">New Search</button>
+      </div>
+    <!-- /ko -->
   </header>
 
   <!-- The list-drawer is the black-backgrounded region which contains all
@@ -106,11 +108,24 @@
         </ul>
       </div>
     <!-- /ko -->
+
+    <!-- ko if: mapFailed() -->
+      <div id="googleFailForm">
+        <p class="first-paragraph">SORRY, it appears that Google Maps has Failed to Load, and QuakeZone is a sorry experience without it.</p>
+        <p> Try refreshing the page.</p>
+        <p> Make sure your internet connection is secure.</p>
+      </div>
+    <!-- /ko -->
+
     </div>
   </div>
-  <img id="list-drawer-button" data-bind="attr: { src: drawerButtonSrc, alt: '<= =>' }, click: drawerButtonClicked, css: { open: drawerOpen() }">
+
+  <!-- ko if: !mapFailed() -->
+    <img id="list-drawer-button" data-bind="attr: { src: drawerButtonSrc, alt: '<= =>' }, click: drawerButtonClicked, css: { open: drawerOpen() }">
+  <!-- /ko -->
 
   <div id="map"></div>
+
 
   <script src="js/knockout-3.4.2.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

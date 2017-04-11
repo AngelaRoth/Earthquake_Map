@@ -64,8 +64,9 @@ var ViewModel = function() {
   self.minMagnitude = ko.observable("7.5");
   self.maxMagnitude = ko.observable("");
 
-  // These three properties keep track of which "content box"
+  // These four properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.
+  self.mapFailed = ko.observable(false);
   self.newForm = ko.observable(true);
   self.searchForm = ko.observable(false);
   self.locationForm = ko.observable(false);

@@ -85,11 +85,11 @@ h1 {
   font-size: 20px;
   font-family: "Comic Sans MS", cursive, sans-serif;
   text-align: center;
-  margin: 5px 0 0 0;
+  margin: 5px 0;
 }
 
 #header-buttons {
-  margin: 5px 40px 7px;
+  margin: 0 40px 7px;
   width: 220px;
   display: -webkit-flex;
   display: flex;
@@ -309,6 +309,14 @@ correctly (with flex-grow on the following div) */
 
 .list-image {
   width: 250px;
+}
+
+
+/* CSS for Fourth (Google Failed) Content Box */
+#googleFailForm {
+  font-weight: bold;
+  color: red;
+  margin: 0 10px 5px;
 }
 
 

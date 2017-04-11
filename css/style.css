@@ -340,11 +340,11 @@ correctly (with flex-grow on the following div) */
   }
 
   h1 {
-    margin: 7px 0 0 0;
+    margin: 7px 0 10px;
   }
 
   #header-buttons {
-    margin: 10px 20px;
+    margin: 0 20px 10px;
     width: 260px;
   }
 

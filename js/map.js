@@ -15,8 +15,11 @@ ViewModel.prototype.initMap = function() {
   map.fitBounds(bounds);
 
   this.googleReady(true);
+  this.mapFailed(false);
 };
 
+// Display the "failure" content box, indicating that
+// Google Maps has failed to load
 ViewModel.prototype.googleError = function() {
   this.newForm(false);
   this.searchForm(false);

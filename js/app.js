@@ -264,15 +264,12 @@ var ViewModel = function() {
       item.marker.setMap(null);
       /*delete item.marker;*/
       /*item.marker = null;*/
-      console.log(markerNumber + '. Dumping marker for ' + item.place());
       markerNumber++;
     });
 
-    // 4. Quake array is emptied of quakes form previous search
-    console.log('quakeArray Before = ' + self.quakeArray());
+    // 4. Quake array is emptied of quakes from previous search
     self.quakeArray([]);
     self.quakeArray().length = 0;
-    console.log('quakeArray = ' + self.quakeArray());
 
     // If no start time is entered, assign first day of 20th century
     // (start time is the only essential parameter for USGS API)
@@ -563,8 +560,14 @@ var ViewModel = function() {
     });
   };
 
+  // In order to meet the PROJECT GUIDELINES of displaying markers ONLOAD
+  // I have "clicked" the "Search Earthquakes" myself, thus displaying my
+  // starter list of quakes
+  this.loadEarthquakes();
 };
 
 var viewModel = new ViewModel();
 
 ko.applyBindings(viewModel);
+
+

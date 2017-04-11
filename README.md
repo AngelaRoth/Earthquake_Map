@@ -6,6 +6,14 @@ Clicking either a quake's marker on the map or its name in the list displays add
 
 Created as part of the Udacity Front-End Nanodegree.
 
+## Note To Project Evaluator
+
+**On Load, QuakeZone currently displays all quakes since January 1, 2007 with a minimum magnitude of 7.5.**
+
+QuakeZone is designed to search for Quakes on user input, but in keeping with the project requirement that "the app should display locations when the page is loaded," I have assigned initial values to "Start Date" and "Min Magnitude." On my **first submission**, I still required the user to click the gold "Get Earthquakes" button in order to load the quakes, but this still does not technically meet the requirements. I have now included a call to `this.loadEarthquakes()` at the end of my ViewModel class. This pulls up, on load, all quakes since January 1, 2007 with a minimum magnitude of 7.5. I think that this format is a little more confusing, since the user doesn't know exactly what they're seeing on load, but since this "automatic viewing of markers" is only there to satisfy the "see markers on load" requirement and will be removed upon completion of the project, I don't want to further alter the site to accomodate it.
+
+Note that mid-ocean and even some offshore quakes are unlikely to return **photos**. To see photos, click on quakes on land.
+
 ## 3rd Party APIs
 
 QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.gov/fdsnws/event/1/), the [New York Times API](https://developer.nytimes.com/), and the [Google Maps API](https://developers.google.com/maps/).
@@ -13,12 +21,6 @@ QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.
 ## Loading QuakeZone
 
 The site is hosted on [GitHub's gh-pages](https://angelaroth.github.io/Earthquake_Map/). Alternately, QuakeZone can be run by loading index.html into your local browser.
-
-### Note To Project Evaluator
-
-QuakeZone is designed to search for Quakes on user input, but in keeping with the project requirement that "the app should display locations when the page is loaded," I have assigned initial values to "Start Date" and "Min Magnitude," so that all you have to do on load is click the gold "Get Earthquakes" button. This will display all quakes since January 1, 2007 with a minimum magnitude of 7.5.
-
-Note that mid-ocean and even some offshore quakes are unlikely to return **photos**. To see photos, click on quakes on land.
 
 ## Using QuakeZone
 

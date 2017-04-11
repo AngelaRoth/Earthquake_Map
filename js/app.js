@@ -69,8 +69,8 @@ var ViewModel = function() {
   // These four properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.
   self.mapFailed = ko.observable(false);
-  self.newForm = ko.observable(false);
-  self.searchForm = ko.observable(true);
+  self.newForm = ko.observable(true);
+  self.searchForm = ko.observable(false);
   self.locationForm = ko.observable(false);
 
   // These two properties are used to display a gold-backed warning message
@@ -325,7 +325,7 @@ var ViewModel = function() {
     }
 
     // Assemble the URL for the USGS API request
-    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' + self.startTime();
+    var earthquakeURL = 'https://earthquake.usgs.gov/fdsnwsOOPS/event/1/query?format=geojson&starttime=' + self.startTime();
     if (self.endTime()) {
       earthquakeURL += '&endtime=' + self.endTime();
     }

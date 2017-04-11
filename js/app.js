@@ -101,11 +101,25 @@ var ViewModel = function() {
     // makes sure all the map stuff has actually happened (i.e. the bounds
     // code has run, as well as the map creation code).
     // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
+
+    var typeOfGoogle = typeof google;
+    console.log('typeOfGoogle = ' + typeOfGoogle);
+    console.log('self.googleReady() = ' + self.googleReady());
+    console.log('self.quakesLoaded() = ' + self.quakesLoaded());
+
     if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
+
+      console.log('Making Markers');
+
       // If everything is ready to go, display the list of search results
       self.newForm(false);
       self.searchForm(true);
       self.locationForm(false);
+
+      // Clear any "error" text which resulted from premature clicking
+      // of "All Results" button
+      self.errorReported(false);
+      self.errorText = ko.observable("");
 
       var quakeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
@@ -198,22 +212,37 @@ var ViewModel = function() {
   // Display full list of results returned by latest search of the
   // USGS database (i.e. with no filters applied)
   this.displayAll = function() {
-    self.errorReported(false);
-    var bounds = new google.maps.LatLngBounds();
-    self.quakeArray().forEach(function(item) {
-      item.included(true);
-      item.marker.setMap(map);
-      bounds.extend(item.marker.position);
-    });
+    // Because the button which calls this function is visible unless
+    // Google Maps fails to load, there is a chance that it might
+    // be clicked after Google Maps has begun to load, but before
+    // it has finished loading. Because the function calls upon the map,
+    // I make sure the map is ready before allowing it to run.
+    // I also make sure the quakes are actually loaded.
+    if((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
+      // Button click now results in action, so clear any error message.
+      self.errorReported(false);
+      self.errorText = ko.observable("");
 
-    bounds = self.expandBounds(bounds);
-    map.fitBounds(bounds);
-    self.newForm(false);
-    self.searchForm(true);
-    self.locationForm(false);
-    // toggle slider open
-    self.drawerOpen(true);
-    self.drawerButtonSrc('img/close.svg');
+      var bounds = new google.maps.LatLngBounds();
+      self.quakeArray().forEach(function(item) {
+        item.included(true);
+        item.marker.setMap(map);
+        bounds.extend(item.marker.position);
+      });
+
+      bounds = self.expandBounds(bounds);
+      map.fitBounds(bounds);
+      self.newForm(false);
+      self.searchForm(true);
+      self.locationForm(false);
+      // toggle slider open
+      self.drawerOpen(true);
+      self.drawerButtonSrc('img/close.svg');
+    } else {
+      // Let user know why button click has not produced any action
+      self.errorReported(true);
+      self.errorText("Waiting for Map and Results to Load.");
+    }
   };
 
   // Go from displaying details of a particular quake, to displaying the
@@ -259,6 +288,8 @@ var ViewModel = function() {
   // Object from each returned set of quake results, and pushes these new
   // Quake Objects into an array.
   this.loadEarthquakes = function() {
+    console.log('Getting Quakes');
+
     // When a new search is performed:
     // 1. Tell self that no quakes are ready to have markers made, so that
     //    ko.computed makeMarkers function doesn't go ahead and make

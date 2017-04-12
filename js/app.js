@@ -62,10 +62,38 @@ var ViewModel = function() {
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable('');
-  self.startTime = ko.observable('2007-01-01');
+  self.startTime = ko.observable('2015-01-01');
   self.endTime = ko.observable('');
   self.minMagnitude = ko.observable('7.5');
   self.maxMagnitude = ko.observable('');
+
+  self.prettyEnd = ko.computed(function() {
+    if (self.endTime()) {
+      return self.endTime();
+    } else {
+      return 'present';
+    }
+  });
+
+  self.prettyMinMag = ko.computed(function() {
+    if (self.minMagnitude()) {
+      if (self.maxMagnitude()) {
+        return 'between ' + self.minMagnitude();
+      } else {
+        return 'of ' + self.minMagnitude();
+      }
+    } else {
+      return '0';
+    }
+  });
+
+  self.prettyMaxMag = ko.computed(function() {
+    if (self.maxMagnitude()) {
+      return 'and ' + self.maxMagnitude();
+    } else {
+      return 'and up';
+    }
+  });
 
   // These four properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.

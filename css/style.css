@@ -245,6 +245,18 @@ h1 {
   flex-grow: 1;
 }
 
+#currently-showing {
+  margin: 5px 0 0 0;
+  padding: 7px 12px;
+  font-size: 14px;
+  color: gold;
+  background-color: MidnightBlue;
+}
+
+#currently-showing p {
+  margin: 0;
+}
+
 ul.results-list {
   margin: 7px 0 5px 0;
   list-style-type: none;

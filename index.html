@@ -75,6 +75,9 @@
           <button id="search-button" type="submit">Go</button>
         </form>
       </div>
+      <div id="currently-showing">
+        <p>Earthquakes between <span data-bind="text: startTime"></span> and <span data-bind="text: prettyEnd"></span>, with magnitudes <span data-bind="text: prettyMinMag"></span> <span data-bind="text: prettyMaxMag"></span><span data-bind="if: searchString()">, searched by <em><span data-bind="text: searchString"></span></em></span>.</p>
+      </div>
       <ul class="results-list" data-bind="foreach: quakeArray">
         <!--ko if: included() -->
           <li class="results-list-item" data-bind="text: place, click: $parent.listItemClicked"></li>

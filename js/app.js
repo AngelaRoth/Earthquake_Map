@@ -18,16 +18,16 @@ var Quake = function(data) {
 // An Article Object is created from data returned by the New York Times API
 // (In the loadNYT function)
 var Article = function(data) {
-  this.headline = ko.observable(data.headline);
-  this.snippet = ko.observable(data.snippet);
-  this.artURL = ko.observable(data.artURL);
+  this.headline = data.headline;
+  this.snippet = data.snippet;
+  this.artURL = data.artURL;
 };
 
 // A Photo Object is created from data returned by the Google Places Library
 // (In the getPhotos function)
 var Photo = function(data) {
-  this.photoURL = ko.observable(data.url);
-  this.attribution = ko.observable(data.attribution);
+  this.photoURL = data.url;
+  this.attribution = data.attribution;
 
   // Open a new window to display larger version of photo
   this.openPhotoWindow = function() {
@@ -49,7 +49,7 @@ var Photo = function(data) {
     }
 
     var specString = 'toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=' + widthString + ',height=' + heightString;
-    window.open(this.photoURL(),'photowindow',specString);
+    window.open(this.photoURL,'photowindow',specString);
     return false;
   };
 };

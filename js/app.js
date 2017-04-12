@@ -9,6 +9,7 @@ var Quake = function(data) {
   this.significance = data.sig;
 
   this.included = ko.observable(true);
+  this.prettySearchTerm = ko.observable('');
   this.articles = ko.observableArray([]);
   this.photos = ko.observableArray([]);
   this.articlesFound = ko.observable(false);
@@ -454,8 +455,10 @@ var ViewModel = function() {
     // Extract some relevant serch terms from the location of the quake;
     // Also search on the word "quake"
     var searchTerm = getSearchTerm(self.currentLocation().place);
-    var prettySearchTerm = searchTerm.replace('+', ' ');
     var fullSearchTerm = 'quake+' + searchTerm;
+    self.currentLocation().prettySearchTerm(searchTerm.replace('+', ' '));
+
+    console.log('pretty search = ' + self.currentLocation().prettySearchTerm());
 
     // Generate the NYT URL.
     // I originally included the following "fq" parameter to limit

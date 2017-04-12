@@ -93,7 +93,7 @@
         <p class="light-green first-paragraph">Images from the region surrounding the Epicenter: these are the places that felt the quake. <b>Click</b> on images to enlarge them.</p>
 
         <!-- ko if: !photosFound() -->
-          <div class="message-box green-back">No Images Available for this Location.</div>
+          <div class="message-box green-back">No Images Available for this region.</div>
         <!-- /ko -->
 
         <ul id="photos-list"  data-bind="foreach: photos">
@@ -107,7 +107,7 @@
         <p class="light-blue first-paragraph">These articles appeared in the New York Times in the Two Weeks following the Quake. The number and relevancy of the articles show how much this quake resonated on the world stage.</p>
 
         <!-- ko if: !articlesFound() -->
-          <div class="message-box blue-back">No Articles Found.</div>
+          <div class="message-box blue-back">No Articles Found for <span data-bind="text: prettySearchTerm"></span>.</div>
         <!-- /ko -->
 
         <ul id="articles-list" data-bind="foreach: articles">

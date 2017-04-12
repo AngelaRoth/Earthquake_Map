@@ -160,14 +160,6 @@ var ViewModel = function() {
           }
           if (item.photos().length === 0) {
             self.getPhotos(item.location());
-            // If Geocoder and PlacesServices both work, but photos
-            // simply aren't available, show "no photos found" box
-            // (Difficult to make this if statement get
-            // called at the right time in getPhotos)
-            /*if (item.photos().length === 0) {
-              console.log('photo length zero');
-              self.currentLocation().photosFound(false);
-            }*/
           }
 
 
@@ -308,8 +300,6 @@ var ViewModel = function() {
     var markerNumber = 1;
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
-      /*delete item.marker;*/
-      /*item.marker = null;*/
       markerNumber++;
     });
 
@@ -513,7 +503,6 @@ var ViewModel = function() {
         // links to the NYT home page.  This fake article will prevent
         // future NYT searches for an already searched earthquake.
         } else {
-          /*self.currentLocation().articlesFound(false);*/
           var sorryHeadline = " Go to New York Times Home Page";
           var articleObject = {
             headline: sorryHeadline,
@@ -573,8 +562,6 @@ var ViewModel = function() {
 
               // if PlacesServiceStatus is NOT OK
               } else {
-                // Show "no photos found" box
-                /*self.currentLocation().photosFound(false);*/
                 // The Place Photos search only "fails" if something wierd
                 // occurs, so we alert the user and suggest they try again.
                 window.alert('Place Photos Search Failed due to ' + placeStatus + '\n\nTry Again.');
@@ -582,29 +569,16 @@ var ViewModel = function() {
             });
           }
 
-        // A little fail-safe: If for some reason Geocoder status is OK,
-        // but there are no geocoder results
+        // A little console.log statement if for some reason Geocoder
+        // status is OK, but there are no geocoder results.
+        // The box which tells users there are no pictures is
+        // already visible
         } else {
-          // Show "no photos found" box
-          /*self.currentLocation().photosFound(false);*/
           console.log('No Geocoder Results');
         }
 
-
-
-/*
-        // If Geocoder and PlacesServices both work, but photos
-        // simply aren't available, show "no photos found" box
-        if (self.currentLocation().photos().length === 0) {
-          console.log('photo length zero');
-          self.currentLocation().photosFound(false);
-        }
-*/
       // If Geocoder Status is NOT OK
       } else {
-        // Show "no photos found" box
-        /*self.currentLocation().photosFound(false);*/
-
         // If the GeoCoder failed due to zero results being returned,
         // don't bother with an alert window. We've already notified the
         // user that there are no results, and "zero result" alert windows

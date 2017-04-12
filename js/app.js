@@ -1,12 +1,12 @@
 // A Quake Object is created from data returned by
 // the US Geological Survey API (in the loadEarthquakes function).
 var Quake = function(data) {
-  this.place = ko.observable(data.place);
-  this.location = ko.observable(data.location);
-  this.time = ko.observable(data.time);
-  this.magnitude = ko.observable(data.magnitude);
-  this.url = ko.observable(data.url);
-  this.significance = ko.observable(data.sig);
+  this.place = data.place;
+  this.location = data.location;
+  this.time = data.time;
+  this.magnitude = data.magnitude;
+  this.url = data.url;
+  this.significance = data.sig;
 
   this.included = ko.observable(true);
   this.articles = ko.observableArray([]);
@@ -124,15 +124,15 @@ var ViewModel = function() {
       var bounds = new google.maps.LatLngBounds();
 
       self.quakeArray().forEach(function(item) {
-        var icon = makeMarkerIcon(item.iconColor());
+        var icon = makeMarkerIcon(item.iconColor);
         // include magnitude in "hover window"
-        var formattedTitle = item.place() + '\nMagnitude: ' + item.magnitude();
-        var infoWindowTitle = '<div>' + item.place() + '</div>' +
-                               '<div>Magnitude: <b>' + item.magnitude() + '</b></div>';
+        var formattedTitle = item.place + '\nMagnitude: ' + item.magnitude;
+        var infoWindowTitle = '<div>' + item.place + '</div>' +
+                               '<div>Magnitude: <b>' + item.magnitude + '</b></div>';
 
         item.marker = new  google.maps.Marker({
           map: map,
-          position: item.location(),
+          position: item.location,
           title: formattedTitle,
           infoTitle: infoWindowTitle,
           icon: icon
@@ -159,7 +159,7 @@ var ViewModel = function() {
             self.loadNYT();
           }
           if (item.photos().length === 0) {
-            self.getPhotos(item.location());
+            self.getPhotos(item.location);
           }
 
 
@@ -256,7 +256,7 @@ var ViewModel = function() {
   this.searchResults = function() {
     var bounds = new google.maps.LatLngBounds();
     self.quakeArray().forEach(function(item) {
-      if (item.place().toLowerCase().includes(self.searchString().toLowerCase())) {
+      if (item.place.toLowerCase().includes(self.searchString().toLowerCase())) {
         item.included(true);
         item.marker.setMap(map);
         bounds.extend(item.marker.position);
@@ -370,17 +370,8 @@ var ViewModel = function() {
               };
 
               var newQuake = new Quake(quakeObject);
-
-              // These two computed observables will change if the
-              // properties of the associated Quake Object change.
-              // For now, this change is theoretical.
-              newQuake.prettyTime = ko.computed(function() {
-                return makeTimePretty(newQuake.time());
-              });
-              newQuake.iconColor = ko.computed(function() {
-                return getIconColor(newQuake.significance());
-              });
-
+              newQuake.prettyTime = makeTimePretty(newQuake.time);
+              newQuake.iconColor = getIconColor(newQuake.significance);
               self.quakeArray.push(newQuake);
             });
 
@@ -443,7 +434,7 @@ var ViewModel = function() {
   // in the articles array of that quake.
   this.loadNYT = function() {
     // We want articles from the two weeks after the quake.
-    var quakeTime = self.currentLocation().time();
+    var quakeTime = self.currentLocation().time;
     // 86400000 = milliseconds in 1 day
     var addTime = 86400000 * 14;
     var withAddedTime = quakeTime + addTime;
@@ -463,7 +454,7 @@ var ViewModel = function() {
 
     // Extract some relevant serch terms from the location of the quake;
     // Also search on the word "quake"
-    var searchTerm = getSearchTerm(self.currentLocation().place());
+    var searchTerm = getSearchTerm(self.currentLocation().place);
     var prettySearchTerm = searchTerm.replace('+', ' ');
     var fullSearchTerm = 'quake+' + searchTerm;
 

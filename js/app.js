@@ -225,7 +225,7 @@ var ViewModel = function() {
       var bounds = new google.maps.LatLngBounds();
       self.quakeArray().forEach(function(item) {
         item.included(true);
-        item.marker.setMap(map);
+        item.marker.setVisible(true);
         bounds.extend(item.marker.position);
       });
 
@@ -259,11 +259,11 @@ var ViewModel = function() {
     self.quakeArray().forEach(function(item) {
       if (item.place.toLowerCase().includes(self.searchString().toLowerCase())) {
         item.included(true);
-        item.marker.setMap(map);
+        item.marker.setVisible(true);
         bounds.extend(item.marker.position);
       } else {
         item.included(false);
-        item.marker.setMap(null);
+        item.marker.setVisible(false);
       }
     });
 
@@ -298,10 +298,8 @@ var ViewModel = function() {
     self.errorReported(false);
 
     // 3. Markers from previous search are jettisoned
-    var markerNumber = 1;
     self.quakeArray().forEach(function(item) {
       item.marker.setMap(null);
-      markerNumber++;
     });
 
     // 4. Quake array is emptied of quakes from previous search

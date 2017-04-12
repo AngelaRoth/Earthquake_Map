@@ -46,7 +46,7 @@ The black-backgrounded box which contains all search forms and results can be to
 
 ### The Initial Search for Earthquakes
 
-**NOTE:** For this assignment, the initial search is performed automatically using pre-set dates and magnitudes. See [Notes to Evaluator](#on-load).
+**NOTE:** For this assignment, the initial search is performed automatically using pre-set dates and magnitudes. See [Note to Project Evaluator](#on-load).
 
 #### Searching for Earthquakes:
 

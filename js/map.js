@@ -24,7 +24,7 @@ ViewModel.prototype.googleError = function() {
   this.searchForm(false);
   this.locationForm(false);
   this.mapFailed(true);
-}
+};
 
 // Attach the infowindow to the current marker and fill it with
 // that marker's information

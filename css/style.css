@@ -20,7 +20,7 @@ body {
 
 .red {
   font-weight: bold;
-  color: #FE4D50;
+  color: #fe4d50;
 }
 
 .green {
@@ -28,15 +28,15 @@ body {
 }
 
 .blue {
-  color: #00C9D4;
+  color: #00c9d4;
 }
 
 .light-green {
-  color: #B5E85D;
+  color: #b5e85d;
 }
 
 .light-blue {
-  color: #65F7FF;
+  color: #65f7ff;
 }
 
 .gold-back {
@@ -48,7 +48,7 @@ body {
 }
 
 .blue-back {
-  background-color: #00C9D4;
+  background-color: #00c9d4;
 }
 
 .first-paragraph {
@@ -73,7 +73,7 @@ a:link {
 }
 
 a:visited {
-  color: #FF89FD;
+  color: #ff89fd;
 }
 
 #map {

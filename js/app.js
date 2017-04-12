@@ -60,11 +60,11 @@ var ViewModel = function() {
   self.quakesLoaded = ko.observable(false);
   self.quakeArray = ko.observableArray([]);
 
-  self.searchString = ko.observable("");
-  self.startTime = ko.observable("2007-01-01");
-  self.endTime = ko.observable("");
-  self.minMagnitude = ko.observable("7.5");
-  self.maxMagnitude = ko.observable("");
+  self.searchString = ko.observable('');
+  self.startTime = ko.observable('2007-01-01');
+  self.endTime = ko.observable('');
+  self.minMagnitude = ko.observable('7.5');
+  self.maxMagnitude = ko.observable('');
 
   // These four properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.
@@ -76,9 +76,10 @@ var ViewModel = function() {
   // These two properties are used to display a gold-backed warning message
   // when the user inputs bad earthquake search parameters
   self.errorReported = ko.observable(false);
-  self.errorText = ko.observable("");
+  self.errorText = ko.observable('');
 
   // These two properties are used to open and close the list-drawer
+  // They have to be observable because various functions change their state
   self.drawerButtonSrc = ko.observable('img/close.svg');
   self.drawerOpen = ko.observable(true);
 
@@ -118,7 +119,7 @@ var ViewModel = function() {
       // Clear any "error" text which resulted from premature clicking
       // of "All Results" button
       self.errorReported(false);
-      self.errorText = ko.observable("");
+      self.errorText('');
 
       var quakeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
@@ -219,7 +220,7 @@ var ViewModel = function() {
     if((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
       // Button click now results in action, so clear any error message.
       self.errorReported(false);
-      self.errorText = ko.observable("");
+      self.errorText('');
 
       var bounds = new google.maps.LatLngBounds();
       self.quakeArray().forEach(function(item) {
@@ -239,7 +240,7 @@ var ViewModel = function() {
     } else {
       // Let user know why button click has not produced any action
       self.errorReported(true);
-      self.errorText("Waiting for Map and Results to Load.");
+      self.errorText('Waiting for Map and Results to Load.');
     }
   };
 
@@ -386,7 +387,7 @@ var ViewModel = function() {
           // message to that effect
           } else {
             self.errorReported(true);
-            self.errorText("No Quakes Found. Check your Dates and Magnitudes.");
+            self.errorText('No Quakes Found. Check your Dates and Magnitudes.');
           }
         }
       })

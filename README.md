@@ -1,12 +1,12 @@
 # QuakeZone
 
-QuakeZone allows users to search for Earthquakes between a range of Dates and Magnitudes. Results are displayed both on a Map and in a List. The resulting list can be further refined by searching for specific terms in the earthquake place names.
+QuakeZone allows users to search for Earthquakes for a range of Dates and Magnitudes. Results are displayed both on a Map and in a List. The resulting list can be further refined by searching for specific terms in the earthquake place names.
 
 Clicking either a quake's marker on the map or its name in the list displays additional information about the quake. At a minimum, this will include the time of the quake, its magnitude, and its [significance](#quake-significance). Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed.
 
 Created as part of the Udacity Front-End Nanodegree.
 
-## Note To Project Evaluator
+## <a name="on-load">Note To Project Evaluator</a>
 
 **On Load, QuakeZone currently displays all quakes since January 1, 2007 with a minimum magnitude of 7.5.**
 
@@ -20,15 +20,17 @@ QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.
 
 ### Error Handling
 
-1. **Google Maps:** If the Google Maps API fails to load, all that is shown aside from the header is a "Sorry" screen which encourages the user to check their internet and try again.
+1. **Google Maps:** If the Google Maps API fails to load, all that is shown aside from the header is a "Sorry" screen which encourages the user to check their internet connection and try again.
 
-2. **Google Maps Geocoder:** If the returned Geocoder status is not `OK`, and the status is not `ZERO_RESULTS`, we alert the user of the failure and the reason for it. If the status is `ZERO_RESULTS`, no special alert is created. The lat-lng co-ordinates of many under-ocean quakes return zero Geocoder results; constantly alerting users of this fact is annoying, and serves no purpose because we already display a little notification that no pictures are available (and the Geocoder call is only there to help find pictures).
+2. **Google Maps Geocoder:** If the returned Geocoder status is not `OK`, and the status is not `ZERO_RESULTS`, we alert the user of the failure and the reason for it. If the status is `ZERO_RESULTS`, no special alert is created. The lat-lng co-ordinates of many under-ocean quakes return zero Geocoder results; constantly alerting users of this fact is annoying, and serves no purpose because we already inform the user if no pictures are available (and the Geocoder call is only there to help find pictures).
 
 3. **Google Maps PlacesService:** If the returned PlacesService status is not `OK` (which happens rarely, and only when some glitch has occurred), we alert the user of the failure and the reason for it, and encourage them to try again.
 
-4. **USGS Earthquake API:** If our request to the USGS API fails, we parse the returned data and try to create a succinct, user-legible reason for the failure. Most likely, the user has entered less-than-ideal search terms, either not formatting them correctly, or entering terms which produce zero or far too many quakes. If this is the case, we notify them of their exact mistake and encourage them to try again. If the returned data can't be parsed for a succinct, user-legible reason, we notify the user of the full status text and inform them at the Earthquake Data is unavailable. If the returned data doesn't even contain a statusText property, we show the user a general message which mentions input formatting and the potential problem of firewalls. All "error" text is displayed in a gold-backed box above the "search for earthquakes" form.
+4. **USGS Earthquake API:** If our request to the USGS API fails, we parse the returned data and try to create a succinct, user-legible reason for the failure. Most likely, the user has entered less-than-ideal search terms, either not formatting them correctly, or entering terms which produce zero or far too many quakes. If this is the case, we notify them of their exact mistake and encourage them to try again. If the returned data can't be parsed for a succinct, user-legible reason, we notify the user of the full status text and inform them that the Earthquake Data is unavailable. If the returned data doesn't even contain a statusText property, we show the user a general message which mentions input formatting and the potential problem of firewalls. All "error" text is displayed in a gold-backed box above the "search for earthquakes" form.
 
 5. **New York Times API:** If our request to the NYT API fails, we alert the user that the New York Times failed to load and encourage them to try again.
+
+6. **No Photos or No Articles Exist:** If the APIs all work OK, but either no photos or no articles exist for a location, the user is informed in a little green-backed (photos) or blue-backed (articles) notification box, displayed in the main flow of the site.
 
 ## Loading QuakeZone
 
@@ -44,7 +46,11 @@ The black-backgrounded box which contains all search forms and results can be to
 
 ### The Initial Search for Earthquakes
 
-On load, you will be presented with a screen which asks you to search for Earthquakes. Fill in the form with the time period and range of magnitudes you wish to search and hit the "Get Earthquakes" button.
+**NOTE:** For this assignment, the initial search is performed automatically using pre-set dates and magnitudes. See [Notes to Evaluator](#on-load).
+
+#### Searching for Earthquakes:
+
+Click "New Search" to be presented with a screen which asks you to search for Earthquakes. Fill in the form with the time period and range of magnitudes you wish to search and hit the "Get Earthquakes" button. [After the course project is completed, the "New Search" screen will be presented on load.]
 
 * Times must be in the format: YYYY-MM-DD
 * Magnitudes can be integer or decimal numbers
@@ -61,7 +67,7 @@ A list of all earthquakes which satisfy your search parameters should be display
 
 Searches from fifty years ago produce significantly fewer results, especially in the low magnitudes, and especially for locations outside North America. Bear in mind that searches for long ago Quakes will not be as comprehensive as searches of recent years.
 
-#### Sample Searches which Return Managable Results:
+#### Sample Searches which Return Manageable Results:
 
 The _Disaster Area_ Search (returns 16 Quakes):
 
@@ -98,7 +104,7 @@ At any time, the full results list can be seen by clicking the "All Results" but
 
 ### Information on a Specific Quake
 
-Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its significance. Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago. Photos, especially, are rare for Quakes which happened below the ocean floor; they are sourced from the Google Places Library, and not many photos are posted of blank ocean!
+Clicking either a map marker or a name in the list of locations will display information on the quake. This includes the time of the quake, its magnitude, and its [significance](#quake-significance). Ideally, New York Times articles from the two weeks following the quake and Photos of the Region will also be displayed. However, articles and photos may not be found for quakes which are too small, or too remote, or which happened too long ago. Photos, especially, are rare for Quakes which happened below the ocean floor; they are sourced from the Google Places Library, and not many photos are posted of blank ocean!
 
 * ADDITIONAL NOTE ON PHOTOS: Be aware that photos are only as reliable as the Google users who upload them. Clicking on Iceland quakes, for instance, is liable to get you a photo of footballer Ronaldo hoisting a trophy.
 
@@ -124,6 +130,6 @@ Some aspects of this site are adequate for demonstrating knowledge of programmin
 
 * Currently, my Knockout "if" bindings work well at determining which portion of the HTML is displayed. However, on page load there can be a quarter-second "jumbled display of everything" before the JavaScript loads and the "if" conditionals are defined. This might be improved with a little CSS band-aid which briefly hides all the HTML jumble until the JavaScript is ready.
 
-* Consider using Knockout Utility Functions, such as arrayFilter, to filter list of Quakes according to search criteria.
+* Knockout Utility Functions, such as `arrayFilter`, might be used to filter list of Quakes according to search criteria.
 
-* Consider adding a few more "fail-safe" buttons, such as one which will allow users to see the details of their "previously viewed" location.
+* A few more "fail-safe" buttons, such as one which will allow users to see the details of their "previously viewed" location, might be added.

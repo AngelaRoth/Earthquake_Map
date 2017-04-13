@@ -28,16 +28,14 @@ ViewModel.prototype.googleError = function() {
 // Attach the infowindow to the current marker and fill it with
 // that marker's information
 ViewModel.prototype.populateInfoWindow = function(marker, infowindow) {
-  if (infowindow.marker != marker) {
-    infowindow.marker = marker;
-    infowindow.setContent(marker.infoTitle);
-    infowindow.open(map, marker);
-    // Make sure the marker property is cleared if the infowindow is closed.
-    infowindow.addListener('closeclick', function(){
-      infowindow.marker = null;
-      marker.setAnimation(null);
-    });
-  }
+  infowindow.marker = marker;
+  infowindow.setContent(marker.infoTitle);
+  infowindow.open(map, marker);
+  // Clear the marker property when the infowindow is closed.
+  infowindow.addListener('closeclick', function(){
+    infowindow.marker = null;
+    marker.setAnimation(null);
+  });
 };
 
 // Take in a COLOR and return a new marker icon of that color.

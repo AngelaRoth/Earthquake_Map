@@ -245,9 +245,15 @@ var ViewModel = function() {
     self.newForm(true);
     self.searchForm(false);
     self.locationForm(false);
+
     // toggle slider open
     self.drawerOpen(true);
     self.drawerButtonSrc('img/close.svg');
+
+    // if infowindow still open or marker still bouncing, kill them.
+    quakeInfowindow.close();
+    self.currentLocation().marker.setAnimation(null);
+
     // Clear search string
     self.searchString('');
   };
@@ -265,6 +271,10 @@ var ViewModel = function() {
       // Button click now results in action, so clear any error message.
       self.errorReported(false);
       self.errorText('');
+
+      // if infowindow still open or marker still bouncing, kill them.
+      quakeInfowindow.close();
+      self.currentLocation().marker.setAnimation(null);
 
       // No term being searched on
       self.searchString('');

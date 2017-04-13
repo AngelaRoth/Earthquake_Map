@@ -272,7 +272,7 @@ var ViewModel = function() {
       var bounds = new google.maps.LatLngBounds();
       self.quakeArray().forEach(function(item) {
         item.included(true);
-        item.marker.setVisible(true);
+        item.marker.setMap(map);
         bounds.extend(item.marker.position);
       });
 
@@ -297,26 +297,20 @@ var ViewModel = function() {
     self.newForm(false);
     self.searchForm(true);
     self.locationForm(false);
-    // if infowindow still open or marker still bouncing, kill them.
-    quakeInfowindow.close();
-    self.currentLocation().marker.setAnimation(null);
   };
 
   // Display a subset of the results returned by the USGS database, based
   // on a user-entered search term
   this.searchResults = function() {
-    // if infowindow still open or marker still bouncing, kill them.
-    quakeInfowindow.close();
-    self.currentLocation().marker.setAnimation(null);
     var bounds = new google.maps.LatLngBounds();
     self.quakeArray().forEach(function(item) {
       if (item.place.toLowerCase().includes(self.searchString().toLowerCase())) {
         item.included(true);
-        item.marker.setVisible(true);
+        item.marker.setMap(map);
         bounds.extend(item.marker.position);
       } else {
         item.included(false);
-        item.marker.setVisible(false);
+        item.marker.setMap(null);
       }
     });
 

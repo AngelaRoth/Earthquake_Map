@@ -62,7 +62,7 @@ var ViewModel = function() {
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable('');
-  self.startTime = ko.observable('2007-01-01');
+  self.startTime = ko.observable('2014-01-01');
   self.endTime = ko.observable('');
   self.minMagnitude = ko.observable('7.5');
   self.maxMagnitude = ko.observable('');
@@ -138,6 +138,11 @@ var ViewModel = function() {
     // makes sure all the map stuff has actually happened (i.e. the bounds
     // code has run, as well as the map creation code).
     // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
+
+    console.log('typeof google = ' + typeof google);
+    console.log('self.googleReady() = ' + self.googleReady());
+    console.log('self.quakesLoaded() = ' + self.quakesLoaded());
+
     if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
       // If everything is ready to go, display the list of search results
       self.newForm(false);

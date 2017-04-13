@@ -11,7 +11,7 @@
 <body>
   <header>
     <h1>QuakeZone</h1>
-    <!-- ko if: !mapFailed() -->
+    <!-- ko if: !mapFailed() && !notLoading() -->
       <div id="header-buttons">
         <button data-bind="click: displayAll" class="header-button">All Results</button>
         <button data-bind="click: getNewScreen" class="header-button">New Search</button>
@@ -129,10 +129,17 @@
       </div>
     <!-- /ko -->
 
+    <!-- ko if: notLoading() -->
+      <div id="notLoadingForm">
+        <p class="first-paragraph">Map and Quakes are still loading.</p>
+        <p>The load process should not take very long. If this screen persists, something went wrong.</p>
+      </div>
+    <!-- /ko -->
+
     </div>
   </div>
 
-  <!-- ko if: !mapFailed() -->
+  <!-- ko if: !mapFailed() && !notLoading() -->
     <img id="list-drawer-button" data-bind="attr: { src: drawerButtonSrc, alt: '<= =>' }, click: drawerButtonClicked, css: { open: drawerOpen() }">
   <!-- /ko -->
 

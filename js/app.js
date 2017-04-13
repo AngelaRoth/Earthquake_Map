@@ -57,15 +57,37 @@ var Photo = function(data) {
 
 var ViewModel = function() {
   var self = this;
+  var notLoadingMessage;
   self.googleReady = ko.observable(false);
   self.quakesLoaded = ko.observable(false);
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable('');
-  self.startTime = ko.observable('2007-01-01');
+  self.startTime = ko.observable('2014-01-01');
   self.endTime = ko.observable('');
   self.minMagnitude = ko.observable('7.5');
   self.maxMagnitude = ko.observable('');
+
+  // These five properties keep track of which "content box"
+  // is displayed in the inner-box of the list-drawer.
+  // On Load, newForm is displayed (in case an error occurs with the
+  // earthquake search); newForm is the "box" where quake error
+  // messages appear.
+  self.mapFailed = ko.observable(false);
+  self.notLoading = ko.observable(false);
+  self.newForm = ko.observable(true);
+  self.searchForm = ko.observable(false);
+  self.locationForm = ko.observable(false);
+
+  // These two properties are used to display a gold-backed warning message
+  // when earthquake search fails or returns too many/zero results
+  self.errorReported = ko.observable(false);
+  self.errorText = ko.observable('');
+
+  // These two properties are used to open and close the list-drawer
+  // They have to be observable because various functions change their state
+  self.drawerButtonSrc = ko.observable('img/close.svg');
+  self.drawerOpen = ko.observable(true);
 
   // Following pretty strings are for box which shows
   // current search terms (#currently-showing)
@@ -97,55 +119,34 @@ var ViewModel = function() {
     }
   });
 
-  // These four properties keep track of which "content box"
-  // is displayed in the inner-box of the list-drawer.
-  // On Load, newForm is displayed in case an error occurs with the
-  // earthquake search; newForm is the "box" where quake error
-  // messages appear.
-  self.mapFailed = ko.observable(false);
-  self.newForm = ko.observable(true);
-  self.searchForm = ko.observable(false);
-  self.locationForm = ko.observable(false);
-
-  // These two properties are used to display a gold-backed warning message
-  // when earthquake search fails or returns too many/zero results
-  self.errorReported = ko.observable(false);
-  self.errorText = ko.observable('');
-
-  // These two properties are used to open and close the list-drawer
-  // They have to be observable because various functions change their state
-  self.drawerButtonSrc = ko.observable('img/close.svg');
-  self.drawerOpen = ko.observable(true);
-
-  // When the drawer-button is clicked, change the button image
-  // and toggle the list-drawer between open an shut.
-  this.drawerButtonClicked = function() {
-    if (self.drawerButtonSrc() === 'img/close.svg') {
-      self.drawerOpen(false);
-      self.drawerButtonSrc('img/open.svg');
-    } else {
-      self.drawerButtonSrc('img/close.svg');
-      self.drawerOpen(true);
-    }
-  };
-
   // WHEN the Google Map is ready AND a new set of Quakes is ready to be
   // loaded, this computed function makes and displays map markers for
   // each quake returned by a new quake search.
   this.makeMarkers = ko.computed(function() {
+    // Clear timeout which was set if map/quake data not ready
+    clearTimeout(notLoadingMessage);
     // I check that the map is ready in two ways. The first makes sure
     // that the google variable has been successfully defined; the second
     // makes sure all the map stuff has actually happened (i.e. the bounds
     // code has run, as well as the map creation code).
     // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
-    if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
+
+    console.log('typeof google = ' + typeof google);
+    console.log('self.googleReady() = ' + self.googleReady());
+    console.log('self.quakesLoaded() = ' + self.quakesLoaded());
+
+
+    var typeOfGoogle = typeof google;
+
+    if ((typeOfGoogle !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
       // If everything is ready to go, display the list of search results
+      self.notLoading(false);
       self.newForm(false);
       self.searchForm(true);
       self.locationForm(false);
 
       // Clear any "error" text which resulted from premature clicking
-      // of "All Results" button
+      // of "All Results" button or slow map/quake loading
       self.errorReported(false);
       self.errorText('');
 
@@ -207,8 +208,30 @@ var ViewModel = function() {
 
       bounds = self.expandBounds(bounds);
       map.fitBounds(bounds);
+
+    // If map or quake data is not ready within 2 seconds of trying
+    // to make markers, inform user that something might be wrong
+    } else {
+      notLoadingMessage = setTimeout(function() {
+        self.newForm(false);
+        self.searchForm(false);
+        self.locationForm(false);
+        self.notLoading(true);
+      }, 2000);
     }
   });
+
+  // When the drawer-button is clicked, change the button image
+  // and toggle the list-drawer between open an shut.
+  this.drawerButtonClicked = function() {
+    if (self.drawerButtonSrc() === 'img/close.svg') {
+      self.drawerOpen(false);
+      self.drawerButtonSrc('img/open.svg');
+    } else {
+      self.drawerButtonSrc('img/close.svg');
+      self.drawerOpen(true);
+    }
+  };
 
   // If Only One Marker is being displayed, expand the bounds of the map
   // so we see more than blue ocean or empty land. Thanks to StackOverflow!
@@ -249,6 +272,9 @@ var ViewModel = function() {
       self.errorReported(false);
       self.errorText('');
 
+      // No term being searched on
+      self.searchString('');
+
       var bounds = new google.maps.LatLngBounds();
       self.quakeArray().forEach(function(item) {
         item.included(true);
@@ -267,7 +293,7 @@ var ViewModel = function() {
     } else {
       // Let user know why button click has not produced any action
       self.errorReported(true);
-      self.errorText('Waiting for Map and Results to Load.');
+      self.errorText('Waiting for Map and Quakes to Load.');
     }
   };
 
@@ -325,9 +351,11 @@ var ViewModel = function() {
     self.errorReported(false);
 
     // 3. Markers from previous search are jettisoned
-    self.quakeArray().forEach(function(item) {
-      item.marker.setMap(null);
-    });
+    if ((typeof google !== 'undefined') && self.googleReady()) {
+      self.quakeArray().forEach(function(item) {
+        item.marker.setMap(null);
+      });
+    }
 
     // 4. Quake array is emptied of quakes from previous search
     self.quakeArray([]);
@@ -362,6 +390,9 @@ var ViewModel = function() {
 
     $.getJSON( earthquakeURL )
       .done(function(data) {
+
+        console.log(data);
+
         // When API returns data, cancel the call to the "waiting" message
         clearTimeout(waitingMessage);
         self.errorReported(false);

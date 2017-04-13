@@ -336,12 +336,18 @@ correctly (with flex-grow on the following div) */
 }
 
 
-
-
 /* CSS for Fourth (Google Failed) Content Box */
 #googleFailForm {
   font-weight: bold;
   color: red;
+  margin: 0 10px 5px;
+}
+
+
+/* CSS for Fifth (Not Loading) Content Box */
+#notLoadingForm {
+  font-weight: bold;
+  color: gold;
   margin: 0 10px 5px;
 }
 

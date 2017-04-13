@@ -116,7 +116,7 @@ If you click this button by mistake and want to go back to your results list, ju
 
 4. **USGS Earthquake API:** If our request to the USGS API fails, we parse the returned data and try to create a succinct, user-legible reason for the failure. Most likely, the user has entered less-than-ideal search terms, either not formatting them correctly, or entering terms which produce zero or far too many quakes. If this is the case, we notify them of their exact mistake and encourage them to try again. If the returned data can't be parsed for a succinct, user-legible reason, we notify the user of the full status text and inform them that the Earthquake Data is unavailable. If the returned data doesn't even contain a statusText property, we show the user a general message which mentions input formatting and the potential problem of firewalls. All "error" text is displayed in a gold-backed box above the "search for earthquakes" form.
 
-5. **USGS Results Take Time to Load:** If the USGS results take longer than a second and a half to load, a "waiting for results" message is displayed.
+5. **USGS Results Take Time to Load:** If the USGS results take longer than a second and a half to load, a "waiting for results" message is displayed. This is only likely to happen if the search parameters were too broad, and a lot of quakes are being returned.
 
 6. **New York Times API:** If our request to the NYT API fails, we alert the user that the New York Times failed to load and encourage them to try again.
 

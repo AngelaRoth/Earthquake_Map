@@ -124,15 +124,15 @@
 
     <!-- ko if: mapFailed() -->
       <div id="googleFailForm">
-        <p class="first-paragraph">SORRY, it appears that Google Maps has Failed to Load, and QuakeZone is a sad experience without it.</p>
+        <p class="first-paragraph">SORRY: Google Maps has Failed to Load, and QuakeZone is a sad experience without it.</p>
         <p>Make sure your internet connection is secure and try reloading the page.</p>
       </div>
     <!-- /ko -->
 
-    <!-- ko if: notLoading() -->
+    <!-- ko if: notLoading() && !mapFailed() -->
       <div id="notLoadingForm">
-        <p class="first-paragraph">Map and Quakes are still loading.</p>
-        <p>The load process should not take very long. If this screen persists, something went wrong.</p>
+        <p class="first-paragraph">The Google Map is still loading.</p>
+        <p>The load process should not take very long. If this screen persists, your internet connection might be slow, or   something might have gone wrong on Google's end.</p>
       </div>
     <!-- /ko -->
 
@@ -144,7 +144,6 @@
   <!-- /ko -->
 
   <div id="map"></div>
-
 
   <script src="js/knockout-3.4.2.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

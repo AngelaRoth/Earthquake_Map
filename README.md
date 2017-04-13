@@ -108,7 +108,7 @@ If you click this button by mistake and want to go back to your results list, ju
 
 ## <a name="error-handling">Error Handling</a>
 
-1. **Google Maps:** If the Google Maps API fails to load, all that is shown aside from the header is a "Sorry" screen which encourages the user to check their internet connection and try again.
+1. **Google Maps:** If the Google Maps API fails to load, all that is shown aside from the header is a "Sorry" screen which encourages the user to check their internet connection and try again. If the API loads, but for some reason has difficulty creating the map, a "Still Loading" screen is shown. This informs the user that the map is still loading, and that long load times may indicate some problem (slow internet; issues at google).
 
 2. **Google Maps Geocoder:** If the returned Geocoder status is not `OK`, and the status is not `ZERO_RESULTS`, we alert the user of the failure and the reason for it. If the status is `ZERO_RESULTS`, no special alert is created. The lat-lng co-ordinates of many under-ocean quakes return zero Geocoder results; constantly alerting users of this fact is annoying, and serves no purpose because we already inform the user if no pictures are available (and the Geocoder call is only there to help find pictures).
 

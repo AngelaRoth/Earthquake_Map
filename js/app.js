@@ -57,6 +57,7 @@ var Photo = function(data) {
 
 var ViewModel = function() {
   var self = this;
+  var quakeInfowindow;
   var notLoadingMessage;
   self.googleReady = ko.observable(false);
   self.quakesLoaded = ko.observable(false);
@@ -89,7 +90,7 @@ var ViewModel = function() {
   self.drawerButtonSrc = ko.observable('img/close.svg');
   self.drawerOpen = ko.observable(true);
 
-  // Following pretty strings are for box which shows
+  // The following pretty strings are used in box which shows
   // current search terms (#currently-showing)
   self.prettyEnd = ko.computed(function() {
     if (self.endTime()) {
@@ -123,23 +124,24 @@ var ViewModel = function() {
   // loaded, this computed function makes and displays map markers for
   // each quake returned by a new quake search.
   this.makeMarkers = ko.computed(function() {
-    // Clear timeout which was set if map/quake data not ready
+    // Clear timeout if an observable property changes, causing
+    // this function to be "re-called"
     clearTimeout(notLoadingMessage);
-    // I check that the map is ready in two ways. The first makes sure
-    // that the google variable has been successfully defined; the second
-    // makes sure all the map stuff has actually happened (i.e. the bounds
-    // code has run, as well as the map creation code).
-    // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
+    // If map is not ready within 2 seconds of function being called
+    // inform user that something might be wrong.
+    // (The message for slow earthquake loads is handled in loadEarthquakes)
+    if (!self.googleReady()) {
+      notLoadingMessage = setTimeout(function() {
+        self.newForm(false);
+        self.searchForm(false);
+        self.locationForm(false);
+        self.notLoading(true);
+      }, 2000);
+    }
 
-    console.log('typeof google = ' + typeof google);
-    console.log('self.googleReady() = ' + self.googleReady());
-    console.log('self.quakesLoaded() = ' + self.quakesLoaded());
-
-
-    var typeOfGoogle = typeof google;
-
-    if ((typeOfGoogle !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
-      // If everything is ready to go, display the list of search results
+    // If google map is ready and quakes are loaded, ok to make markers!
+    if (self.googleReady() && self.quakesLoaded()) {
+      // Display search results content box
       self.notLoading(false);
       self.newForm(false);
       self.searchForm(true);
@@ -150,7 +152,7 @@ var ViewModel = function() {
       self.errorReported(false);
       self.errorText('');
 
-      var quakeInfowindow = new google.maps.InfoWindow();
+      quakeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
 
       self.quakeArray().forEach(function(item) {
@@ -160,7 +162,7 @@ var ViewModel = function() {
         var infoWindowTitle = '<div>' + item.place + '</div>' +
                                '<div>Magnitude: <b>' + item.magnitude + '</b></div>';
 
-        item.marker = new  google.maps.Marker({
+        item.marker = new google.maps.Marker({
           map: map,
           position: item.location,
           title: formattedTitle,
@@ -208,16 +210,6 @@ var ViewModel = function() {
 
       bounds = self.expandBounds(bounds);
       map.fitBounds(bounds);
-
-    // If map or quake data is not ready within 2 seconds of trying
-    // to make markers, inform user that something might be wrong
-    } else {
-      notLoadingMessage = setTimeout(function() {
-        self.newForm(false);
-        self.searchForm(false);
-        self.locationForm(false);
-        self.notLoading(true);
-      }, 2000);
     }
   });
 
@@ -256,6 +248,8 @@ var ViewModel = function() {
     // toggle slider open
     self.drawerOpen(true);
     self.drawerButtonSrc('img/close.svg');
+    // Clear search string
+    self.searchString('');
   };
 
   // Display full list of results returned by latest search of the
@@ -303,11 +297,17 @@ var ViewModel = function() {
     self.newForm(false);
     self.searchForm(true);
     self.locationForm(false);
+    // if infowindow still open or marker still bouncing, kill them.
+    quakeInfowindow.close();
+    self.currentLocation().marker.setAnimation(null);
   };
 
   // Display a subset of the results returned by the USGS database, based
   // on a user-entered search term
   this.searchResults = function() {
+    // if infowindow still open or marker still bouncing, kill them.
+    quakeInfowindow.close();
+    self.currentLocation().marker.setAnimation(null);
     var bounds = new google.maps.LatLngBounds();
     self.quakeArray().forEach(function(item) {
       if (item.place.toLowerCase().includes(self.searchString().toLowerCase())) {
@@ -390,9 +390,6 @@ var ViewModel = function() {
 
     $.getJSON( earthquakeURL )
       .done(function(data) {
-
-        console.log(data);
-
         // When API returns data, cancel the call to the "waiting" message
         clearTimeout(waitingMessage);
         self.errorReported(false);

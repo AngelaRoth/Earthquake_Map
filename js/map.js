@@ -11,7 +11,6 @@ ViewModel.prototype.initMap = function() {
   });
 
   var bounds = new google.maps.LatLngBounds();
-
   map.fitBounds(bounds);
 
   this.googleReady(true);

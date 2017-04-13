@@ -57,7 +57,6 @@ var Photo = function(data) {
 
 var ViewModel = function() {
   var self = this;
-  var quakeInfowindow;
   var notLoadingMessage;
   self.googleReady = ko.observable(false);
   self.quakesLoaded = ko.observable(false);
@@ -152,7 +151,7 @@ var ViewModel = function() {
       self.errorReported(false);
       self.errorText('');
 
-      quakeInfowindow = new google.maps.InfoWindow();
+      var quakeInfowindow = new google.maps.InfoWindow();
       var bounds = new google.maps.LatLngBounds();
 
       self.quakeArray().forEach(function(item) {

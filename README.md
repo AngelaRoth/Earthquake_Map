@@ -16,21 +16,7 @@ Note that mid-ocean and even some offshore quakes are unlikely to return **photo
 
 ## 3rd Party APIs
 
-QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.gov/fdsnws/event/1/), the [New York Times API](https://developer.nytimes.com/), and the [Google Maps API](https://developers.google.com/maps/).
-
-### Error Handling
-
-1. **Google Maps:** If the Google Maps API fails to load, all that is shown aside from the header is a "Sorry" screen which encourages the user to check their internet connection and try again.
-
-2. **Google Maps Geocoder:** If the returned Geocoder status is not `OK`, and the status is not `ZERO_RESULTS`, we alert the user of the failure and the reason for it. If the status is `ZERO_RESULTS`, no special alert is created. The lat-lng co-ordinates of many under-ocean quakes return zero Geocoder results; constantly alerting users of this fact is annoying, and serves no purpose because we already inform the user if no pictures are available (and the Geocoder call is only there to help find pictures).
-
-3. **Google Maps PlacesService:** If the returned PlacesService status is not `OK` (which happens rarely, and only when some glitch has occurred), we alert the user of the failure and the reason for it, and encourage them to try again.
-
-4. **USGS Earthquake API:** If our request to the USGS API fails, we parse the returned data and try to create a succinct, user-legible reason for the failure. Most likely, the user has entered less-than-ideal search terms, either not formatting them correctly, or entering terms which produce zero or far too many quakes. If this is the case, we notify them of their exact mistake and encourage them to try again. If the returned data can't be parsed for a succinct, user-legible reason, we notify the user of the full status text and inform them that the Earthquake Data is unavailable. If the returned data doesn't even contain a statusText property, we show the user a general message which mentions input formatting and the potential problem of firewalls. All "error" text is displayed in a gold-backed box above the "search for earthquakes" form.
-
-5. **New York Times API:** If our request to the NYT API fails, we alert the user that the New York Times failed to load and encourage them to try again.
-
-6. **No Photos or No Articles Exist:** If the APIs all work OK, but either no photos or no articles exist for a location, the user is informed in a little green-backed (photos) or blue-backed (articles) notification box, displayed in the main flow of the site.
+QuakeZone uses data from the [US Geological Survey API](https://earthquake.usgs.gov/fdsnws/event/1/), the [New York Times API](https://developer.nytimes.com/), and the [Google Maps API](https://developers.google.com/maps/). See [Error Handling](#error-handling) for what happens if "bad" data is returned.
 
 ## Loading QuakeZone
 
@@ -119,6 +105,20 @@ Like a particular photo? You can click it to see a larger (fully opaque!) versio
 At any time, a new range of dates and magnitudes may be searched by clicking the "New Search" button in the red header.
 
 If you click this button by mistake and want to go back to your results list, just click "All Results." As long as you haven't actually performed a new search, clicking "All Results" will display the full results of your most recent search.
+
+## <a name="error-handling">Error Handling</a>
+
+1. **Google Maps:** If the Google Maps API fails to load, all that is shown aside from the header is a "Sorry" screen which encourages the user to check their internet connection and try again.
+
+2. **Google Maps Geocoder:** If the returned Geocoder status is not `OK`, and the status is not `ZERO_RESULTS`, we alert the user of the failure and the reason for it. If the status is `ZERO_RESULTS`, no special alert is created. The lat-lng co-ordinates of many under-ocean quakes return zero Geocoder results; constantly alerting users of this fact is annoying, and serves no purpose because we already inform the user if no pictures are available (and the Geocoder call is only there to help find pictures).
+
+3. **Google Maps PlacesService:** If the returned PlacesService status is not `OK` (which happens rarely, and only when some glitch has occurred), we alert the user of the failure and the reason for it, and encourage them to try again.
+
+4. **USGS Earthquake API:** If our request to the USGS API fails, we parse the returned data and try to create a succinct, user-legible reason for the failure. Most likely, the user has entered less-than-ideal search terms, either not formatting them correctly, or entering terms which produce zero or far too many quakes. If this is the case, we notify them of their exact mistake and encourage them to try again. If the returned data can't be parsed for a succinct, user-legible reason, we notify the user of the full status text and inform them that the Earthquake Data is unavailable. If the returned data doesn't even contain a statusText property, we show the user a general message which mentions input formatting and the potential problem of firewalls. All "error" text is displayed in a gold-backed box above the "search for earthquakes" form.
+
+5. **New York Times API:** If our request to the NYT API fails, we alert the user that the New York Times failed to load and encourage them to try again.
+
+6. **No Photos or No Articles Exist:** If the APIs all work OK, but either no photos or no articles exist for a location, the user is informed in a little green-backed (photos) or blue-backed (articles) notification box, displayed in the main flow of the site.
 
 ## Future Version 2.0
 

@@ -99,13 +99,16 @@ var ViewModel = function() {
 
   // These four properties keep track of which "content box"
   // is displayed in the inner-box of the list-drawer.
+  // On Load, newForm is displayed in case an error occurs with the
+  // earthquake search; newForm is the "box" where quake error
+  // messages appear.
   self.mapFailed = ko.observable(false);
   self.newForm = ko.observable(true);
   self.searchForm = ko.observable(false);
   self.locationForm = ko.observable(false);
 
   // These two properties are used to display a gold-backed warning message
-  // when the user inputs bad earthquake search parameters
+  // when earthquake search fails or returns too many/zero results
   self.errorReported = ko.observable(false);
   self.errorText = ko.observable('');
 
@@ -135,12 +138,6 @@ var ViewModel = function() {
     // makes sure all the map stuff has actually happened (i.e. the bounds
     // code has run, as well as the map creation code).
     // On StackOverflow: https://stackoverflow.com/questions/5113374/javascript-check-if-variable-exists-is-defined-initialized
-
-    var typeOfGoogle = typeof google;
-    console.log('typeOfGoogle = ' + typeOfGoogle);
-    console.log('self.googleReady() = ' + self.googleReady());
-    console.log('self.quakesLoaded() = ' + self.quakesLoaded());
-
     if ((typeof google !== 'undefined') && self.googleReady() && self.quakesLoaded()) {
       // If everything is ready to go, display the list of search results
       self.newForm(false);
@@ -193,7 +190,6 @@ var ViewModel = function() {
           if (item.photos().length === 0) {
             self.getPhotos(item.location);
           }
-
 
           self.populateInfoWindow(this, quakeInfowindow);
           if (this.getAnimation() !== null) {
@@ -341,7 +337,7 @@ var ViewModel = function() {
     // (start time is the only essential parameter for USGS API)
     if (!self.startTime()) {
       self.startTime("1900-01-01");
-      console.log('Start Time assigned value of 1900-01-01');
+      console.log('No Start Date Entered. Start Date assigned value of 1900-01-01');
     }
 
     // Assemble the URL for the USGS API request
@@ -369,8 +365,6 @@ var ViewModel = function() {
         // When API returns data, cancel the call to the "waiting" message
         clearTimeout(waitingMessage);
         self.errorReported(false);
-        // log data to see how it's structured.
-        console.log(data);
 
         // Make sure features property exists before referencing it
         if (data.hasOwnProperty('features')) {
@@ -488,8 +482,6 @@ var ViewModel = function() {
     var fullSearchTerm = 'quake+' + searchTerm;
     self.currentLocation().prettySearchTerm(searchTerm.replace('+', ' '));
 
-    console.log('pretty search = ' + self.currentLocation().prettySearchTerm());
-
     // Generate the NYT URL.
     // I originally included the following "fq" parameter to limit
     // search results, but it proved unnecessary (and too limiting)
@@ -505,7 +497,6 @@ var ViewModel = function() {
 
     $.getJSON( nytURL )
       .done(function(data) {
-        console.log(data);
         var articles = data.response.docs;
 
         // If articles are found, make Article Objects and add to array
@@ -592,10 +583,10 @@ var ViewModel = function() {
             });
           }
 
-        // A little console.log statement if for some reason Geocoder
-        // status is OK, but there are no geocoder results.
-        // The box which tells users there are no pictures is
-        // already visible
+        // A console statement, for those who really want to investigate,
+        // if for some reason Geocoder status is OK, but there are no
+        // geocoder results. The box which tells users no pictures are
+        // available is already visible.
         } else {
           console.log('No Geocoder Results');
         }
@@ -614,14 +605,13 @@ var ViewModel = function() {
     });
   };
 
-  // In order to meet the PROJECT GUIDELINES of displaying markers ONLOAD,
-  // automatically begin loading earthquakes for the default search parameters
+  // In order to meet the Project guidelines of displaying markers ONLOAD,
+  // automatically begin loading earthquakes for the default search parameters.
   // I considered not loading quakes until I was sure Google Maps had loaded,
   // but I think that Google Maps WILL usually load, and that it is a good
   // idea to get the quakes loading as well so that they're more likely
   // to be available when the makeMarkers function is called
   this.loadEarthquakes();
-
 };
 
 var viewModel = new ViewModel();

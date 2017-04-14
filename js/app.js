@@ -64,7 +64,7 @@ var ViewModel = function() {
   self.quakeArray = ko.observableArray([]);
 
   self.searchString = ko.observable('');
-  self.startTime = ko.observable('2014-01-01');
+  self.startTime = ko.observable('2007-01-01');
   self.endTime = ko.observable('');
   self.minMagnitude = ko.observable('7.5');
   self.maxMagnitude = ko.observable('');
